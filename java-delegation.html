@@ -1,0 +1,300 @@
+<HTML>
+<HEAD>
+   <META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+   <META NAME="Author" CONTENT="Cedric Beust">
+   <META NAME="Description" CONTENT="Adding delegation support in Java">
+   <META NAME="Keywords" CONTENT="Java, Delegation, C++">
+   <META NAME="GENERATOR" CONTENT="Mozilla/4.04 [en] (X11; I; SunOS 5.5.1 sun4u) [Netscape]">
+   <TITLE>Delegation in Java</TITLE>
+</HEAD>
+<BODY>
+
+<CENTER>
+<H2>
+ADDING DELEGATION TO JAVA</H2></CENTER>
+<FONT SIZE=-1>v1.6 Fri Mar 27 18:26:44 MET 1998</FONT>
+
+<P>Adding delegation support for Java is a recurrent discussion on the
+technical mailing-lists. While it is hard to predict if it will eventually
+make it into the language, many proposals have already been advanced. Here
+is my contribution to this debate.
+<BR>&nbsp;
+<H3>
+CONSTRAINTS</H3>
+What follows has been greatly inspired by the process used by the ISO C++
+Committee to decide the inclusion (or not) of a new feature in the language.
+In a few words, an extension should
+<BR>&nbsp;
+<UL>
+<LI>
+Add functionalities that cannot be gained with the current status of the
+language</LI>
+
+<LI>
+Be easy to explain</LI>
+
+<LI>
+Be easy to implement</LI>
+
+<LI>
+Not break any existing code (use a new keyword as a last resort only)</LI>
+</UL>
+I suggest you refer to <A HREF="#[1]">#[1]</A> for more information on
+this subject.
+<BR>&nbsp;
+<H3>
+RATIONALE</H3>
+Sometimes, I find myself simulating multiple inheritance of implementation
+by mixing simple inheritance and delegation. Consider the classic example
+of displaying a grapher. I have an "abstract" representation of a node
+(class Node) and I want to display it. For this, I have a class Graphic.
+My class will naturally be called NodeGraphic and will, at least in C++,
+inherit both from Node and from Graphic. And it does make sense : a NodeGraphic
+is both a Node and a Graphic.
+
+<P>In Java, it's a bit trickier :
+<UL>
+<LI>
+You have to choose what will be inherited and what will be delegated</LI>
+
+<LI>
+And your object still won't "naturally" (not without some efforts) be both
+a Node and a Graphic : you won't be able to apply the substitution principle
+to it.</LI>
+</UL>
+
+<UL><B><TT>public class Node {</TT></B>
+<BR><B><TT>&nbsp;&nbsp;&nbsp; public setName() {}</TT></B>
+<BR><B><TT>}</TT></B>
+
+<P><B><TT>public class Graphic {</TT></B>
+<BR><B><TT>&nbsp;&nbsp;&nbsp; public setX(int x) {}</TT></B>
+<BR><B><TT>&nbsp;&nbsp;&nbsp; public setLabel(String name) {}</TT></B>
+<BR><B><TT>}</TT></B>
+
+<P><B><TT>public class NodeGraphic extends Node {</TT></B>
+<BR><B><TT>&nbsp;&nbsp;&nbsp; // delegation takes place here :</TT></B>
+<BR><B><TT>&nbsp;&nbsp;&nbsp; public setX(int x) { _graphic.setX(x); }</TT></B>
+<BR><B><TT>&nbsp;&nbsp;&nbsp; public setLabel(String name) { _graphic.setLabel(name);
+}</TT></B>
+
+<P><B><TT>&nbsp;&nbsp;&nbsp; Graphic _graphic;</TT></B>
+<BR><B><TT>}</TT></B></UL>
+As you can see, you end up writing a lot of dumb code, which is error prone
+(illustrated below) and on top of this, you can't pass a NodeGraphic to
+a function expecting a Graphic (you will have to resort to interfaces to
+achieve this, but it won't help if the author of the package <TT>Graphic</TT>
+belongs to didn't envision this).
+
+<P>Worse : if one day <TT>Graphic</TT> is improved, say with a function
+<TT>setBackground()</TT>, a simple recompilation won't be enough : you
+will have to add by hand the s<TT>etBackground()</TT> function to your
+class. And this goes for all new functions, and deprecated ones. This is
+beginning to rhyme with nightmare, but it's part of the compromise Java
+makes with simplicity.
+<BR>&nbsp;
+<H3>
+MY PROPOSAL</H3>
+I would like to have the following syntax :
+<UL><B><TT>public interface IGraphic {</TT></B>
+<BR><B><TT>&nbsp;&nbsp; // Defines what a Graphic is</TT></B>
+<BR><B><TT>};</TT></B></UL>
+
+<UL><B><TT>public class NodeGraphic extends Node implements IGraphic(_graphic)
+{</TT></B>
+<BR><B><TT>&nbsp;&nbsp;&nbsp; // ...</TT></B>
+<BR><B><TT>&nbsp;&nbsp;&nbsp; IGraphic _graphic;</TT></B>
+<BR><B><TT>}</TT></B></UL>
+<I>Please note that here, the "I" prefix means "interface" (not to be confused
+with CORBA's usual notation where you suffix&nbsp; the implementation with
+_i).</I>
+
+<P>With this syntax, you are free to use whatever implementation of the
+interface <TT>IGraphic</TT> suits you best (in the constructor of <TT>NodeGraphic</TT>
+for example). Your class will never know about any concrete implementation
+of the interface it delegates to.
+
+<P>Of course, you can delegate to more than one attribute :
+<UL><B><TT>public class NodeGraphic extends Node</TT></B>
+<BR><B><TT>&nbsp;&nbsp;&nbsp; implements IGraphic(_graphic), IComponent(_component)
+{</TT></B>
+<BR><B><TT>&nbsp;&nbsp;&nbsp; // ...</TT></B>
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <B><TT>IGraphic _graphic;</TT></B>
+<BR><B><TT>&nbsp;&nbsp;&nbsp; IComponent _component;</TT></B>
+<BR><B><TT>};</TT></B>
+<BR>&nbsp;</UL>
+
+<H3>
+ALTERNATIVE SYNTAX</H3>
+Some people are concerned about the visibility of the delegation. They'd
+like the fact that the implementation of an interface is actually delegated
+to be invisible from the declaration. Therefore, the following alternative
+syntax might be used :
+<UL><B><TT>public class NodeGraphic extends Node</TT></B> <B><TT>implements
+IGraphic, IComponent {</TT></B>
+<BR><B><TT>&nbsp;&nbsp;&nbsp; // ...</TT></B>
+<BR><B><TT>&nbsp;&nbsp;&nbsp; IGraphic _graphic implements IGraphic;</TT></B>
+<BR><B><TT>&nbsp;&nbsp;&nbsp; IComponent _component implements IComponent;</TT></B>
+<BR><B><TT>};</TT></B></UL>
+
+<H3>
+RESOLVING AMBIGUITIES</H3>
+
+<H4>
+Static ambiguities</H4>
+This syntax can cause ambiguities. For example, suppose that both these
+interfaces have a public method <TT>clash()</TT>, the following code will
+create an error :
+<UL><B><TT>NodeGraphic ng = new NodeGraphic();</TT></B>
+<BR><B><TT>ng.clash();&nbsp;&nbsp; // error : ambiguous</TT></B></UL>
+You are then expected to disambiguate this code yourself :
+<UL><B><TT>NodeGraphic ng = new NodeGraphic();</TT></B>
+<BR><B><TT>ng.IComponent.clash();</TT></B></UL>
+My experience (C++) tends to prove that such ambiguities are either rare,
+or systematic, and in this case, you should arrange for the class that
+causes numerous conflicts to use some different naming scheme.
+
+<P>If ever the class NodeGraphic has its own <TT>clash()</TT> function,
+it is the one chosen. Delegated functions come second in the resolution
+of overridden methods. A typical implementation in such a case would be
+in class <TT>NodeGraphic</TT> :
+<UL><B><TT>public void clash() {</TT></B>
+<BR><B><TT>&nbsp;&nbsp;&nbsp; _graphic.clash();</TT></B>
+<BR><B><TT>&nbsp;&nbsp;&nbsp; _component.clash();</TT></B>
+<BR><B><TT>&nbsp;&nbsp;&nbsp; // do your own clash stuff if any</TT></B>
+<BR><B><TT>}</TT></B>
+<BR>&nbsp;</UL>
+
+<H4>
+Dynamic ambiguities</H4>
+There is a particular case that cannot be caught at compile time and will
+be ambiguous at runtime. Since delegated members can be modified dynamically,
+one member could first be assigned to a "simple" interface, and later on,
+replaced with an "enriched" interface (inheriting from the first interface).
+If this enriched interface contains a function that clashes with another
+implemented interface, the call becomes impossible to determine :
+<BR>&nbsp;
+<UL><B><TT>public interface IBase {</TT></B>
+<BR><B><TT>&nbsp;&nbsp;&nbsp; public void f();</TT></B>
+<BR><B><TT>}</TT></B><B><TT></TT></B>
+
+<P><B><TT>public interface IDerived extends IBase {</TT></B>
+<BR><B><TT>&nbsp;&nbsp;&nbsp; public void g();</TT></B>
+<BR><B><TT>};</TT></B><B><TT></TT></B>
+
+<P><B><TT>public interface IOther {</TT></B>
+<BR><B><TT>&nbsp;&nbsp;&nbsp; public void g();</TT></B>
+<BR><B><TT>};</TT></B><B><TT></TT></B>
+
+<P><B><TT>public class A implements IBase(_base), IOther(_other) {</TT></B>
+<BR><B><TT>&nbsp;&nbsp;&nbsp; public IBase _base;&nbsp;&nbsp;&nbsp;&nbsp;
+// public for clarity</TT></B>
+<BR><B><TT>&nbsp;&nbsp;&nbsp; public IOther _other;</TT></B>
+<BR><B><TT>};</TT></B><B><TT></TT></B>
+
+<P><B><TT>public class Base implements IBase {}</TT></B>
+<BR><B><TT>public class Derived implements IDerived {}</TT></B>
+<BR><B><TT>public class Other implements IOther {}</TT></B><B><TT></TT></B>
+
+<P><B><TT>/* ... */</TT></B><B><TT></TT></B>
+
+<P><B><TT>A a = new A();</TT></B>
+<BR><B><TT>a._base = new Base();</TT></B>
+<BR><B><TT>a.g();&nbsp;&nbsp; // ok, not ambiguous</TT></B>
+<BR><B><TT>a._base = new Derived();</TT></B>
+<BR><B><TT>a.g();&nbsp;&nbsp; // error, is it the g() from Other or Derived
+?</TT></B></UL>
+To prevent this, I suggest that only those interfaces mentioned in the
+declarative part of the class should be considered when trying to perform
+a call.&nbsp;Therefore, in the error case, <TT>Derived.g()</TT> won't be
+considered because <TT>IDerived</TT> is not mentioned in the implements
+clause : it's <TT>IBase</TT>. Since&nbsp;<TT>IBase</TT> does not contain
+a <TT>g()</TT> (an error would have been triggered), there is no ambiguity.
+
+<P>Another way to solve this problem would be to throw a runtime exception,
+much like what happens when you try to store an object of a wrong type
+in an array (why this is not caught at runtime, I don't know).&nbsp;Instead
+of an <TT>ArrayStoreException</TT>, you would have some <TT>DelegationAmbiguityException</TT>.
+<BR>&nbsp;
+<H3>
+VISIBILITY OF THE DELEGATED ATTRIBUTE</H3>
+The attribute used as delegate can have any visibility (<TT>public</TT>,
+<TT>protected</TT> or <TT>private</TT>, although <TT>public</TT> should
+be discouraged by standard OO practice). All the functions of the implemented
+interface will automatically be accessible as if they had been declared
+public.
+<BR>&nbsp;
+<H3>
+PROS AND CONS</H3>
+With this declaration, you are now free to assign _graphic to whatever
+implementation of <TT>IGraphic</TT> suits you best.
+
+<P>This solution has very attractive properties :
+<UL>
+<LI>
+Simple to explain</LI>
+
+<BR>&nbsp;
+<LI>
+Simple to parse</LI>
+
+<UL>Not much added to the existing syntax
+<BR>&nbsp;</UL>
+
+<LI>
+No new keyword</LI>
+
+<BR>&nbsp;
+<LI>
+Doesn't break existing code</LI>
+
+<BR>&nbsp;
+<LI>
+Simple code generation</LI>
+
+<UL>Basically, <TT>node.setBackground()</TT> will be compiled to <TT>node._graphic.setBackground()</TT>,
+and there will be no code for <TT>setBackground()</TT> in the leaf class.
+<BR>&nbsp;</UL>
+
+<LI>
+True OO gain</LI>
+
+<UL>The substitution principle can now apply : a <TT>NodeGraphic</TT> is
+both a Node and a Graphic, since we use the familiar 'implements' keyword.
+<BR>&nbsp;</UL>
+
+<LI>
+True coding gain</LI>
+
+<UL>No need to delegate by hand all the operations. A simple recompilation
+will bring to your class all the functionalities that were added (or removed)
+in your ancestors.</UL>
+</UL>
+The only drawback I see is that it forces a new interface to be introduced
+for a class to be delegated this way, but this might be seen as a good
+point (personally, I think the more interfaces, the better).&nbsp; One
+might also use interfaces to define subsets of classes that are delegated
+in their class.
+
+<P>--
+<BR><A HREF="mailto:beust@sophia.inria.fr">Cedric Beust</A>
+<BR>&nbsp;
+<BR>&nbsp;
+<BR>&nbsp;
+<H3>
+<B>THANKS</B></H3>
+...to <A HREF="mailto:Olivier.Dedieu@sophia.inria.fr&quot;">Olivier Dedieu</A>,
+<A HREF="mailto:mallet@opengroup.org">Lionel Mallet,</A> <A HREF="mailto:Thierry.Kormann@sophia.inria.fr">Thierry
+Kormann</A> and <A HREF="mailto:jmleon@sunlabs.com">Jean-Michel Leon</A>
+for their constructive criticism.
+<BR>&nbsp;
+<H3>
+<B>REFERENCES</B></H3>
+<A NAME="[1]"></A>[1] The design and evolution of C++, Bjarne Stroustrup
+<BR>ISBN 0-201-54330-3, Addison Wesley
+<BR>&nbsp;
+<BR>&nbsp;
+<BR>&nbsp;
+<BR>&nbsp;
+</BODY>
+</HTML>

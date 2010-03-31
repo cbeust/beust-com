@@ -1,0 +1,136 @@
+<HTML>
+<HEAD>
+   <META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+   <TITLE>JavaOne 2001
+</TITLE>
+<LINK rel="stylesheet" href="javaone99.css">
+</HEAD>
+<BODY BGCOLOR="#ffffff">
+
+<CENTER>
+<H1>
+JavaOne 2001
+</H1></CENTER>
+
+<CENTER>
+<H2>
+Moscone Center, San Francisco</H2>
+<H3>June 4-8, 2001</H3>
+</CENTER>
+
+<CENTER><A HREF="mailto:cedric@beust.com">Cedric&nbsp;Beust</A></CENTER>
+<p>
+<em>
+It's back!
+<p>
+By popular demand and in answer to a general outcry because I didn't bother writing anything up... here is my totally biased^H^H^H^H^H^Haccurate report of the circus next door.  Send flames to scott@sun.com
+</em>
+
+<p>
+
+Some general thoughts:
+
+- 17,000 registered attendants, and the organization is top-notch, just like the previous years
+- McNealy is *not* making a presentation this year.  No idea why, maybe he's out of town or maybe he got a pink slip
+
+<p>
+<span class="header">
+<h3>
+Monday
+</h3>
+</span>
+<p>
+
+John Gage is back on stage as the regular anchor for the JavaOne keynotes.  Not surprisingly, we were flooded with numbers that are supposed to knock us off our chairs about the Java phenomenon.  Hearing Sun's Chief Science Officer call the attendance growth exponential when there are three thousand people less this year than last year makes you wonder about the validity of the other figures, but hey, we're all in to be brainwashed, so this is fitting.  And it doesn't remove anything from the fact that Java is strong.  Not "stronger than ever", but as strong as last year, without doubt.
+<p>
+Another questionable statistics would be that the number of VB programmers is decreasing while that of Java programmers is on the rise (used to be 40/60%, now it's 60/40%).  Don't even think of asking me how they calculated this number unless you're interested in hearing some creative expletives.
+<p>
+A novelty this year was the introduction of a second keynote in the afternoon, with a more technical vocation.  Tim Lindholm and Graham Hamilton (of JDBC and JavaBeans fame) hosted this session.  While I find Graham highly enjoyable, even despite the aridity of the topic he presented (the dozens of Java API's for XML), Tim has this extremely annoying habit of repeating portions of his sentences several times ("So so so this Java API will allow allow allow you to...").  Unfortunately, I started paying attention to his stutter way too much, and I lost interest in his presentation.
+<p>
+The rest of the day was spent getting drunk at the BEA open house, but you already know that :-)
+
+
+<p>
+
+<span class="header">
+<h3>
+Tuesday
+</h3>
+</span>
+<p>
+
+
+The keynote featured James Gosling, whose appearance is always eagerly expected.  He is not the most charismatic speaker but his teddy-bear attitude added to the respect he gained in the Java community makes the JavaOne audience totally devoted to him.  After a mildly amusing video followed by the very anticipated and now ritual t-shirt throwing, James got a little bit more technical.
+<p>
+He mentioned two big additions coming to Java:
+<p>
+<ul>
+<li>Assertions (already in 1.4)
+<p>
+A new keyword assert has been introduced in the language.  It is supported by some new support classes (Error, etc...) and a bunch of methods on the classloader to enable or disable the feature.  http://www.jcp.org/aboutJava/communityprocess/jsr/asrt_prop.html
+<p>
+<li>Generics (delayed until 1.5)
+<p>
+This part really distresses me.  Even though Gosling said that he really liked the compromise that the participants in the JCP reached, I still think they are completely missing the target.  In a nutshell, the syntax is C++-like and provides type safety where downcasting from Object was usually needed.  So far so good.  The catch is that the proposal is totally compatible with the current JVM's:  no bytecode ops have been added.
+<p>
+Some of the reasons why I think this is totally misguided:
+<p>
+- It is my experience that type safety is not that big a deal in the day-to-day life of a Java programmer.  There are several occurrences where you can get bitten by this, but I found that only one was admittedly a pain to debug:  putting an object in a HashMap and inverting key and value.  Other than that, I don't get that many ClassCastExceptions with my containers, I usually know what I put in them and the codes that write it and read are typically narrow-scoped (see below for exceptions to this)
+<p>
+- A dynamic cast is costly, even more so when the involved objects implement interfaces.  I think this is the main drawback of lack of templates, and it is not being addressed by the proposal, which is merely syntactic sugar without any runtime impact
+<p>
+- Introspection and heavy distribution of Java code will probably make generics not that relevant anyway.  When an EJB returns a collection of objects to a client, generics don't add a lot of robustness ti the application
+<p>
+It would be unfortunate for Java if generics made it into the language.  I really loved templates in C++ (the C++ committee guys really know their stuff) but they are not welcome in Java.
+<p>
+Okay, end of rant.  On with the keynote.
+</ul>
+
+
+<p>
+Gosling was followed by Nokia's president, who delivered his pitch in a drone voice that put me to sleep.  I decided that my office chair was more comfortable for naps, so I left at this point, therefore missing Pat Sueltz speech as well.  Yes, if you remember my report last year, I didn't exactly enjoy her presentation back then, and while there would probably be some entertaining value listening to her spewing her usual nonsense, I decided I'd rather catch her on the webcast (which I couldn't get to work.  Of course, Sun won't use any of the popular streaming media).
+<p>
+<span class="header">
+<h3>
+Thursday
+</h3>
+</span>
+<p>
+
+
+This morning featured three keynotes:  Pat Sueltz, Bill Coleman and Larry Ellison, and it was by far the most enjoyable keynote I have attended to in years at JavaOne.
+<p>
+You might want to take a look at last year's report (http://beust.com/cedric/javaone00.html) before reading further.
+<p>
+So I was kinda curious to see if Pat could top her performance of last year, and I was actually pleasantly surprised.  She's dropped the attitude and the nonsense and her talk wasn't horrible, just plain boring.  She focused on the JCP and how it enables every Java developer to work together.  Amazingly, she still managed to fill half an hour with her endless trite comments.
+<p>
+Then Kanegaard invited Bill on stage, preceded by a short video showing two developers (one non-Weblogic and Weblogic, who was nobody else than Chris) busy cranking up code.  The non-Weblogic guy keeps bragging while Chris silently pretends typing code while he's actually playing Solitaire (I caught that).  I was a bit disappointed by this video, I expected a solid punchline or something more substantial than the end slogan, but well.
+<p>
+Then Bill stepped on stage.  While I'm obviously biased, I have to say he was extremely good and entertaining, despite the seriousness of his overall presentation (hardly any jokes).  Bill proceeded to talk about BEA's platform vision, how it fits with Weblogic Integration, announced the 6.1 beta, WLI and BEA Portal.  I think he made a very good job at concealing the pitch aspect of his presentation, probably because unlike most of our competitors, we do have most of the products we are presenting.  And to prove this very point, Chris and Scott stepped on stage for a little demo.
+<p>
+The demo was focused on Web services and it went extremely well (note to Scott:  don't roll your sleeves, you look like you just escaped from a mental asylum).  The little Swing application first showed how you can connect and use two Web services (one giving the local traffic and one on Babelfish) and then took it one step further by creating a composite service mixing these two.  It took about two minutes to create the personalized service and to see a French report of traffic on I-80, which I thought was pretty neat (and based on what I heard at the booth, I'm not the only one).  Kudos to Todd, Chris and Manoj for pulling this off without a hitch (although I hear we redefined the term "fail over" for this demo ;-)).
+<p>
+Of course, a demo is always important, but it was extremely fitting in this particular case because the audience got a glimpse of a long-term vision, which is what they expect to hear from a CEO at a JavaOne keynote, but we also showed them something that is very close to their day-to-day preoccupations, and how we are actually materializing Web services on their machine here and now.
+<p>
+Before leaving, Bill concluded with "Please note that I have proceeded with this presentation without blowing up.  Unlike the next guy...".
+<p>
+Big laughs, then Larry steps on stage, introducing himself as "the next guy" (and doing repeatedly so during his presentation).  I have to give him credit, he has repartee (which should be pronounced "reparty" by the way ;-)).
+<p>
+Still, you could see that Larry wasn't exactly pleased with neither Bill's presentation nor the nasty concluding comment, and while he managed to keep a soft-spoken tone and self-contained attitude during the first half, he was stuttering and tripping on words quite often in the rest of his talk.
+<p>
+Larry's presentation reeked of desperation.  All he was able to come up with is an endless stream of slides with numbers and outrageous claims in them (such as "Best J2EE server").  The main point that Larry was trying to drive was that they are cheaper and faster than BEA at caching and that their download size is smaller, hence showing that their code is more efficient since it is lightweight.  I'm not making this up.  He was basically saying "Download our software, it's only ten meg big" (and I expected at this point that he would drop on his knees and say "Please").
+<p>
+One funny statistics was with IBM's own benchmark.  First Larry showed IBM's claims, that they are twice faster than we are.  The second slide showed the real facts:  they aren't!  Oracle ran this benchmark and found us faster.  And of course, the next slide shows Oracle beating both BEA and IBM hands down.  I guess in certain areas, Ellison finds it easier to bully IBM than us :-)
+<p>
+Eventually, Larry ran out of numbers so he called Akamai's CEO on stage, who took over and drowned us in another logorrhea of statistics.  The only thing is that I trust Akamai's numbers.  These guys are good, and they actually deliver, as you probably noticed if you've been downloading big files from various Web sites these past months (it's always interesting to hover on a link to see where it is coming from... my own experience shows that Akamai is very strong in that area).
+<p>
+Still, Conrades was pitching his company and it was unclear how Oracle was benefiting from his presence on stage.  When he left, Ellison did a demo of PetStore (cheers, applause) and of an interesting-looking development environment that allows you to modify J2EE code on the fly.  This is probably the only part that would be worth remembering, although even this demo failed to convince me for a simple reason:  it showed that an initial query on the PetStore took a long time, then debugged it, noticed that some variables should be final, fixed it, recompiled the code, repeated the query and... switched to a different window to show that the access time had been brought down from five seconds to one.
+<p>
+Why didn't we see that in action?  Why did he switch the window and show us the statistics instead?  Now that would have been convincing at least, but the way they did it, there is no proof whatsoever that the whole thing wasn't rigged.  Which pretty much summarizes Ellison's talk:  a lot of claims and graphs but not one single hard evidence.  Larry dodges the issue by saying "You don't believe us, try it yourself!".  How about convincing us that our time will be well spent first?
+<HR>
+
+<p>
+
+<A HREF="index.html">Back to my home page</A>
+</BODY>
+</HTML>

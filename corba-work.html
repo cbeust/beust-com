@@ -1,0 +1,141 @@
+<html>
+<head>
+<title>Past CORBA experience</title>
+</head>
+<body bgColor=#cccccc>
+<h1>
+<p align="center">
+Past CORBA Experience
+</p>
+</h1>
+
+<h3>
+<p align="center">
+Cedric Beust (Cedric.Beust@sun.com)
+</p>
+</h3>
+<p>
+<p>
+<p>
+
+I first became acquainted with CORBA during my PhD, which examines
+the impact of distributed computing on traditional graphical
+user interfaces. CORBA did not exist when I started my PhD so I was
+using mainly raw TCP/IP and a Sun product called Tooltalk, also
+referred to as a "software bus". This messaging API (as opposed to
+function based API) allowed to connect several tools to a central "bus"
+where they could interact and send events. The first version of CORBA
+was released by the end of my PhD thesis and I started using ORB's by
+then (mostly Post Modern Computing's Black Widow). 
+<p>
+Then I was hired by Ilog (http://www.ilog.com) where I worked on a
+product called Ilog Broker. This software library also predates CORBA
+and its goal is to allow seamless distribution of existing C++
+code. You take an existing C++ header file, add some keywords (like
+ASYNC, SYNC, OUT/IN for parameter passing, etc...) and Ilog Broker
+will generate stubs to make your class remotely callable. When I
+joined Ilog, Ilog Broker was using RPC as the underlying communication 
+medium.
+<p>
+
+My job was to allow CORBA to be used instead of RPC. The tool would
+have to generate IDL out of the annotated C++ header files and would
+also create appropriate stub TIE files that had to concile both the
+CORBA Dynamic Invokation Interface all the while being able to access
+Ilog Broker's internal API. The CORBA framework had to allow the same advanced functionalities as the RPC one, including pass-by-value of objects and asynchronous constructors (which CORBA doesn't have and was critical to all our customers).
+<p>
+
+Ilog Broker is a both multi-thread safe (can safely be called from
+multiple threads) and multi-thread hot (spawns several threads itself)
+library. Therefore, I had to deal with these issues while inserting an 
+ORB in the whole process. Our ORB of choice was Orbix. I started with
+early versions of Orbix (1.2) and carried on until 2.3c. Initially,
+the multi-thread support was very crude, not flexible and extremely
+buggy. But this got better in Orbix 2.
+<p>
+
+I particularly enjoyed the flexibility offered by Orbix' threading
+policies. It was important to be able to specify the granularity of
+multi-threading : thread per object, thread per request or thread
+per call. No ORB was as flexible then. I eventually came up with one
+main thread receiving all incoming CORBA requests and dispatching them 
+to the appropriate user objects. The said objects were blocking on
+their own condition variable, waiting to be awakened by the main
+thread. This architecture turned out to work quite well both on
+Solaris and NT (NT requires some additional tweaking, though : it is
+necessary to create an invisible window with its own thread and from
+there, post wake-up messages on the main thread).
+<p>
+
+Orbix was suffering from two major drawbacks by then : the NT version
+was very unreliable and Iona's support was extremely slow. This was
+the main obstacle to delivering a product using this ORB and caused us 
+to slip many times. Another problem, which all ORB's had, was that the 
+POA did not exist then and therefore, all vendors had to supply their
+own proprietary solutions to implement multi-threading, interface
+repository, object activation, etc...
+<p>
+
+During this period, we considered switching away from Orbix. I was
+asked to evaluate several ORB's. Therefore, I ran several benchmarks
+on the current ORB's and analyzed their API's and support. In the end, 
+the two candidates left were Orbix and Expersoft's PowerBroker.
+<p>
+
+PowerBroker was an extremely well designed ORB. It was very flexible,
+supported CORBA 2 far better than any other ORB then and, more
+importantly, was working fine on NT and even offered a CORBA-COM
+(actually, only OLE and automation servers, but it was already much
+more than most of its competitors) bridge that I tested with success
+on many configurations : I was able to have NT/Solaris Java/C++ CORBA/OLE
+processes interact with very little effort. We eventually ruled out
+PowerBroker because of its insufficient (for our needs)
+multi-threading support and also mostly because our customers were
+requesting Orbix.
+<p>
+
+Some time later, I extended my benchmarks to include Java. Few Java
+ORB's existed by then, but OrbixWeb was getting better and better. I
+also included RMI in my benchmarks and the results were quite
+amazing : RMI was about ten times slower than any other
+ORB. Intrigued, I posted my benchmarks on the CORBA newsgroups and the 
+Java mailing-lists. This is when I was contacted by Bob Orfali and Dan 
+Harkey.
+<p>
+
+They were working on their latest CORBA book and they were
+incorporating Java in the picture. They asked me if they could use my
+benchmarks in their book. Later on, we kept exchanging data as Bob was busy
+evangelizing people about CORBA and Java, and how RMI would be harmful 
+to the cohesion of the CORBA movement, which was perceived as the only 
+opponent to Microsoft's COM. RMI had to drop its proprietary protocol
+and run over IIOP or it would fail.
+<p:
+
+Bob, myself and another person, Jeff Nelson, voiced our concerns on
+comp.object.corba but we were received with a clear hostility from the 
+Java crowd. Most of them didn't see any need to have RMI over IIOP and 
+actually, some were affirming that it was simply not possible (the
+main obstacles were : distributed garbage collection and
+pass-by-value). Jeff eventually wrote a short prototype showing how
+this could be done and from then, the heated debate turned to more
+technical grounds. Jeff's work convinced Chris Stone and JavaSoft
+eventually agreed to implement RMI over IIOP (more on Jeff's work can
+be found at http://www.distributedobjects.com/portfolio/rmicorba).
+<p>
+
+Since then, I have kept in touch with Bob, Jeri and Dan and eventually 
+met them a few years ago. As an aside, I have recently joined Dan Harkey's
+distributed computing program in San Jose State University.
+<p>
+
+I occasionally like to write articles or reviews (http://beust.com/cedric)
+and I like to keep up to date with the latest technologies, including
+competings ones (ATL and COM mostly).
+<p>
+<p>
+<hr width="100%">
+<a href="index.html">Back</a>
+
+</body>
+</html>

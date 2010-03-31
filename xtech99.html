@@ -1,0 +1,778 @@
+<HTML>
+<HEAD>
+   <META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+   <META NAME="GENERATOR" CONTENT="Mozilla/4.05 [en] (X11; I; SunOS 5.5.1 sun4m) [Netscape]">
+   <TITLE>XTech 99 : The XML Technical Conference
+</TITLE>
+<STYLE type="text/css">
+<!--
+
+BODY {
+text-align: justify;
+background: white
+}
+
+.remark {
+font-style: italic;
+font-family: times ;
+}
+
+.date {
+font-size: 24pt;
+}
+
+-->
+</STYLE>
+
+</HEAD>
+<BODY>
+
+<CENTER>
+<H1>
+XTech 99 :&nbsp;XML&nbsp;Technical conference</H1></CENTER>
+
+<CENTER>
+<H2>
+San&nbsp;Jose Convention Center, Mar 7-11, 1999</H2></CENTER>
+
+<CENTER><A HREF="mailto:Cedric.Beust@sun.com">Cedric&nbsp;Beust</A></CENTER>
+&nbsp;
+<H2>
+General remarks</H2>
+XML is taking off. Of course, all the participants
+in this conference have an interest in XML, but it was pretty clear from
+all the talks that everyone agrees on its soundness. Everything
+is not so rosy, though.
+
+<P>One of XML's main strengths is that it's extremely bare-bone and simple.
+This is also its drawback : in order to be really useful, XML must be complemented
+with a host of additional standards that take on where XML leaves off.
+Thus the necessity of the DOM, RDF, CSS, XSL, XPointer,
+XLink, and ECMAScript. One of the dangers is that XML might collapse under
+the weight of all these additional standards, which are far from being
+simple (check out CSS2 or Schemas).
+
+<P>XSL and Java are definitely hot. A good property of XSL is that it can
+be used both on the server (on the short term, to output HTML) and on the
+client, on next-generation browsers (IE5, Gecko). XSL is powerful but it
+also has blatant lacks. It's hard to predict where is it headed now since
+the standard is still under way, but let's hope that it will address all
+the issues. Meanwhile, vendors are using subsets of the norm and mixing
+those with proprietary solutions (see the talk on the "Coolest XML client-side
+application").
+
+<P>
+<SPAN class="remark">
+Text in italics and enclosed in brackets reflects personal opinions and
+is not part of the talk I am currently attending.
+</SPAN>
+
+<P>I assume in this talk that you are familiar with the current new Web
+standards, like XSL, DOM, CSS, etc... If I am being a little too specific
+in the following texts, please let me know <A HREF="mailto:cedric.beust@sun.com">by
+email</A> and I will try and add a glossary to this article with broad
+explanations on how all these acronyms fit in the Big Picture.
+
+<P>&nbsp;
+<BR>
+<HR WIDTH="100%">
+<H2>
+<SPAN class="date">Monday, Mar 7, 1999&nbsp;</SPAN></H2>
+&nbsp;
+<H2>
+<SPAN class="presentation-title">Tutorial : RDF and Metadata, Ora Lassita
+(Nokia), Bob Schloss (IBM Watson)&nbsp;</SPAN></H2>
+<SPAN class="remark">[Note : <A HREF="http://www.w3.org/RDF">RDF</A> is
+the Resource Description Framework, a standard put forth by the W3C to express
+meta-data on any kind of documents. See their <A HREF="http://www.w3.org">Web
+site</A> for more details]&nbsp;</SPAN>
+<H3>
+What is wrong with the Web ?</H3>
+The Web is suited for machine to machine interaction but its content is
+formatted for human interpretation. It is machine readable but not machine
+understandable, and therefore, hard to automate. Some metadata is needed,
+data with structure and semantics.
+
+<P>A Web Metadata is a machine understandable description of Web resources
+(and a Web resource is an object addressable by a URI).
+
+<P>There are a lot of possible applications to Metadata :
+<UL>
+<LI>
+cataloging</LI>
+
+<LI>
+resource discovery</LI>
+
+<LI>
+e-commerce</LI>
+
+<LI>
+intelligent software agent</LI>
+
+<LI>
+digital signature</LI>
+
+<LI>
+content rating</LI>
+
+<LI>
+IP rights</LI>
+
+<LI>
+privacy and policies</LI>
+
+<LI>
+personalization and customization</LI>
+</UL>
+<SPAN class="remark">[First question to speakers : is Metadata going to
+replace DTD's ? Answer : the W3C Schema Working group is working on that.
+It's true that there are a lot of commonalities]&nbsp;</SPAN>
+
+<P><SPAN class="remark">[Question : what happens when we have 32 different
+"standard" DTD's ? Answer : There is an ongoing work to register DTD's
+in a central repository. And even though DTD's may differ superficially,
+a lot of doctypes are actually compatible. Use XSL to make up for the differences.
+]&nbsp;</SPAN>
+
+<P>In brief, RDF is machine understandable, I18N compatible, domain neutral
+and application neutral. It provides interoperability with no or little
+ambiguity. It came from META and PICS.
+
+<P>As of today, there are three Propositions&nbsp;<SPAN class="remark">[i.e.,
+not Recommendations (in W3C terminology).]&nbsp;</SPAN>: PICS-NG (W3C),
+MCF (Netscape) and XML Data (Microsoft).
+<H3>
+Model and Syntax</H3>
+RDF in a few words :
+<UL>
+<LI>
+domain neutral, application neutral, I18N</LI>
+
+<LI>
+viewed as a DAG on an object oriented tree</LI>
+
+<LI>
+uses XML</LI>
+
+<LI>
+machine understandable</LI>
+</UL>
+<SPAN class="remark">[At this point, I can't resist and ask a question
+that has been nagging me for a while. The speakers keep mentioning this
+"machine understandable" thing but XML, as a text format, is much more
+human-readable than machine readable. Why isn't RDF using a binary format,
+much more appropriate for machine interpretation ? Answer : the speaker
+(Ora) agrees and actually, his first proposition to the W3C was not XML.
+But he was turned down and XML was eventually chosen. It doesn't make much
+sense in that respect, except maybe that XML is trendy].&nbsp;</SPAN>
+<BR><SPAN class="remark">[I still find that there is a greater issue at
+stake here. XML has very good properties but we can very much predict that
+it will be abused. I have the feeling that RDF as XML is such an abuse.
+This could be reasonably addressed by compression or tokenization, though,
+but my point is that nobody is writing XML or HTML documents by hand (except
+for me, currently writing HTML in emacs ;-)) and that the "readability"
+point for XML is not always relevant. ]&nbsp;</SPAN>
+
+<P>As a conclusion to this debate, RDF is independant of XML. Other syntaxes
+are possible.
+<H3>
+RDF Model</H3>
+There are three different types :
+<UL>
+<LI>
+Resource (anything that has a URI)</LI>
+
+<LI>
+Property (a relation or an attribute used in describing resources)</LI>
+
+<LI>
+Statement (resource + property + value)</LI>
+</UL>
+Values are not only strings : they can be arbitrarily complex tree structures
+and can also be embedded or referenced (with links).&nbsp;<SPAN class="remark">[There
+is no such thing as an RDF DTD : XML is not even sufficient for RDF, they
+are using a lot of namespaces and sometimes, they go beyond what is actually
+specified. ]&nbsp;</SPAN>
+
+<P><SPAN class="remark">[One more reason in my eyes why XML is not an appropriate
+format for RDF. Their simple examples, using merely two or three namespaces,
+were already painful to read. And all that for simple annotations.&nbsp;</SPAN>
+<H3>
+Containers</H3>
+Containers allow to group objects. There are three different types of containers
+:
+<UL>
+<LI>
+bag (unordered)</LI>
+
+<LI>
+seq (ordered)</LI>
+
+<LI>
+alt (represents alternatives. For example, it may be the titles of a book
+in different languages</LI>
+</UL>
+It is possible to create collections based on URL patterns.&nbsp;<SPAN class="remark">[Actually,
+the patterns are limited to prefixes].&nbsp;</SPAN>
+
+<P>Duplicates are allowed since there are no mechanisms to enforce uniqueness.
+
+<P>Example of a container in pseudo-language :
+<BR>&nbsp;
+<BLOCKQUOTE><TT>{ "http://...", dc:Creator, x}</TT>
+<BR><TT>{ x, rdf:_1, "Ora" }</TT>
+<BR><TT>{ x, rdf:_2, "Ralph" }</TT>
+<BR><TT>{ x, rdf:Type, rdf:seq }</TT></BLOCKQUOTE>
+
+
+<P><SPAN class="remark">[I find this specification in pseudo-language much
+easier to read than the actual XML source !]&nbsp;</SPAN>
+<H3>
+Referents</H3>
+You can reference groups of URI's of different manners :
+<UL>
+<LI>
+A URI : about=</LI>
+
+<LI>
+An implicit group of URI's : aboutEachPrefix=</LI>
+
+<LI>
+An explicit group of URI's : aboutEach=</LI>
+</UL>
+For example, it is possible to specify that all documents of a given site
+(or sub-tree in the site) must receive a certain meta-data (like a copyright).
+
+<P><SPAN class="remark">[Overall an enjoyable talk although the afternoon
+was much more boring, going through a lot of different sources and explaining
+them line by line. I have a few concerns, though :
+<UL>
+<LI>
+Even though RDF is about meta-data, all the examples given by the speakers
+were much more "data" than "meta-data" to me. Which leads me to the thought
+that RDF and XML are treading on the same grounds and that maybe, one of
+them will be absorbed by the other in a near future.<BR>
+<BR></LI>
+
+<LI>
+However interesting, RDF is still being used very marginally. Gecko makes
+heavy use of it but it's all internal and not exposed for general use.</LI>
+</UL>
+</SPAN>
+
+<P>
+<HR WIDTH="100%">
+<H2>
+<SPAN class="date">Tuesday, Mar 8, 1999&nbsp;</SPAN></H2>
+&nbsp;
+<H3>
+<SPAN class="presentation-title">Keynote : Jon Bosak&nbsp;</SPAN></H3>
+
+
+<P>Jon Bosak opens the conference with his keynote. His goal is to get
+over with "Boring Old Documents" (the current documents you can find on
+the Web) and switch to the next step. It is vital to separate content and
+structure and then format them (HTML mixes all that). Whatever may come
+in the future, documents will live, they won't go away.
+
+<P>The current trend is to move away from procedural and toward declarative
+and object oriented documents (Poscript vs PDF). Printing will not disappear
+either. Actually, formatting is a superset of printing. A printed document
+allows very limited interaction whereas an online document will let you
+do almost anything.
+
+<P>Bosak then shows NetPost, a prototype used by Sun to illustrate the
+benefits of XML. It is an online newspaper that can change its look completely
+without changing the content. With only one click, the shown pages switch
+from the the "NY Post" layout to the ESPN one. Advertisement will gain
+more and more importance. Online documents allow to break new grounds in
+that respect : you can customize your ad depending on the content of the
+article (for example, if an article tells the story of a plane crash, it
+would be a bad idea for a company like United Airlines to advertise on
+that very page).
+
+<P><SPAN class="remark">[I am puzzled : I am not sure an online newpaper
+is a good illustration of the concept. People will never leave their paper
+newspaper for an online one. He could have picked a much more telling example,
+like one of a portal gathering summaries of major headlines.]&nbsp;</SPAN>
+
+<P>However good XML is, its rendering is limited to HTML right now, and
+it is trapped in Middleware. That's why Sun wants to jumpstart XSL.
+
+<P><SPAN class="remark">[Bosak then announces that Sun is offering a $30,000
+grant for whoever will be able to add XSL support in Gecko (the new open-sourced
+Navigator) by the end of the year. The announcement comes as a complete
+surprise and still makes us wonder. In my opinion, it just can't be done.
+More on this below with the <A HREF="#trenches">CiRTECH presentation</A>.]&nbsp;</SPAN>
+
+<P>Bosak concludes that "we are getting out of proprietary format, and
+XML is making that possible".
+
+<P><SPAN class="remark">[I agree, and as a matter of fact, Office 2000
+will come out with full XML support for save files, thus making the binary
+upward compatibility headaches of current Word and Excel documents history.
+However, I am definitely not convinced that this is happening because of
+Sun's sheer mental force. XML is just an obligatory step now, and Microsoft
+is pushing it more than anybody else. However, this will most likely allow
+us to see more and more non-Microsoft document viewers, and that is a good
+thing.]&nbsp;</SPAN>
+<BR>&nbsp;
+<H2>
+<SPAN class="presentation-title">Keynote : New Web standards&nbsp;</SPAN></H2>
+
+
+<P>The next keynote is a panel of people taking parts in the various W3C
+working groups. Five of them talked about the various activities they are
+in charge of :
+<BR>&nbsp;
+<UL>
+<LI>
+&nbsp;<A HREF="http://www.w3.org/TR/1998/WD-xlink-19980303">XLink</A> :
+generalizes the notion of hyperlinks for XML&nbsp;<BR>
+<BR></LI>
+
+<LI>
+Schema : defines the structure, content and semantices of XML documents&nbsp;<BR>
+<SPAN class="remark">[Schemas are on a collision course with DTD's. I am
+not sure which one will win, although I would vote for Schemas. DTD's are
+being pushed by SGML hard core gurus but some of their concerns are not
+relevant to the current problem, and they are being way too religious about
+it, trying to push features that don't make sense and dismissing any new
+addition as useless.]&nbsp;</SPAN>&nbsp;<BR>
+<BR></LI>
+
+<LI>
+Fragments : Formalizes how it is possible to work with XML document fragments&nbsp;<BR>
+<BR></LI>
+
+<LI>
+<A HREF="http://www.w3.org/Style/XSL">XSL</A> : The style sheet language
+for XML.&nbsp;<SPAN class="remark">[This is undoubtedly the area where
+most of the things will happen in a near future. Right now, XSL is the
+only way to bridge XML and HTML, and in the future, it will move toward
+the client and will allow things that we can barely envision right now.]&nbsp;</SPAN>&nbsp;<BR>
+<BR></LI>
+
+<LI>
+<A HREF="http://www.w3.org/DOM">DOM</A> : the Document Object Model, which
+is at the core of the whole new Web. Just ask Arnaud for the details, he
+wrote it ;-)</LI>
+</UL>
+&nbsp;
+<H2>
+<SPAN class="presentation-title">SVG : Scalable Vector Graphics&nbsp;</SPAN></H2>
+
+
+<P>This talk was made bu Jon Ferraiolo, who works for Adobe. Adobe is one
+of the main proponents (and main implementor) for this spec. The idea is
+to be able to specify 2D vectorial graphics in XML. Graphic is a very important
+piece of document presentation and it is blatantly absent of current Web
+standards. SVG addresses this need.
+
+<P>SVG is a joint work by Microsoft, AutoDesk, HP, Macromedia, Adobe and
+Visio. It must be
+<UL>
+<LI>
+automatically editable</LI>
+
+<LI>
+readable by humans</LI>
+
+<LI>
+easy to generate by server-side technology (CGI, etc...)</LI>
+</UL>
+SVG offers a very rich feature set. It intends to replace totally GIF,
+JPG and other PNG as an image format. It allows full resolution printing,
+progressive rendering&nbsp;<SPAN class="remark">[This means that its content
+will be displayed incrementally, so as not to leave the user with a blank
+page while it is loading. It's a good thing that they're aware of the importance
+of such a feature].&nbsp;</SPAN>Another crucial point : texts embedded
+in the graphics must appear in textual form in the source, so that they
+can be accurately archived by search engines.&nbsp;<SPAN class="remark">[Another
+fine idea]&nbsp;</SPAN>Finally, it must supply interactivity and animation.
+
+<P>SVG is made of three distinct items :
+<UL>
+<LI>
+Shapes</LI>
+
+<LI>
+Texts</LI>
+
+<LI>
+Images</LI>
+</UL>
+It features gradients, patterns, text paths and alpha masks&nbsp;<SPAN class="remark">[Alpha
+blending is a feature that makes a lot of promises for graphically appealing
+documents].&nbsp;</SPAN>
+
+<P>Jon then proceed to do a demo. Pretty simple : the city of SF is represented,
+then zoomed, showing coffee places. It also illustrates curved text (textpath)
+with appropriate mouseOver() events.&nbsp;<SPAN class="remark">[I was unimpressed
+by the demo]&nbsp;</SPAN>
+
+<P>The main benefits of SVG is : faster downloads, less round trips to
+the server, searchable graphics and scalable and zoomable graphical elements.
+
+<P><SPAN class="remark">
+[A good talk overall but Ferraiolo lacks a lot
+of "bigger picture" vision. He didn't mention any drawback to SVG, not
+even the most obvious one : scalable graphics imply much bigger documents
+for possibly unused data. This is where the current map Web sites shine : they
+only show you the map you want and will cause a round trip at each zoom,
+but it's very much acceptable even with a slow connection.
+
+<P>There is definitely a need for 2D graphics on the Web, but I am not
+so sure it has to be vectorial. We have a few ideas on that one, but it's
+still confidential ;-)]&nbsp;</SPAN>
+</SPAN>
+<P>
+
+<SPAN class="presentation-title">
+<H2>
+XJ2 : Java based XML and XSL technology
+</H2>
+</SPAN>
+
+<P>XJ2 is a Java XML parser (tests both well-formedness and validity).
+It is SAX compliant and implements XML Namespaces. It implements the first
+half of XSL's norm (Transformation) and is being realized in collaboration
+with DataChannel. It supports both DTD's and DCD's, including strong data
+typing.
+
+<P>Available transformations as of today :
+<UL>
+<LI>
+XML -> HTML (3.2, 4.0, CSS)</LI>
+
+<LI>
+XML -> XML</LI>
+
+<LI>
+XML -> anything</LI>
+</UL>
+<SPAN class="remark">[not sure what this last one means]&nbsp;</SPAN>
+<P>
+<SPAN class="remark">[The
+talk was fine until then. XJ2 definitely looked like something worth checking
+out. However, the speaker started contradicting himself by claiming support
+for a wide range of heterogeneous browsers but then admitting that they
+only work on the latest IE. Pressed to answer about additional features,
+the speaker would consistently answer "if it is implemented in IE5, we
+will do it".
+
+<P>It more and more looked to me like they must have some special contract
+with Microsoft but still, have no idea of what lies ahead. I am definitely
+convinced that they are piggybacking MSIE5 but I completely fail to see
+what their goal is or the point in their work. Oh well.]&nbsp;</SPAN>
+</SPAN>
+
+<P>
+<P><SPAN class="presentation-title">
+<H2>
+Datacraft : databases on the Web&
+</H2>
+</SPAN>
+
+<P>This tool comes from IBM Research. In order to achieve their e-commerce
+strategies, IBM have to deal with major database issues. One of the challenge
+is to map databases (often queried through XML or OO requests) to Web languages
+(XML and HTML). Creating such mappings is not easy and Datacraft aims
+at allowing developers to make this connection with a visual tool that
+will take care of all the gritty details for them.
+
+<P>Datacraft is an application development tool that allows to graphically
+<UL>
+<LI>
+browse database schemas</LI>
+
+<LI>
+browse schema views</LI>
+
+<LI>
+build queries and query results</LI>
+</UL>
+Datacraft liberates application builders from database details. A database
+schema is exported as both XML and RDF. The schema is then graphically
+converted into a query.
+
+<P>XML and RDF are used to describe database schemas and construct the
+query graph. Datacraft uses Resource Attachments (RA) to specify connections.
+The application runs as a Swing applet and therefore, needs a Swing-compatible
+browser (not very common).
+
+<P>
+<SPAN class="remark">
+The approach is definitely interesting but I suspect
+the speaker to have left aside all the important stuff. The core of this
+tool is in RA's, which specify how an XML/RDF request is mapped into a
+database query and reciprocally. Since this specification has to be generic,
+I suspect that writing RA's must be extremely tedious. It's probably okay
+to use Datacraft when the appropriate RA exists, but it's most likely a
+daunting task to write one.
+
+I also regretted that he wasn't more explicit about how they use RDF,
+since it is a format that can be easily abused and is definitely not easy
+to write either.
+</SPAN>
+
+<P>
+
+<P>
+
+<H2>
+<P><SPAN class="presentation-title">The Coolest Client-side XML application&nbsp;</SPAN>
+</H2>
+
+<P>Tony Stewart, from Rivcom, a small (~10 employees) company, gave this
+talk. He spent about ten minutes raving about what they did and explaining
+that he wouldn't have the time to explain it all within 45 minutes.
+
+<P><SPAN class="remark">[I was already hating the talk before it even started.
+Although this guy definitely has charisma and knows how to capture an audience,
+his neverending rave without showing anything was very annoying.]&nbsp;</SPAN>Rivcom
+has had to write a prototype of a Web application that they would show
+to VC's in order to raise fundings. They were understaffed and faced impossible
+deadlines&nbsp;<SPAN class="remark">[bla bla bla, yeah, right, Rambo]&nbsp;</SPAN>but
+they took on the contract. They needed a shared XML database and had to be
+able to update data in real time, both for the developer of the site,
+but for the customer. Stewart then starts a first demo.
+
+<P><SPAN class="remark">[The demo consisted in store listings that are
+being updated in real time. The GUI and styles are also updated on all
+open pages in real time. Now the guy has my attention. What he is showing
+can definitely not be done with HTTP. My first guess is an underlying socket
+with a file protocol. This will turn out to be WinINet and ftp later in
+the talk.]&nbsp;</SPAN>
+
+<P>They use a proprietary language for both styles and behaviors (their
+project started two years ago, CSS did not exist then and Javascript was
+barely a blip on the radar). The whole demo fits in 13 XML files and uses
+some additional Javascript with empty DIV statements.
+
+<P>Rivcom was in charge of the browser side functionalities. The work was divided
+in four tasks, four people and they used Frontpage and CSS to lay out the
+basic look. Then came some C++ programming (ActiveX) and scripting. The
+server side occupied three people.
+
+<P>The main guidelines they followed to build this prototype are :
+<UL>
+<LI>
+Be pragmatic, use long file names. The developer must be able to understand
+what is going out by consulting the generated source.</LI>
+
+<LI>
+Ignore multi user issues (it's a prototype, it has to work and be completed
+quickly)</LI>
+
+<LI>
+Make use of as many existing Web technologies as possible</LI>
+
+<LI>
+Expect to generate "real" CSS in the future</LI>
+
+<LI>
+Use ftp to upload and then issue a HTTP GET request to notify the server
+that it has to reload some files off the database.</LI>
+</UL>
+<SPAN class="remark">[Now that last one is neat. Notice that it's a GET
+request but what is really returned is just a true/false value, to indicate
+whether the files could be successfully retrieved or not.]
+</SPAN>
+
+<P>
+<SPAN class="remark">
+[I wasn't very optimistic at the beginning of this talk but it turned
+out to be really interesting. Of course, certainly not as earth-shattering as the speaker
+had announced, but one should never set the bar for oneself too high. As
+goes a popular golf saying : "Never start a swing with something as predictible
+as 'watch this'".
+</SPAN>
+<P>
+<SPAN class="remark">
+Anyway. While their solution relies on a great part on proprietary standards,
+these guys are definitely on to something. Their exploration of this area
+shows where the needs are and their prototype is a glimpse of future Web
+applications. This is as much hacky as Web programming can be. I like that.
+But I hate people who brag about their work that much ;-)]
+</SPAN>
+
+<P>
+<H2>
+<SPAN class="presentation-title"><A NAME="trenches"></A>Mozilla from
+the trenches&nbsp;</SPAN>
+</H2>
+
+<P>Michael Leventhal works for CiTEC, a small company in Finland. They
+are leveraging Mozilla's open source to hack into the code and add useful
+functionalities. Then they probably want to sell the browser with their
+added value, although he didn't make their business plan extremely clear.
+
+<P>This talk was not very interesting from a technical point of view. Leventhal
+emphasized the fact that dealing with Mozilla source code is Really Really
+Hard ("if you can defeat the Russian army, you should have no problem compiling
+Mozilla"). The code weighs 5M LOC.
+
+<P>
+
+<P>
+<SPAN class="remark">
+[A few words on Mozilla.
+</SPAN>
+
+<P>
+<SPAN class="remark">
+Mozilla uses its own COM-like format (XpCOM, which can expose COM interfaces)
+and they invented their own cross platform GUI specification format, based on XML and
+RDF. They have done an impressive amount of work in that area. I strongly
+suggest you to <A HREF="http://www.mozilla.org/">take a look</A> at their technical data and especially XUI and XPFE.
+The sad news is that while their approach is definitely interesting from
+a Research point of view, it is holding them back a lot, while Microsoft
+is not hampered at all by this problem.
+</SPAN>
+<P>
+<SPAN class="remark">
+More on Gecko <A HREF="#gecko">below</A>. Leventhal also mentioned the $30,000 grant offered by Sun to add XSL into
+Mozilla but my guess is that they can never make it by this summer].
+</SPAN>
+<P>
+<BR>
+<HR WIDTH="100%">
+<H2>
+<SPAN class="date">Wednesday, March 10, 1999&nbsp;</SPAN></H2>
+
+
+<P>
+<H2>
+<SPAN class="presentation-title">Keynote : How to find a hit-man online,
+David Siegel&nbsp;
+</SPAN>
+</H2>
+<BR>This humoristic presentation was given by David Siegel, a GUI guru,
+who realized (among other things) some of the best-selling typefaces and
+also authored "Secrets of Successfuly Web Sites".
+
+<P><SPAN class="remark">Nothing much to say on this one. It was entertaining
+but I can't think of anything really new that was said during this talk.&nbsp;</SPAN>
+<P>
+<P>
+
+<H2>
+<SPAN class="presentation-title">The
+DNA Infrastructre in Windows, J. Allard&nbsp; (Microsoft)</SPAN>
+</H2>
+
+<P>Just a simple explanation on how Microsoft sees the
+Internet and how it can be put to work for enterprise business.
+
+<P>
+<P>
+
+<H2>
+<SPAN class="presentation-title">XML Beans, David Epstein IBM Research&nbsp;</SPAN>
+</H2>
+
+<P>The BML (Bean Markup Language) is a language that describes component
+based applications. It is made of a BML Processor (that realizes instances
+of the language) and a BML Player (a runtime kernel that dynamically constructs
+applications).
+
+<P>BML can operate on any Java object (not just Java beans) and provides
+a way to capture the component structure.
+
+<P>The markup is made of two categories :
+<UL>
+<LI>
+Core : bean, string, args, call-method, cast, etc...</LI>
+
+<LI>
+Extras : script, add</LI>
+</UL>
+The BML Processor takes a DOM as input and is self-contained in a 53k JAR
+file.
+
+<P><SPAN class="remark">An interesting approach but to me, Java Beans have
+failed and I don't see in that way their approach can make this change.
+I have yet to see a Bean demo that shows something else than a juggler
+being manipulated at runtime.&nbsp;</SPAN>
+
+<P>
+
+<P>
+<H2>
+<SPAN class="presentation-title">Java standard extensions for XML, Dave
+Brownell (Sun)&nbsp;</SPAN>
+</H2>
+
+<P>Dave gave a quick overview of his work and explained how his XML parser
+was fitting in the bigger picture in Sun's XML strategy.
+
+<P><SPAN class="remark">[A talk that captured the audience's attention
+and probably gave a better idea on Sun's vision for XML. Which doesn't
+differ much from Microsoft's, by the way. All developers interested in
+writing or using an XML parser should definitely check out Dave's work,
+which has a lot of interesting features. ]&nbsp;</SPAN>
+
+<P>
+<HR WIDTH="100%">
+<H2>
+<SPAN class="date">Thursday, March 11, 1999&nbsp;</SPAN></H2>
+
+
+<P>
+<P>
+
+<H2>
+<SPAN class="presentation-title">Keynote : Sun and XML, Jonathan Schwartz
+(Sun)&nbsp;</SPAN>
+</H2>
+
+<P>In this talk, Jonathan gave a very high-level (marketing oriented, not
+technical) overview of Sun's strategy of XML. Somebody pointed out to me that Jonathan managed to give a 45mn lecture on XML without even mentioning the W3C once... not very nice.
+
+<P>
+<P>
+<H2>
+<SPAN class="presentation-title">Keynote : IBM's strategy for XML, Marie
+Wieck (IBM)&nbsp;</SPAN>
+</H2>
+
+<P>IBM's vision for XML.&nbsp;<SPAN class="remark">[A little less interesting
+presentation than Jonathan's, although Marie has a strong presence on the
+scene].&nbsp;</SPAN>
+
+<P>
+<P>
+<H2>
+<SPAN class="presentation-title">XML in IE5 and on the server, David
+Walsch (Microsoft)&nbsp;</SPAN>
+</H2>
+
+<P>David Walsch is the technical product leader for IE5 (final release
+due out next week). In this talk, he demoed all the various supports that
+IE5 offers for new standards.
+
+<P><SPAN class="remark">Even though IE5 is definitely ahead of any other
+browser in the Web Standards Race, David's demo curiously didn't score
+very well on the "Wow" scale. He showed XML mixing with CSS, dynamically
+modifying the graphical layout of several pages. We also saw some XSL (not
+much though) but that was about all.&nbsp;</SPAN>
+
+<P>
+<P>
+<H2>
+<SPAN class="presentation-title"><A NAME="gecko">XML and Related Standards in Gecko,
+Vidur Apparao, Netscape&nbsp;</A></SPAN>
+</H2>
+
+<P>Vidur is the technical lead for the implementatino of the DOM and XML
+for the Mozilla open-source project. I thought that Gecko would pale in
+comparison to IE5 (previous talk) but actually, the demo was okay. However,
+Gecko is clearly way behind IE5 in a lot of areas (except maybe for CSS)
+
+<HR>
+
+<A HREF="index.html">Back to my home page</A>
+</BODY>
+</HTML>

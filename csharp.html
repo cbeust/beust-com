@@ -1,0 +1,297 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type"
+content="text/html; charset=iso-8859-1">
+<meta name="GENERATOR" content="Microsoft FrontPage Express 2.0">
+<title> C Sharp </title>
+<STYLE type="text/css">
+<!--
+BODY {
+text-align: justify;
+background: white;
+}
+
+.code {
+}
+
+-->
+</STYLE>
+</head>
+
+<body>
+
+<h1 align="center">C Sharp overview</h1>
+
+<p>&nbsp;</p>
+
+<h3>Language features</h3>
+
+<ul>
+    <li><em>Overriding must be explicit; it cannot happen
+        inadvertently as in C++ or Java. <br>
+        <br>
+        </em>I am not fond of this feature, and it was turned
+        down by the C++ Commitee years ago for good reasons.One
+        of them being that if a developer writes a method that
+        matches exactly that of a parent class, it's extremely
+        unlikely that they do not want polymorphism to apply to
+        it. Another (more minor) point is that it is certainly
+        going to take me a while to get used to writing <br>
+        <p><SPAN class="code"> <tt>public override string ToString() {...} </SPAN></tt> <br>
+        </p>
+        <p>(and don't even get me started on string with a
+        lowercase s and ToString with a capital T). Oh and
+        override must be used in conjunction with virtual in the
+        derived classes... ugly IMO. <br>
+        <br>
+        </p>
+    </li>
+    <li>Placeholders for string formatting : <br>
+        <p><SPAN class="code"> <tt>Console.WriteLine(&quot;Values : {0}, {1}&quot;,
+        v1, v2); </SPAN></tt> </p>
+        <p>This feature will make definitely make internationalization of
+C# programs easy.  <br>
+        <br>
+        </p>
+    </li>
+    <li>No keywords extends or implements : <br>
+        <blockquote>
+            <p><SPAN class="code"> <tt>public class A : B, IFoo { <br>
+            <br>
+            }<br>
+</SPAN>            </tt></p>
+        </blockquote>
+        <p>The keywords extends and implements have always
+        bothered me. On one side, recommended style is not to put
+        semantics into naming (Sun has been bashing Microsoft's
+        Hungarian notation for that very reason) and on the other side,
+        you need to remember which types are interfaces, which
+        you must implement, and which others are classes, which
+        you must extend. We don't really need those keywords :
+        just impose the first type to be the base class and the
+        other types, the interfaces (I assume that's what C# does).</p>
+        <p>Note that C#, just like Java, has single inheritance
+        of implementation and multiple inheritance of interfaces.
+        <br>
+        <br>
+        </p>
+    </li>
+    <li>All types are objects (e.g. int and System.Int32 are
+        equivalent, although the use of the former is recommended.)
+        Although Smalltalk has cast a bad shadow on this practice,
+        I have always thought the principle was sound and I was
+        hoping that we would reach a point where performance
+        imperatives would no longer make it mandatory to have
+        native types. We'll see if C# finally made that happen.
+        Regardless, this inconsistency in the type system had
+        made it hard for both C++ and Java in many ways : for C++,
+        consider templates, which often have to be specialized
+        for primitive types, and for Java, introspection and
+        runtime discovery must often cater to both type systems
+        and introduce restrictions on primitive types (containers
+        cannot contain them, for example). <br>
+        <br>
+        </li>
+    <li>Jagged arrays (arrays of arrays of irregular size)<br>
+        <br>
+        </li>
+    <li>Microsoft is unfortunately (but not surprisingly)
+        perpetuating its capitalization rules. Method names start
+        with an uppercase letter while some types (not all) start
+        with a lowercase : &quot;object&quot;, &quot;string&quot;
+        but &quot;Main&quot;<br>
+        <br>
+        </li>
+    <li>Reference parameters. The keyword &quot;ref&quot; allows
+        the developer to specify that parameters can be passed by
+        reference. There is a weird twist, though : it must be
+        used in both the declaration and the use of the method.
+        This makes it easy for somebody reading the code to be
+        aware that the method might change the parameters that
+        are given to it. More contestable is the (re)introduction
+        of the &quot;out&quot; qualifier. I wish they had stuck
+        with Ada's &quot;in&quot;, &quot;out&quot; and &quot;inout&quot;.
+        <br>
+        <br>
+        </li>
+    <li>Variable length methods are finally back ! A new keyword
+        &quot;params&quot; allows to declare a method with a
+        variable number of parameters. Once a method is declared
+        with a &quot;params&quot; parameter (which must always
+        come last), it can be invoked in any way : <br>
+        <blockquote>
+            <p><tt>void foo(params int[] args) { ... } <br>
+            <br>
+            foo(1); <br>
+            foo(2, 3); <br>
+            foo(new int[] { 1, 2, 3}); <br>
+            </tt></p>
+        </blockquote>
+        <p>With this feature, it becomes possible to use a powerful C++ idiom : partial
+        specialization. You can partially specialize the
+        overloaded method for the most-frequent cases and leave
+        the generic case to the 'params' signature. <br>
+        <br>
+        </p>
+    </li>
+    <li>New statements : foreach, checked/unchecked (for numeric precision, which seems to top at twenty-eight digits, a number I think might not be satisfactory for numericians) and lock (the
+        C# synchronized). <br>
+        <br>
+        </li>
+    <li>Properties are glorified fields : their declaration is
+        made in two parts. The first one is the standard field
+        declaration, and the second one defines accessors :<blockquote>
+            <p><tt>public class Button {</tt></p>
+            <blockquote>
+                <p><tt>private string caption;<br>
+                public string Caption {<br>
+                get { return caption; } set { caption = value;
+                Repaint(); }</tt></p>
+            </blockquote>
+            <p><tt>}</tt></p>
+        </blockquote>
+        <p><tt><br>
+        </tt>This is a mix of Ada's &quot;quote&quot; operator
+        and of Eiffel's field-methods (or C++'s overloading of
+        the == operator). While it can make the code more
+        readable, it also introduces side effects which Java
+        developers can find disruptive. This is pretty much the
+        classical debate about operator overloading, so no need
+        to get into more details. <br>
+        <br>
+        </p>
+    </li>
+    <li>Events and event handlers are part of C#. While this may
+        look like a JavaBeans legacy, my guess is that it's been
+        more driven by OLE and Visual Basic, which make heavy use
+        of them. I don't think you will use much of this feature
+        if you're not into COM programming (but then again, if
+        you're not, why are you using C# ?). <br>
+        <br>
+        </li>
+    <li>Speaking of operator overloading, it is alive and well,
+        and very similar to its C++ counterpart. It even includes
+        type conversion operators. <br>
+        <br>
+        </li>
+    <li>Types can exhibit array-like behaviors by becoming
+        indexers (this is similar to C++' operator[]). <br>
+        <br>
+        </li>
+    <li>C# has destructors, and while they have the same syntax
+        as C++ (~), they are more like Java finalizers, except
+        that they are guaranteed to be called by the garbage
+        collector. <br>
+        <br>
+        </li>
+    <li>Delegates are there, and they are similar to the ones you
+        had in J++. I've always liked them, so I'm pretty happy.
+        I've never liked the explosion of useless objects that
+        Java forces upon you in order to create method-objects.
+        Anything that can address this flaw is welcome, and
+        delegates fit the bill very well. <br>
+        <br>
+        </li>
+    <li>Enums are back too, and they are type-safe. A very
+        welcome addition that Java has been fighting with hoards
+        of Integer constants scattered throughout hundreds of
+        interfaces. It's time to end the technology madness. <br>
+        <br>
+        </li>
+    <li>Namespaces and assemblies are more Windows-oriented
+        features that will make application packagers happy. They
+        make it easy to create libraries or executables without
+        going through the painful process of identifying the
+        needed libraries that must appear on a two hundred
+        character long command line. <br>
+        <br>
+        </li>
+    <li>After a quick read, C#'s versioning looks ill-formed to
+        me. They are trying to solve a problem which I believe
+        rarely happens, and cluttering the language with another
+        syntactical construct to address it is not going to help.
+        Java's serialVersionUID is a crude but effective, and
+        easy to explain, way to express the same constraint : the
+        developer can force the compile to accept the new class
+        as being compatible with its previous version if they so
+        desire. Maybe there are deeper (probably DLL related)
+        issues at stake here, so I'll have to revisit the subject
+        later. <br>
+        <br>
+        </li>
+    <li>XML support. A Welcome addition, unfortunately, the
+        introduction is fairly sparse : <br>
+        <br>
+        <em>C# allows the XML data to be mapped directly into a
+        struct data type instead of a class. This is a more
+        efficient way to handle small amounts of data. </em><br>
+        <br>
+        I wish they were a little more detailed on this feature.<br>
+        <br>
+        </li>
+    <li>Libraries : of course, not a word on them in the language
+        specification. Since C# is a Windows-oriented language,
+        it's fairly easy to guess what libraries will be there :
+        we can probably expect a mix of MFC and WFC, along with
+        the COM packages that made J++ an ideal tool for COM
+        programming.<br>
+        <br>
+        My secret hope is that the XML support mentioned above
+        will be accompanied by a native DHTML library. Basically,
+        I want to be able to write WFC code and have it display
+        either native MFC windows or be suitable for rendering in
+        a DOM browser.<br>
+        <br>
+        </li>
+</ul>
+
+<h3>What's missing</h3>
+
+<ul>
+    <li>Threads. Although the keyword &quot;lock&quot; makes me
+        believe there is thread support, the rest of it will
+        probably be implemented in the libraries.<br>
+        <br>
+        </li>
+    <li>Security. No sandbox, nothing. Cool.<br>
+        <br>
+        </li>
+    <li>Templates. No matter how much I love them in C++, I
+        believe they don't belong in a language such as C# or
+        Java, so I won't miss them.<br>
+        <br>
+        <br>
+        </li>
+</ul>
+
+<h3>Conclusion</h3>
+
+<p>An interesting language, although not as simple as I expected
+it to be. It's most likely going to be a resounding success as it
+fills an empty spot in the Windows development suite. Code
+written in C# will undoubtedly be more readable than in C++, but
+there are still a lot of features that won't make it as easy as
+it could have been (I expect a lof of abuse from operator
+overloading). C# caters to both C++ and Visual Basic programmers
+and I expect the curve won't be too steep for them.</p>
+
+<p>As for Java programmers, well, it's pretty obvious that my
+future Windows developments will be done in C#, and no matter how
+close it is to Java, I just wish I didn't have to make space for
+yet another language in my brain, which is already fairly
+cluttered up.</p>
+
+<p>&nbsp;</p>
+
+<p>&nbsp;</p>
+
+<DIV ALIGN="right"><A HREF="mailto:cedric@beust.com">Cedric&nbsp;Beust</A></DIV>
+<HR>
+
+<p>
+
+<A HREF="index.html">Back to my home page</A>
+
+</body>
+</html>

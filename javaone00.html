@@ -1,0 +1,195 @@
+<HTML>
+<HEAD>
+   <META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+   <TITLE>JavaOne 2000
+</TITLE>
+<LINK rel="stylesheet" href="javaone99.css">
+</HEAD>
+<BODY BGCOLOR="#ffffff">
+
+<CENTER>
+<H1>
+JavaOne 99
+</H1></CENTER>
+
+<CENTER>
+<H2>
+Moscone Center, San Francisco</H2>
+<H3>June 5-9, 2000</H3>
+</CENTER>
+
+<CENTER><A HREF="mailto:cedric@beust.com">Cedric&nbsp;Beust</A></CENTER>
+
+<p>
+<span class="header">
+<h3>
+Tuesday Keynote
+</h3>
+</span>
+<p>
+- John Gage : showed a Java powered digital camera (which is also a DHCP Web
+server). Nothing earth-shattering there and I still can't figure out why the
+fact that Java is in the device should matter to a common customer)
+<p>
+- Scott Mc Nealy : had his much expected and always lame top-10 list. This
+year was about Outlook viruses, but that's pretty much where the Microsoft
+bashing stopped. Litany of boring figures about why Java is storming the
+world, and then he invited Steve Jobs on stage
+<p>
+- Steve Jobs : wants to make Mac the best Java platform in the local cluster
+(actually, they've been trying to do that for years and repeatedly failing at
+it, but Steve wouldn't be Steve if he left his reality distortion field
+outside the room). He showed a Swing/Aqua emulation (which kind of crashed).
+Aqua is nice looking but Swing is as slow as it ever was, even on their
+"super-fast PowerPC processor"
+<p>
+- Patricia Sueltz : new girl on the block (wasn't there last year as far as I
+can tell). Probably the worst keynote I've heard in years. She's boring,
+non-funny, spits out never-ending logorrheas of dull numbers, sucks up to
+anything that has "executive" and "Sun" in their job title, and to top it all,
+she is extremely badly dressed. Most of the crowd started walking out at this
+point. She introduced partners : Bill Coleman was first, then American
+Express, then the Sega VP (who made some spectacularly unconvincing statements
+about Java as a gaming language), then Magic Johnson (who looked much more
+comfortable than I had expected) and then some.
+
+<p>
+
+
+<span class="header">
+<h3>
+Wednesday Keynote
+</h3>
+</span>
+<p>
+
+Bill Joy
+<p>
+I was afraid that he might go on the neuromancien tangent that seems to have
+taken him lately (see his article in one of the latest Wireds) but his talk
+was actually okay. I did notice that he only mentioned Jini once in his talk,
+though, which a striking contrast over last year. If Jini's coffin needs to be
+nailed more assertively, that would probably be it. He did mention nano-tech,
+but we were spared the "Why the future doesn't need us" pathos.
+<p>
+
+Basically : while Moore's law should theoretically run out of steam in the
+next ten years due to physical constraints, nano-technology might give it a
+twenty year reprieve. An average individual (he probably means a Silicon
+Valley citizen) carries three devices on them, it will probably one hundred
+times that in ten years, which makes for interesting networking problems.
+<p>
+
+His next message was about the existence of six webs : the near Web
+(computer), the far Web (TV via a remote), the weird Web (voice-driven), the
+e-commerce Web (B2B) and the pervasive computing Web. The categories look
+quite arbitrary to me but, well, it's interesting nevertheless. Joy is a
+remarkably smart person, but he has a hard time projecting his enthusiasm halo
+past the end of the stage, and that's too bad.
+<p>
+
+
+<span class="header">
+<h3>
+James Gosling
+</h3>
+</span>
+<p>
+
+His presentation skills are not getting better over time (actually, his
+stuttering got worse). And he definitely needed more charisma to thrill the
+crowd with his interest in real-time Java, despite John Gage's commendable
+efforts to make the talk interesting. The demonstration didn't help (two
+mechanical arms playing a simplistic piece of music in synch). I can't believe
+the non-existing demo effect of his robot escaped him. Not surprisingly, the
+final note on the piano was greeted with a thundering silence.
+<p>
+
+It was equally hard to get interested in the kind-of-technical explanations of
+what the real-time specification is about, probably because I'm not very
+interested in this topic, but more generally because I can't understand how
+someone can reasonably hope that a garbage-collected language can do better
+than Esterel or likes. Gosling's very words are stunning : "dealing with GC
+issues translates in a hideous set of constraints". Well, doh.
+<p>
+Even himself doesn't seem too confident in Java's ability to perform well in
+this domain, as his concluding remarks show : "I find the mere thought of
+people flying or driving Java-powered devices scary".
+<p>
+Gosling then invited FireDrop's CTO on stage, who proceeded to copiously pitch
+his zaplets. I'll write a separate rant on those later, there's a lot to be
+said :-)
+<p>
+
+Jon Bosak, Greg Papadopoulos, James Gosling and John Gage concluded with an
+unformal discussion about XML and Java. Nothing really new there, and that was
+a disappointing discussion given the panel.
+
+<p>
+
+
+<span class="header">
+<h3>
+Zaplets
+</h3>
+</span>
+
+<p>
+
+In short, zaplets are "active emails". They allow you to send an email on
+which recipients can act and see the message kept in your inbox modified as
+more and more people respond.
+<p>
+
+The principle is sound, as anybody who has used an auction site or, closer to
+zaplets' philosophy, a service like e-vite, can testify. It's not uncommon to
+refresh the page in your browser just to see if more people joined and what
+they have to say.
+
+<p>
+zaplets want to bring this technology into your mailbox, and that's where I
+start disagreeing. Especially given the strong message that Sun (well, Scott)
+sent regarding Outlook : not everyone feels confident dealing with a mailer
+owning a mind of its own. Besides, checking the stored email in your inbox is
+not very different from refreshing your browser, so why would users change
+their habits ? I can't think of a really compelling reason right now, but I'm
+open to suggestions.
+<p>
+Another issue is that zaplets leave the "open" world of browsers and enter the
+shady kingdom of proprietary software. I can think of at least three
+mainstream mailers which probably gather 95% of the total industry (Outlook,
+Netscape, Eudora). Each of them needs to receive some enhancements to support
+zaplets. It's hard to tell which underlying technique they use from their Web
+site, but for the sake of discussion, let's assume it's plain J2EE (probably
+JSP + DHTML). Even this open standard is hard to obtain uniformly across the
+three mailers I mentioned above (you should probably not hold your breath for
+Outlook).
+<p>
+
+Another consideration is that Outlook already offers all these "distributed
+white board" features, and no matter how (un) safe these are, they are
+extremely widespread across the enterprise. Yes, ActiveX are used all over the
+place, and if you have worked a little bit with some of the COM interfaces
+exported by Outlook, there is no denying that it is a very powerful offer,
+albeit Windows-centric (which a lot of people have absolutely no problem
+with). The ActiveX approach is the right one, it just needs more security and
+thinking. Just like Scott said, "Melissa and ILOVEYOU do not need to happen".
+That's quite right, but it doesn't invalidate completely the ActiveX approach,
+and it certainly doesn't mean that the sandbox is the answer.
+<p>
+
+The bottom line is that zaplets might be the hype of the week (I'm not even
+sure it is actually) but they have some extremely steep technical and
+political curves to face, and I think they're a little late in the game to
+change anything in the way we use our mailers. But time will tell...
+<p>
+
+
+
+<HR>
+
+<p>
+
+<A HREF="index.html">Back to my home page</A>
+</BODY>
+</HTML>

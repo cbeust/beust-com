@@ -1,0 +1,1792 @@
+<HTML>
+<HEAD>
+   <META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+   <META NAME="GENERATOR" CONTENT="Mozilla/4.03 [en] (X11; I; SunOS 5.5 sun4u) [Netscape]">
+   <TITLE>Compte-rendu de la conf&eacute;rence COOTS (27-Jul-1995)</TITLE>
+<!-- Changed by: Cedric Beust, 27-Jul-1995 -->
+</HEAD>
+<BODY>
+
+<H3>
+<TT>From: beust@sophia.inria.fr&nbsp;<BR>
+To: koala@sophia.inria.fr&nbsp;<BR>
+Subject: Compte-rendu de la conf&eacute;rence COOTS (Monterey, 26-29 juin
+1995)</TT></H3>
+
+<HR>Mes commentaires sont en italique.
+<H3>
+Discussions libres</H3>
+
+<UL>
+<LI>
+<A HREF="#disc1">Langages orient&eacute;s objets pour le Web</A></LI>
+
+<LI>
+<A HREF="#disc2">COM et CORBA</A></LI>
+</UL>
+
+<H3>
+Tutorials</H3>
+
+<UL>
+<LI>
+<A HREF="#tutorial1">Microsoft's OLE and COM</A></LI>
+
+<LI>
+<A HREF="#tutorial2">Design patterns</A></LI>
+
+<LI>
+<A HREF="#tutorial3">Concurrent OO network programming with C++</A></LI>
+
+<LI>
+<A HREF="#tutorial4">Introduction to the SOM Objects toolkit</A></LI>
+</UL>
+
+<H3>
+S&eacute;ances techniques</H3>
+
+<UL>
+<LI>
+<A HREF="#conf1">Simple activation for distributed objects</A></LI>
+
+<LI>
+<A HREF="#conf2">Dynamic insertion of object services</A></LI>
+
+<LI>
+<A HREF="#conf3">OO oriented components for high-speed network programming</A></LI>
+
+<LI>
+<A HREF="#conf4">Program explorer : a program visualizer for C++</A></LI>
+
+<LI>
+<A HREF="#conf5">Software configuration management in an OO database</A></LI>
+
+<LI>
+<A HREF="#conf6">Debugging storage management problems in garbage-collecter
+environments</A></LI>
+
+<LI>
+<A HREF="#conf7">Phantom, an interpreted language for distributed programming</A></LI>
+
+<LI>
+<A HREF="#conf8">A Framework for higher-order functions in C++</A></LI>
+
+<LI>
+<A HREF="#conf9">Lingua-Franca : an IDL for structural subtyping distributed
+object systems</A></LI>
+
+<LI>
+<A HREF="#conf10">Adding group communication and fault-tolerance to CORBA</A></LI>
+
+<LI>
+<A HREF="#conf11">The Spring object model</A></LI>
+
+<LI>
+<A HREF="#conf12">Integration of concurrency control in a language with
+subclassing and subtyping</A></LI>
+
+<LI>
+<A HREF="#conf13">Generic containers for a distributed object store</A></LI>
+</UL>
+&nbsp;
+<H1>
+L'air du temps</H1>
+Avant tout quelques sentiments sur ce que j'ai retir&eacute; de la conf&eacute;rence.
+Il ne s'agit nullement de faits mais des simples constatations que j'ai
+faites par recoupements, par des bruits de couloirs ou bien en entendant
+la m&ecirc;me chose &agrave; des endroits diff&eacute;rents. Ce ne sont
+donc rien de plus que des "tendances", et il est s&ucirc;rement possible
+que je me trompe &agrave; 100% sur certaines d'entre elles. So... take
+it for what it's worth.
+<UL>
+<LI>
+BOF</LI>
+
+
+<P>Vraiment pas dynamiques &agrave; cette conf&eacute;rence. Les BOF impos&eacute;s
+n'ont pas eu lieu, sauf celui sur Modula 3 qui regroupait une dizaine de
+personnes en rond. Sinon, discussions informelles dans le hall du Marriott
+tard le soir. Elles portaient sur Java principalement, et c'est Doug Lea
+qui r&eacute;pondait aux questions, nombreuses, que les gens se posaient.
+C'est &eacute;tonnant de voir que Java est tr&egrave;s largement connu
+de nom, mais tr&egrave;s peu en d&eacute;tails (en fait, la plupart des
+gens pr&eacute;sents n'avaient m&ecirc;me pas lu l'article d'introduction)
+<LI>
+CORBA est l&agrave;</LI>
+
+
+<P>CORBA est bien l&agrave;. Ce n'est plus du vaporware. Les impl&eacute;mentations
+ont atteint une fiabilit&eacute; certaine, et certains speeches m'ont aid&eacute;
+&agrave; voir plus clair, et &agrave; poser quelques jalons sur les spec
+que j'avais lues sans trop les visualiser jusqu'&agrave; pr&eacute;sent
+<LI>
+Les threads</LI>
+
+
+<P>Toujours l&agrave;, et plus vivants que jamais. Le fait qu'un syst&egrave;me
+soit MT n'est m&ecirc;me plus consid&eacute;r&eacute; comme un atout majeur,
+c'est tout juste si l'auteur pr&eacute;cisait entre deux transparents "ah
+j'oubliais, naturellement le syst&egrave;me est multi-thread"
+<LI>
+Asynchronisme en baisse</LI>
+
+
+<P>De moins en moins de toolkits fournissent l'asynchronisme. Alors que
+je prenais &ccedil;a au d&eacute;but pour une d&eacute;fense (ou une explication)
+de cette lacune dans CORBA, il semble que tout le monde s'oriente de plus
+en plus franchement vers "synchronisme uniquement". L'asynchronisme s'obtient
+avec du synchronisme dans un thread s&eacute;par&eacute;
+<LI>
+Modula 3</LI>
+
+
+<P>... &eacute;tait le langage num&eacute;ro deux de cette conf, derri&egrave;re
+C++. Je ne sais pas trop quoi en d&eacute;duire : il me semblait que c'&eacute;tait
+Smalltalk, mais on dirait que Modula 3 fait une perc&eacute;e remarqu&eacute;e
+(naturellement les pr&eacute;sentations M3 &eacute;taient faites par des
+gens de Dec mais il y avait aussi des projets bas&eacute;s sur M3, comme
+par exemple l'Obliq de Cardelli)
+<LI>
+DESIGN PATTERNS !!!</LI>
+
+
+<P>Je n'ai pas fini de vous en reparler. Le concept n'est pas neuf, mais
+pour la premi&egrave;re fois il est cristallis&eacute; et extr&ecirc;mement
+bien synth&eacute;tis&eacute; dans un bouquin &eacute;crit par quatre auteurs
+(surnomm&eacute; le "gang of four"). L'un d'eux (John Vlissides) a fait
+un tutorial, cf. plus bas. Une chose est s&ucirc;re : il n'y a pas un article
+technique qui ne mentionne pas ce livre dans sa bibliographie. Il faut
+absolument le lire, ou au moins le survoler pour avoir une id&eacute;e
+de quoi il parle.
+<LI>
+COM &agrave; la poursuite de CORBA</LI>
+
+
+<P>Je vous avais parl&eacute; de COM l'ann&eacute;e derni&egrave;re apr&egrave;s
+avoir assist&eacute; &agrave; la conf&eacute;rence sur OLE 2 par la Chief
+Architect de Microsoft. Je ne m'&eacute;tais pas trop arr&ecirc;t&eacute;
+sur COM parce qu'&agrave; l'&eacute;poque, ce n'&eacute;tait rien de plus
+que la couche de base d'OLE (et de quelques autres services). Mais l&agrave;
+le ton a compl&egrave;tement chang&eacute;. COM est beeaucoup plus achev&eacute;
+et se pose comme concurrent direct de CORBA, et ce n'est pas sans raison,
+comme vous verrez dans les comptes-rendus le concernant (il y en a deux
+: le tutorial COM et le pot-pourri qui rassemblait les gars de COM et les
+gars de CORBA)
+<LI>
+SOM d'IBM</LI>
+
+
+<P>Un mod&egrave;le &agrave; garder en vue, il fonctionne bien et fournit
+une impl&eacute;mentation tr&egrave;s correcte de CORBA, ajout&eacute;
+en plus &agrave; leur m&eacute;canisme de compatibilit&eacute; binaire
+C++ (ce n'est pas du pipo, cf. plus bas). SOM, et son successeur DSOM (D
+pour distributed) sont &agrave; la base d'OS/2 depuis le tout d&eacute;but
+<LI>
+Doug Schmidt</LI>
+
+
+<P>Attention gourou. Si son nom ne vous est pas familier, entrez-le dans
+votre bbdb, ce mec est impressionnant : programmeur exp&eacute;riment&eacute;
+C++, tr&egrave;s familier avec les m&eacute;thodologies OO, auteur d'articles
+remarquables &agrave; la fois dans la forme (graphiques, benches, etc...)
+et dans le fond, et en plus il trouve le temps de faire des contrats avec
+l'industrie. J'avais regard&eacute; les premi&egrave;res versions de ACE
+(AKA Tcp_wrappers) et elles n'etaient pas tr&egrave;s convaincantes. Mais
+c'&eacute;tait il y a deux ans, et maintenant il a cr&eacute;&eacute; un
+v&eacute;ritable framework qui fonctionne impeccablement (et est assez
+complexe aussi... on n'a rien sans rien). Voir plus bas.</UL>
+
+<H1>
+Lecture</H1>
+J'ai fait mes achats de bouquins &agrave; la fois &agrave; Monterey (il
+y a avait une librairie juste en face du Marriott) et &agrave; San Jose,
+au fameux "Computer Literacy", qui est un book store carr&eacute;ment *impressionnant*.
+Imaginez deux fois la superficie de la doc de l'INRIA avec des rayons de
+bouquins informatiques partout, et m&ecirc;me des terminaux pour consulter
+leur base de donn&eacute;es. En principe, Jean-Michel a command&eacute;
+son bouquin &eacute;lectroniquement, donc c'est aussi possible.
+
+<P>J'ai rapport&eacute; quatre livres:
+<UL>
+<LI>
+Designing and coding reusable C++, par Carroll/Ellis, qui a &eacute;t&eacute;
+tr&egrave;s bien re&ccedil;u par la communaut&eacute; (pas &eacute;tonnant
+vu les auteurs)</LI>
+
+<LI>
+Advanced C++ programming styles and idioms, par Coplien. C'est la suite
+de son premier bouquin, qui &eacute;tait d&eacute;j&agrave; une r&eacute;f&eacute;rence</LI>
+
+<LI>
+Motif 2.0 Programmer's Guide (OSF)</LI>
+
+<LI>
+Design Patterns (le fameux dont je vous rebats les oreilles). A lire au
+moins du bout de l'oeil, mais surtout ne pas manquer les 30 premi&egrave;res
+pages, qui repr&eacute;sentent (IMHO) une synth&egrave;se de l'&eacute;tat
+de l'art en mati&egrave;re de conception OO, autrement dit, l'apprentissage
+qui vient de 20 ann&eacute;es de pratique de LOO).</LI>
+</UL>
+Magazines :
+<UL>
+<LI>
+Dr Dobbs journal</LI>
+
+<LI>
+Wired</LI>
+
+<LI>
+Journal of OO programming (un article qui decrit un fsm en C++, ca peut
+peut-&ecirc;tre int&eacute;resser Colas s'il n'est pas pass&eacute; &agrave;
+la ligne suivante d&egrave;s qu'il a lu "C++")</LI>
+
+<LI>
+Object Magazine (int&eacute;ressant article sur les GUI, qui bat en br&egrave;che
+le m&eacute;canisme &eacute;v&eacute;nementiel)</LI>
+
+<LI>
+C++ Report</LI>
+
+<LI>
+The X Journal</LI>
+
+<LI>
+Byte</LI>
+
+<LI>
+;login:</LI>
+</UL>
+et naturellement les proceedings.
+<H1>
+La conf&eacute;rence</H1>
+Quatre jours. Deux jours de tutorials (2 x 3h par jour) et deux jours de
+discussions techniques.
+
+<P>
+<HR>
+<H2>
+Tutorial 1</H2>
+<A NAME="tutorial1"></A>MICROSOFT'S OLE AND COM
+<H3>
+David Chappell, Chappell &amp; Associates</H3>
+<I>Ne soyez pas alarm&eacute; par la taille du compte-rendu de ce tutorial.
+C'est de loin le plus gros de tous, les autres sont bien plus petits, mais
+il y a tellement de points int&eacute;ressants que je n'ai pas arr&ecirc;t&eacute;
+de prendre des notes pendant 3h</I>
+
+<P>Chappell s'est pr&eacute;sent&eacute; d'embl&eacute;e comme quelqu'un
+qui vient du "monde ouvert" mais qui a &eacute;t&eacute; s&eacute;duit
+par le c&ocirc;t&eacute; obscur ("Just like you, I spent years of my life
+hating Microsoft. I was wrong. OLE is full of odd and cool stuff"). Il
+se dit avoir &eacute;t&eacute; tr&egrave;s enthousiaste quand CORBA est
+apparu mais a rapidement perdu ses illusions devant la lenteur avec laquelle
+les progr&egrave;s ont &eacute;t&eacute; faits. La mort dans l'&acirc;me,
+il s'est donc int&eacute;ress&eacute; &agrave; la technologie Microsoft
+et l&agrave; il a vraiment pris son pied.
+
+<P><I>Le gars a l'air honn&ecirc;te, ce n'est pas un Microsoft zealot,
+et le reste du tutorial a achev&eacute; de me convaincre sur la validit&eacute;
+de ses arguments</I>
+
+<P>OLE est une cible mobile. Il est construit au-dessus de COM (Common
+Object Model, ou aussi Component Object Model, c'est l'ancien nom).
+
+<P><I>A ce niveau, Chappell demande combien de personnes n'ont jamais utilis&eacute;
+Windows. Une personne l&egrave;ve le doigt sur une soixantaine</I>
+
+<P>OLE 2.0 ne concerne pas seulement les documents compos&eacute;s (compound).
+C'est en fait la caract&eacute;ristique la moins int&eacute;ressante. Il
+n'y aura pas de OLE 3.0. En fait, le num&eacute;ro de version n'est m&ecirc;me
+plus prononc&eacute;. On dit "OLE" et tout le monde sait qu'il s'agit du
+2.0.
+
+<P>COM existe aussi sur Mac. Il est pr&eacute;vu sur d'"autres" <I>pas
+de pr&eacute;cision </I>plateformes pour 1Q96, mais sans date plus pr&eacute;cise.
+Quel que soit le syst&egrave;me cible, il devra supporter l'Object Broker
+de Microsoft.
+
+<P>OLE n'est pas une technologie de design, c'est une technologie logicielle.
+Il se compose de plusieurs parties :
+<UL>
+<LI>
+les Monikers : ils nomment les objets, ce sont des objets eux-m&ecirc;mes,
+ils permettent donc une plus grande souplesse qu'une simple cha&icirc;ne</LI>
+
+<LI>
+Uniform Data Transfer : est utilis&eacute; pour transf&eacute;rer des donn&eacute;es
+entre les applications (Doug Rand avait expos&eacute; l'UDT de Motif l'ann&eacute;e
+derni&egrave;re &agrave; l'Xhibition, le principe est tout &agrave; fait
+le m&ecirc;me, il me semble que m&ecirc;me la signification des initiales
+est identique (Daniel ?)) et aussi pour les notifications</LI>
+
+<LI>
+Drag and Drop : il repose sur l'UDT (encore une fois, forte analogie avec
+Motif, mais l'UDT d'OSF a trois autres m&eacute;thodes &agrave; unifier
+(clipboard et les deux s&eacute;lections)).</LI>
+
+<LI>
+Automation : permet &agrave; une application d'exposer des op&eacute;rations
+&agrave; d'autres applications (genre Arexx). C'est &agrave; peu pr&egrave;s
+&eacute;quivalent &agrave; l'interface dynamique de CORBA <I>Chappell fait
+des parall&egrave;les avec CORBA &agrave; chaque fois qu'il le peut, preuve
+qu'il a bien &eacute;tudi&eacute; la b&ecirc;te</I></LI>
+
+<LI>
+In-Place Activation : est charg&eacute;e d'invoquer l'application qui g&egrave;re
+le document, de changer la barre de menu, etc... Chappell appelle &ccedil;a
+"document-centric computing", mais ce n'est pas transparent (&ccedil;a
+prend un temps certain &agrave; charger)</LI>
+</UL>
+Le paradigme derri&egrave;re tout &ccedil;a, c'est que les applications
+monolithiques sont rarement la bonne solution. Il faut voir l'application
+comme des composants qu'on active &agrave; la demande pour une activation
+sur place. Cela aboutit au "Component Software", et &agrave; des composants
+binaires r&eacute;utilisables.
+
+<P>Trois motivations &agrave; la base de l'effort COM/OLE :
+
+<P>1- il faut pouvoir distribuer des binaires
+
+<P>2- on doit pouvoir acc&eacute;der aux composants par-dessus la barri&egrave;re
+du langage de programmation
+
+<P>3- il doit &ecirc;tre possible d'ajouter des composants au syst&egrave;me,
+et que les anciens composants puissent les utiliser imm&eacute;diatement
+sans recompilation
+
+<P>COM permet ces trois points, et il cr&eacute;e donc ce nouveau type
+de software qu'est le "Component Software" (VBX fait &ccedil;a pour Visual
+Basic).
+
+<P>Comp&eacute;tition :
+<UL>
+<LI>
+CORBA, beaucoup de similitudes avec COM</LI>
+
+<LI>
+OPENDOC, cr&eacute;&eacute; par CIL (Component Integration Labs), qui repose
+sur l'impl&eacute;mentation d'IBM de CORBA : SOM (cf. plus bas)</LI>
+</UL>
+Chappell avoue esp&eacute;rer que Opendoc r&eacute;ussira &agrave; s'octroyer
+une part du march&eacute;, parce que m&ecirc;me si ce qu'il voit de Microsoft
+le satisfait, l'id&eacute;e d'une emprise tentaculaire et omnipr&eacute;sente
+de MS sur le march&eacute; de la distribution le d&eacute;range (le fameux
+d&eacute;mon du "monde ouvert"). Digital a annonc&eacute; qu'il supporterait
+COM sur ses plateformes. Il y aura probablement un standard d'interop&eacute;rabilit&eacute;
+COM/CORBA.
+
+<P><I>Petite apart&eacute; compl&egrave;tement en relation avec cette derni&egrave;re
+phrase. J'ai lu le texte qui suit dans un minuscule entrefilet quelque
+part dans un magazine. Vu l'importance de ce que cela sous-entend, il me
+para&icirc;t n&eacute;cessaire de le mentionner &agrave; ce niveau :</I>
+
+<P><I>&lt;&lt; The OMG has voted to request proposals on linking CORBA
+and Microsoft's COM. Jeff Alger, Senior Product Manager in Microsoft's
+Enterprise developers group, says his company is helping the OMG with the
+process of getting a CORBA-COM gateway standard created, early mid-96.
+But some analysts doubt that Microsoft ultimately cares for interoperability.
+They point to the company's work with DEC to make portions of OLE available
+on UNIX machines, a move which would break OLE's current single-platform
+limitation and reduce the need for CORBA compatibility. >></I>
+
+<P><I>Pas tr&egrave;s surprenant quand on y r&eacute;fl&eacute;chit deux
+minutes.</I>
+
+<P>OLE/r&eacute;seau ("Network OLE") utilise les DCE RPC, mais DCE n'est
+pas OO (cela dit, HP a d&eacute;velopp&eacute; un OODCE, et IBM veut mettre
+SOM sur DCE).
+
+<P><I>Question de l'assistance sur CORBA, &agrave; laquelle Chappell r&eacute;pond
+en disant qu'il ne faut pas parler de "CORBA" parce que les specs sont
+trop floues et trop sujettes &agrave; interpr&eacute;tation pour que la
+question soit suffisamment pr&eacute;cise. Il faut parler d'une "impl&eacute;mentation
+sp&eacute;cifique de CORBA" pour que la question ait un sens (SOM, Orbix,
+etc...). Chappelle ajoute qu'il est optimiste quant &agrave; l'avenir de
+OLE/COM en dehors des mondes Window, NT, Mac (j'ai personnellement quelques
+doutes)</I>
+<H3>
+Bases de COM</H3>
+Les objets sont repr&eacute;sent&eacute;s par deux choses : leurs donn&eacute;es
+(&eacute;tat) et leurs m&eacute;thodes (comportement). Les langages OO
+ne sont pas tr&egrave;s efficaces pour cr&eacute;er des applications &agrave;
+partir d'objets d&eacute;velopp&eacute;s ind&eacute;pendamment (langages
+diff&eacute;rents, pas d'acc&egrave;s aux sources, etc...). COM r&eacute;sout
+ce probl&egrave;me.
+
+<P><I>Chappell fait alors une remarque humoristique sur le fait qu'il faudrait
+inventer une nouvelle mesure de temps : l'ann&eacute;e Microsoft. C'est
+avec ce genre de remarques, associ&eacute; &agrave; sa connaissance certaine
+des deux mondes, qu'il a r&eacute;ussi &agrave; int&eacute;resser l'audience
+sans coup f&eacute;rir</I>
+
+<P>Tous les objets COM supportent plusieurs interfaces, toutes d&eacute;riv&eacute;es
+de "IUnknown". Un client n'a pas besoin de conna&icirc;tre plus que les
+m&eacute;thodes de l'objet cible, et comment les invoquer. Vu d'un client,
+un objet n'est rien d'autre qu'une interface.
+
+<P>COM d&eacute;finit deux choses :
+<UL>
+<LI>
+un standard binaire</LI>
+
+<LI>
+un langage de d&eacute;finition, IDL, qui est un sur-ensemble de l'IDL
+de DCE (mais ce n'est *pas* l'IDL CORBA, cf. quelques exemples de codes
+dans une conf. technique plus bas)</LI>
+</UL>
+Il n'est cependant pas indispensable d'&eacute;crire de l'IDL pour utiliser
+COM (on peut &eacute;crire directement le code qui est g&eacute;n&eacute;r&eacute;
+&agrave; partir de l'IDL). Les interfaces sont impl&eacute;ment&eacute;es
+avec des vtables. Une interface n'est rien de plus qu'un pointeur &agrave;
+une vtable. Les interfaces sont *fix&eacute;es* une bonne fois pour toutes.
+Les objets d'une m&ecirc;me classe ne supportent pas n&eacute;cessairement
+la m&ecirc;me interface.
+
+<P>Chaque interface est identifi&eacute; par une IID, et chaque classe
+par une CLSID. Ces deux ID sont des GUID (global user id's), qui repr&eacute;sentent
+une m&eacute;thode de nommage unique &agrave; tout le syst&egrave;me).
+L'interface de base (IUnknown, dont h&eacute;ritent toutes les interfaces)
+est tr&egrave;s simple : elle s'occupe de produire des pointeurs (QueryInterface())
+et de g&eacute;rer le comptage de r&eacute;f&eacute;rences (AddRef(), Release()).
+
+<P>Chaque objet COM est impl&eacute;ment&eacute; comme un serveur. Ils
+peuvent &ecirc;tre de trois types :
+<UL>
+<LI>
+In-process (DLL)</LI>
+
+<LI>
+Local (m&ecirc;me machine, mais dans un autre processus)</LI>
+
+<LI>
+Distant (sur des machines diff&eacute;rentes pas impl&eacute;ment&eacute;)
+<I>:-)</I></LI>
+</UL>
+La biblioth&egrave;que COM est une DLL sous Windows. COM utilise des "usines
+de classes" (class factories, c'est une des 24 "design patterns" d&eacute;crites
+dans le bouquin du "gang of 4", voir plus bas) afin de cr&eacute;er plusieurs
+objets d'une m&ecirc;me classe. COM n'utilise pas l'h&eacute;ritage de
+l'impl&eacute;mentation (pas pratique pour des syst&egrave;mes contenant
+des objets h&eacute;t&eacute;rog&egrave;nes). COM utilise intensivement
+l'aggr&eacute;gation.
+
+<P><I>Par ce principe, COM rejoint compl&egrave;tement la position du gang
+des quatre, clairement expos&eacute;e dans les 30 premi&egrave;res pages
+de leur livre. Je ne sais pas si c'est un hasard, ou une convergence naturelle
+vers le meilleur design bas&eacute; sur l'exp&eacute;rience</I>
+
+<P>Je d&eacute;taille les divers aspects de COM dans les sections qui suivent.
+<H3>
+Stockage structur&eacute; (structured storage)</H3>
+La m&eacute;thode de stockage traditionnelle n'est pas OO, et elle ne marche
+pas pour stocker plusieurs objets ind&eacute;pendants. La solution est
+donc de cr&eacute;er des "fichiers dans les fichiers". Les fichiers sur
+disques se divisent en deux cat&eacute;gories : storages et streams (une
+cons&eacute;quence de cette organisation est que les fichiers sont plus
+gros).
+
+<P>En gros, les storages sont des noeuds et les streams sont des feuilles.
+On acc&egrave;de au stockage structur&eacute; avec les interfaces IPersist*
+(IPersistStorage, IPersistStream, IPersistFile).
+<H3>
+Monikers</H3>
+Les objets sont r&eacute;f&eacute;renc&eacute;s par leur CLSID ou bien
+leur leur Moniker, qui encapsule l'intelligence n&eacute;cessaire &agrave;
+la cr&eacute;ation et &agrave; la connexion &agrave; une instance sp&eacute;cifique
+d'un objet (c'est &agrave; peu pr&egrave;s &eacute;quivalent aux r&eacute;f&eacute;rences
+d'objets de CORBA). Par exemple, on peut avoir stock&eacute; dans un document
+Word non pas une feuille de calcul, mais un intervalle de cellules dans
+une feuille de calcul. Un pointeur vers un nom de fichier qui contiendrait
+cette feuille ne serait donc pas suffisant.
+
+<P>Les Monikers r&eacute;pondent &agrave; l'interface IMoniker. A l'origine,
+ils ont &eacute;t&eacute; cr&eacute;&eacute;s pour stocker des documents
+li&eacute;s, mais ils sont devenus bien plus g&eacute;n&eacute;riques.
+<H3>
+Uniform Data Transfer</H3>
+<I>Chappell avoue humblement que cet aspect de COM l'ennuie au plus haut
+point, aussi sera-t-il bref</I>
+
+<P>Avant, sous Windows, les seuls moyens de transferts &eacute;taient le
+clipboard ou bien DDE. Maintenant, il y a des Data Objects, qui r&eacute;pondent
+&agrave; l'interface IDataObject. Ils peuvent regrouper des objets tr&egrave;s
+diff&eacute;rents : storage, stream, fichier ordinaire ou encore de la
+m&eacute;moire). L'UDT sp&eacute;cifie en plus un m&eacute;canisme de notification
+(IAdviseSink), un peu comme les propri&eacute;t&eacute;s X, afin de sp&eacute;cifier
+<UL>
+<LI>
+par quelles donn&eacute;es un consommateur est int&eacute;ress&eacute;</LI>
+
+<LI>
+comment acc&eacute;der &agrave; ces donn&eacute;es</LI>
+
+<LI>
+comment &ecirc;tre inform&eacute; des changements d'&eacute;tat de ces
+donn&eacute;es</LI>
+</UL>
+Les IDataObject peuvent &ecirc;tre utilis&eacute;s pour le Drag and Drop
+(IDropTarget, IDropSource).
+<H3>
+Automation</H3>
+Les objets COM peuvent rendre les m&eacute;thodes accessibles avec
+<UL>
+<LI>
+des IDataObject (qui supportent une interface standard)</LI>
+
+<LI>
+des objets qui supportents une interface custom</LI>
+</UL>
+ou bien via une interface g&eacute;n&eacute;rique : IDispatch (&agrave;
+peu pr&egrave;s &eacute;quivalente &agrave; l'interface d'invocation dynamique
+de CORBA), qui s'appelle "OLE Automation".
+
+<P>L'Automation vient du groupe qui d&eacute;veloppe Visual Basic, et non
+pas du groupe d'OLE. Il a &eacute;t&eacute; con&ccedil;u pour VB &agrave;
+l'origine, donc tr&egrave;s facile &agrave; utiliser. L'Automatisation
+fonctionne avec une identit&eacute; (DISPID, dispatch id) sur laquelle
+un switch() est effectu&eacute;. Cette m&eacute;thode se pr&ecirc;te naturellement
+mieux &agrave; un langage interpr&eacute;t&eacute;. Un objet peut supporter
+l'information de type dynamique (RTTI), une biblioth&egrave;que de types
+&eacute;tant un fichier cr&eacute;&eacute; en ODL (Object Description Language)
+(ITypeLib, ITypeInfo).
+<H3>
+Documents Compos&eacute;s</H3>
+Il peut s'agir soit d'embedding (incrustation ?) soit de linking (lien).
+Un document peut &ecirc;tre li&eacute; &agrave; plusieurs autres documents.
+Pour les liens, on utilise des Monikers, stock&eacute;s dans un objet IStream
+dans le document parent.
+
+<P>L'application conteneur permet &agrave; un document cr&eacute;&eacute;
+par une application serveur d'&ecirc;tre incrust&eacute;e ou li&eacute;e
+&agrave; un document qu'elle cr&eacute;e. Une application peut &ecirc;tre
+<UL>
+<LI>
+uniquement un conteneur</LI>
+
+<LI>
+uniquement un serveur</LI>
+
+<LI>
+les deux</LI>
+</UL>
+Exemple : une feuille de calcul Excel (serveur) dans un document Word (conteneur).
+
+<P>L'activation sur place permet une &eacute;dition visuelle du document.
+Un double-clic sur l'objet incrust&eacute; provoque les application suivantes
+:
+<UL>
+<LI>
+activation de l'objet</LI>
+
+<LI>
+changement des barres de menu</LI>
+
+<LI>
+&eacute;dition de l'objet sur place</LI>
+</UL>
+
+<H3>
+Conclusion</H3>
+Chappell conclut en donnant sa vision du futur : d'apr&egrave;s lui, Unix
+est condamn&eacute; &agrave; occuper une place de plus en plus petite dans
+ce march&eacute; dans les dix prochaines ann&eacute;es...
+
+<P>
+<HR>
+<H2>
+Tutorial 2</H2>
+<A NAME="tutorial2"></A>DESIGN PATTERNS
+<H3>
+John Vlissides, IBM Research</H3>
+John Vlissides fait partie du gang-of-four, et est donc co-auteur du bouquin
+(avec Erich Gamma, Richard Helm et Ralph Johnson. Il a travaill&eacute;
+auparavant avec Linton (il &eacute;tait son th&eacute;sard en fait) sur
+Interviews. On retrouve dans les Design Patterns beaucoup de concepts qui
+ont &eacute;t&eacute; appliqu&eacute;s (avec succ&egrave;s) dans Interviews
+: les glyps, les factories (WidgetKit, DialogKit, etc...).
+
+<P><I>Je vous relate son tutorial tel quel dans cette section, mais il
+faudrait qu'on consacre une mini-r&eacute;union aux Design Patterns. Autre
+introduction tr&egrave;s valable : C++ Report Juin 95, p18 (celui que j'ai
+rapport&eacute;). Ce qui suit peut vous sembler assez fumeux et abstrait,
+mais &ccedil;a vous para&icirc;tra plus clair quand vous serez un peu plus
+familier avec les Design Patterns. C'est *r&eacute;ellement* int&eacute;ressant,
+tous les d&eacute;veloppeurs devraient lire ce bouquin, m&ecirc;me ceux
+qui n'utilisent pas n&eacute;cessairement la POO.</I>
+
+<P>Le d&eacute;veloppement OO est bien plus que le simple dessin de diagrammes.
+La r&eacute;utilisabilit&eacute; la plus puissante n'est pas la r&eacute;utilisabilit&eacute;
+du code, mais celle du design. Un bon designer <I>faudrait vraiment trouver
+un mot fran&ccedil;ais pour design </I>se repose sur son exp&eacute;rience.
+Les syst&egrave;mes OO exploitent des structures r&eacute;currentes (i.e.
+qu'on retrouve r&eacute;guli&egrave;rement) de designs qui promeuvent :
+<UL>
+<LI>
+l'abstraction</LI>
+
+<LI>
+la souplesse</LI>
+
+<LI>
+la modularit&eacute;</LI>
+
+<LI>
+l'&eacute;l&eacute;gance</LI>
+</UL>
+Ces structures r&eacute;currentes peuvent se regrouper sous une appellation
+g&eacute;n&eacute;rique : Design Patterns ("motifs de design" ?).
+
+<P>Une Design Pattern se compose de plusieurs parties :
+<UL>
+<LI>
+un nom, utile pour le r&eacute;f&eacute;rencer par la suite, et &eacute;galement
+dans les discussions</LI>
+
+<LI>
+une description abstraite de la collaboration entre les divers composants,
+illustrant la fa&ccedil;on de r&eacute;soudre un probl&egrave;me pr&eacute;cis</LI>
+
+<LI>
+le probl&egrave;me &agrave; r&eacute;soudre</LI>
+
+<LI>
+les cons&eacute;quences de l'application de cette Design Pattern (bonnes
+et mauvaises)</LI>
+
+<LI>
+une port&eacute;e ("scope") repr&eacute;sentant le domaine sur lequel la
+pattern s'applique</LI>
+
+<LI>
+un but, refl&eacute;tant ce que fait la pattern</LI>
+</UL>
+<I>Les auteurs pr&eacute;viennent dans le livre qu'ils ont r&eacute;solument
+fait le choix de la souplesse tout en d&eacute;laissant parfois les consid&eacute;rations
+d'optimisation. Quand c'est le cas, c'est toujours indiqu&eacute; dans
+les cons&eacute;quences, dans la partie "inconv&eacute;nients"</I>
+
+<P>Les DP sont ind&eacute;pendantes du langage d'impl&eacute;mentation
+(dans le livre, c'est C++ et Smalltalk qui sont utilis&eacute;s pour donner
+des exemples d'impl&eacute;mentation). Mais une DP, ce n'est *pas* du code.
+
+<P>A ce stade, John donne l'exemple de la DP "Observer" : on a des donn&eacute;es
+(par exemple des chiffres de production) qui sont "observ&eacute;es" par
+plusieurs clients, qui les g&egrave;rent (les affichent) chacun diff&eacute;remment
+: un graphe barres, un camembert, une courbe. Une modification de la base
+de donn&eacute;es doit entra&icirc;ner une mise &agrave; jour visuelle
+de tous les observeurs. Inversementsi un observeur est modifi&eacute;,
+la base de donn&eacute;es doit &eacute;galement &ecirc;tre modifi&eacute;e
+(et par rebond, les autres observeurs). La DP "Observer" capture ce sch&eacute;ma
+tr&egrave;s typique, et fournit une solution si vous avez &agrave; impl&eacute;menter
+un tel mod&egrave;le.
+
+<P>Les DP ont quatre objectifs :
+<UL>
+<LI>
+codifier des "bons" dessigns</LI>
+
+<LI>
+leur donner des noms</LI>
+
+<LI>
+capturer et pr&eacute;server l'information li&eacute;e &agrave; ce design</LI>
+
+<LI>
+faciliter la restructuration et la reconstruction ("refactoring")</LI>
+</UL>
+Les auteurs ont identifi&eacute; 23 DP <I>il y a naturellement plusieurs
+mailing-lists pour discuter d'&eacute;ventuelles nouvelles DP, ou encore
+de leurs applications</I>
+
+<P>La description d'une DP suit le mod&egrave;le suivant (repris pour chacune
+d'entre elle dans le livre) : son but (intent), synonymes, motivation,
+applicability (?), structure (en notation OMT quelque peu modifi&eacute;e),
+participants, collaborations, impl&eacute;mentation, exemple de code, usages
+connus <I>une des choses que les auteurs ont gard&eacute;e &agrave; l'esprit
+pour chaque DP est que pour qu'elle figure dans le livre, elle doit avoir
+au moins deux usages connus. Les exemples les plus cit&eacute;s dans le
+livre sont Interviews, ET++, etc... </I>et enfin DP voisines.
+
+<P>Vlissides a alors illustr&eacute; ce mod&egrave;le avec la DP "Observer".
+
+<P>Les b&eacute;n&eacute;fices des DP sont multiples :
+<UL>
+<LI>
+r&eacute;utilisation du design</LI>
+
+<LI>
+vocabulaire de d&eacute;signation unique et sans ambigu&iuml;t&eacute;
+<I>maintenant, si vous lisez dans un source "ce code suit le design de
+la pattern 'observer'", vous vous y retrouverez bien plus facilement</I></LI>
+
+<LI>
+am&eacute;liore la compr&eacute;hension</LI>
+
+<LI>
+repr&eacute;sente une base pour une &eacute;ventuelle automatisation <I>je
+pense que Vlissides fait r&eacute;f&eacute;rence &agrave; un "futur" outil
+de g&eacute;n&eacute;ration automatique. Un projet secret d'IBM ?</I></LI>
+</UL>
+Le reste du tutorial a &eacute;t&eacute; consacr&eacute; &agrave; l'illustration
+de l'usage des DP (mais de plusieurs cette fois, pas seulement de Observer)
+&agrave; un &eacute;diteur WYSIWYG pr&eacute;nomm&eacute; lexi. Le livre
+consacre un chapitre &agrave; cet exemple.
+
+<P><I>Le live peut para&icirc;tre un peu r&eacute;barbatif &agrave; lire
+&eacute;tant donn&eacute; qu'il est compos&eacute; &agrave; 75% de l'&eacute;num&eacute;ration
+des 23 patterns. Comme les auteurs le disent en introduction, il n'est
+pas vraiment destin&eacute; &agrave; &ecirc;tre lu de bout en bout, mais
+&agrave; &ecirc;tre consult&eacute; quand le besoin de fait sentir. Personnellement,
+je suis en train de le finir et je l'ai lu en continuit&eacute; sans aucune
+difficult&eacute;. Maintenant, si vous ne devez en lire qu'une partie,
+je vous sugg&egrave;re le plan suivant :</I>
+<UL>
+<LI>
+<I>lecture compl&egrave;te du chapitre d'introduction</I></LI>
+
+<LI>
+<I>lecture compl&egrave;te de l'application &agrave; l'&eacute;diteur WYSIWYG</I></LI>
+
+<LI>
+<I>survol des patterns afin de se familiariser un peu avec leurs noms et
+leurs champs d'applications, afin d'avoir un d&eacute;clic si vous avez
+un jour besoin d'appliquer une DP et d'aller lire &agrave; ce moment la
+description de la pattern dans son int&eacute;gralit&eacute;</I></LI>
+</UL>
+
+<HR>
+<H2>
+Tutorial 3</H2>
+<A NAME="tutorial3"></A>Concurrent OO Network Programming With C++
+<H3>
+Doug Schmidt, Universit&eacute; de Washington, St Louis</H3>
+Voici donc le tutorial du gourou dont je vous ai parl&eacute; en introduction.
+Il a tellement de cordes a son arc qu'il pourrait parler de plusieurs dizaines
+de choses. Il a choisi de relater ses exp&eacute;riences avec de la programmation
+distribu&eacute;s, dans le cadre de plusieurs projets industriels li&eacute;
+avec Motorola et Kodak.
+
+<P><I>Il a commenc&eacute; en disant qu'il &eacute;tait rassur&eacute;
+de voir que la salle &eacute;tait &agrave; peu pr&egrave;s pleine, contrairement
+au speech OLE qui avait lieu dans la salle &agrave; c&ocirc;t&eacute;</I>
+
+<P>L'informatique distribu&eacute;e (ID) a plusieurs avantages :
+<UL>
+<LI>
+collaboration</LI>
+
+<LI>
+performance (difficile &agrave; r&eacute;aliser, m&ecirc;me maintenant)</LI>
+
+<LI>
+robustesse (m&ecirc;me remarque)</LI>
+
+<LI>
+portabilit&eacute;</LI>
+
+<LI>
+extensibilit&eacute;</LI>
+
+<LI>
+r&eacute;duit les co&ucirc;ts <I>pas tr&egrave;s s&ucirc;r l&agrave;...</I></LI>
+</UL>
+Mais l'ID est complexe : elle offre de nouveaux probl&egrave;mes qui ne
+rel&egrave;vent pas syst&eacute;matiquement de l'ID. Maintenant, il est
+n&eacute;cessaire de s'occuper de probl&egrave;mes r&eacute;ellement d&eacute;licats,
+et l'apparition de toolkits (CORBA, COM) n'all&egrave;ge pas cette t&acirc;che,
+mais a pour seul effet d'acc&eacute;l&eacute;rerer la rencontre avec ces
+probl&egrave;mes d&eacute;licats. Les techniques OO et C++ aident &agrave;
+plusieurs niveaux :
+<UL>
+<LI>
+design patterns</LI>
+
+<LI>
+environnements</LI>
+
+<LI>
+h&eacute;ritage de classe</LI>
+</UL>
+La conception OO et C++ ne sont pas des panac&eacute;es mais ils aident
+&agrave; minimiser ce que Doug appelle la "complexit&eacute; accidentelle"
+<I>voir plus bas </I>. Des fonctionnalit&eacute;s avanc&eacute;es des OS
+aident &eacute;galement : multi-threading, multi-processing, synchronisation,
+m&eacute;moire partag&eacute;e, linking dynamique explicite <I>c'est un
+des points que Schmidt d&eacute;veloppe assez longuement dans les papiers
+sur son framework ASX. On pourra en rediscuter, c'est assez int&eacute;ressant
+et tr&egrave;s peu exploit&eacute; en Unix &agrave; ma connaissance </I>.
+
+<P>Sources de complexit&eacute; de l'ID :
+<UL>
+<LI>
+probl&egrave;mes inh&eacute;rents (latence, pannes)</LI>
+
+<LI>
+probl&egrave;mes accidentels (manque de support pour d&eacute;bugger,</LI>
+</UL>
+d&eacute;composition algorithmique inad&eacute;quate, absence de biblioth&egrave;ques,
+r&eacute;entrance, etc...) <I>ces quelques points suffisent &agrave; confirmer
+-- si vous en doutiez -- que Schmidt a *vraiment* mis les mains dedans.
+Ce n'est habituellement pas le genre de remarque que l'on trouve dans les
+papiers th&eacute;oriques sur l'ID</I>
+
+<P>Il n'y a maintenant plus aucune excuse pour utiliser des m&eacute;canismes
+bas-niveau (sockets, select(), fork()/exec(), etc...). Les Design Patterns
+et les frameworks permettent d'&eacute;lever le d&eacute;veloppement des
+services :
+<UL>
+<LI>
+fonctionnalit&eacute;s des services</LI>
+
+<LI>
+configuration des services</LI>
+
+<LI>
+concurrence des services</LI>
+</UL>
+<I>Une corde de plus que j'ai oubli&eacute; de pr&eacute;ciser concernant
+Schmidt : il a &eacute;galement fait beaucoup de travail sur les d&eacute;mons
+IP, et c'est en fait &agrave; ce moment que l'id&eacute;e d'encapsuler
+tout &ccedil;a dans des wrappers C++ lui est venue. Depuis, il a &eacute;tendu
+ACE/ASX pour encapsuler aussi un domaine de communication bien plus vaste
+: TLI, NT, m&eacute;moire partag&eacute;e, linking dynamique, etc...</I>
+
+<P><I>Schmidt fait alors une apart&eacute; pour dire quelques mots sur
+le livre Design Patterns ("a classic book" dit-il) : quasiment tous les
+exemples donn&eacute;s dans le bouquin viennent du monde des interfaces
+graphiques, ce qui est une preuve que l'usage des DP ne compromet en rien
+la vitesse d'ex&eacute;cution</I>
+
+<P>Le reste du tutorial est consacr&eacute; &agrave; l'exposition de son
+projet en collaboration avec Motorola : il s'agit de g&eacute;rer la communication
+entre plusieurs dizaines de satellites et une base terrestre, dans un projet
+d'imagerie. Inutile de dire que des communications fiables et rapides sont
+une obligation.
+
+<P>Schmidt conclut en disant que pour l'ID, il est indispensable de savoir
+ce qui se passe "sous le capot", quel que soit le niveau d'abstraction
+offert par la toolkit utilis&eacute;e (que ce soit ACE ou CORBA). Par exemple,
+CORBA ne garantit pas qu'un send() ne bloquera pas en sortie (inadmissible
+pour son projet). M&ecirc;me remarque sur la taille de la queue des sockets,
+qui influe &eacute;norm&eacute;ment sur les performances. C'est un point
+sur lequel il revient dans son papier (voir plus bas) <I>autre r&eacute;flexion
+typique d'un technicien </I>.
+
+<P>Schmidt revient alors sur les Design Patterns. Quand il a d&ucirc; porter
+ACE sur NT, il n'a pas pu *du tout* r&eacute;utiliser son code, *mais*
+il a pu r&eacute;utiliser les patterns (par exemple, select()/poll() sur
+Unix devient WaitForMultipleObjects() sur NT. Remarque int&eacute;ressante
+(car elle vient d'un pro-Unix, et non pas d'un pro-Microsoft "NT's got
+very reasonable programmation things".
+
+<P>Citation de la pattern "Reactor", qui est utilis&eacute;e dans Xt, Interviews,
+CORBA, et de l'"Iterator" (STL, gestion lectures des r&eacute;pertoires
+read_dir() etc...).
+
+<P>Schmidt a aussi fait une d&eacute;monstration particuli&egrave;rement
+convaincante de l'usage des templates en C++ pour commuter d'une application
+single-threaded vers une multi-threaded en modifiant une ligne de source.
+Plusieurs cas de figure :
+<UL>
+<LI>
+input ST, output ST</LI>
+
+<LI>
+input MT, output ST</LI>
+
+<LI>
+input ST, output MT</LI>
+
+<LI>
+input MT, output MT</LI>
+</UL>
+Impressionnant ! (je vous disais que ce mec est un pro).
+
+<P>
+<HR>
+<H2>
+Tutorial 4</H2>
+<A NAME="tutorial4"></A>Introduction to the SOMObjects Toolkit and Metaclass
+Programming
+<H3>
+Ira Forman, IBM Austin Texas</H3>
+Peut-&ecirc;tre que le nom vous dit quelque chose. Moi aussi, et j'ai eu
+ma r&eacute;ponse au milieu du tutorial, quand Ira a dit qu'il &eacute;tait
+probablement la deuxi&egrave;me personne au monde &agrave; avoir programm&eacute;
+en Objective C. Il &eacute;tait dans le bureau &agrave; c&ocirc;t&eacute;
+de Brad Cox quand celui-ci a invent&eacute; Objective C (qui s'appellait
+OOPC, Objective Programming compiler for C, c'&eacute;tait en 1983).
+
+<P>Il y avait deux parties &agrave; ce tutorial. La premi&egrave;re est
+consacr&eacute;e &agrave; SOM (int&eacute;ressant, comme je vous le disais
+en introduction) est la deuxi&egrave;me &agrave; la programmation de m&eacute;ta-classes,
+&agrave; propos de laquelle Ira a &eacute;t&eacute; tr&egrave;s enthousiaste
+("don't leave after the break, cos' this will know you off your socks")
+mais au final, c'est assez fumeux.
+
+<P>La programmation OO est repr&eacute;sent&eacute;e par l'encapsulation
+est le polymorphisme, mais elle a fait beaucoup de promesses qu'elle n'a
+pas tenues. Un des gros probl&egrave;mes du d&eacute;veloppement OO est
+la (absence de) compatibilit&eacute; binaire.
+
+<P>SOM (System Object Model) est une technologie pour les biblioth&egrave;ques
+de classes orient&eacute;s objet qui fournit les fonctionnalit&eacute;s
+suivantes :
+<UL>
+<LI>
+neutralit&eacute; de langage</LI>
+
+<LI>
+&eacute;tat de l'art dans le domaine des capacit&eacute;s OO</LI>
+
+<LI>
+force industrielle</LI>
+</UL>
+L'IDL de SOM est celui de CORBA augment&eacute; d'informations encapsul&eacute;es
+sur des d&eacute;tails d'impl&eacute;mentations <I>e.g. : l'ordre dans
+lequel les m&eacute;thodes sont stock&eacute;es dans l'ex&eacute;cutable
+afin que le binaire de la biblioth&egrave;que r&eacute;siste &agrave; une
+&eacute;ventuelle r&eacute;organisation de ces m&eacute;thodes dans le
+source</I>
+
+<P>Les plateformes de SOM :
+<UL>
+<LI>
+aujourd'hui : OS/2, Windows 3.1, AIX, System 7 (sur Mac, c'est Apple qui
+impl&eacute;mente SOM)</LI>
+
+<LI>
+annonc&eacute; : OS/400, MVS</LI>
+
+<LI>
+consid&eacute;r&eacute; <I>:-) </I>: Windows 95 <I>renomm&eacute; au vol
+sur le transparent par Ira en "Winever" </I>, HP/UX, Solaris</LI>
+</UL>
+SOM offre des biblioth&egrave;ques de conteneurs (qui viennent &agrave;
+l'origine de Taligent) <I>je suppose que STL les rend obsol&egrave;tes
+</I>, une biblioth&egrave;que de d&eacute;p&ocirc;ts d'interfaces <I>analogue
+&agrave; celle de CORBA </I>, et une environnement persistant.
+
+<P>DSOM (Distributed SOM) permet l'invocation de m&eacute;thodes distantes
+via un proxy ou un ORB, sous OS/2 et Win3.1 (TCP/IP, IPS, SPX, NetBIOS)
+et AIX (TCP/IP, IPX/SPX).
+
+<P>Une classe SOM doit subir quelques contraintes avant de devenir DSOM
+:
+<UL>
+<LI>
+elle doit avoir une interface IDL</LI>
+
+<LI>
+aucun acc&egrave;s &agrave; stdout</LI>
+
+<LI>
+pas de m&eacute;moire allou&eacute;e par le client dans les variables d'instances.</LI>
+</UL>
+Quelques variations &agrave; SOM :
+<UL>
+<LI>
+Replicated SOM, utilis&eacute; pour du groupware sur petite &eacute;chelle</LI>
+
+<LI>
+Persistent SOM, d&eacute;velopp&eacute; avant que les premi&egrave;res
+specs de CORBA sortent</LI>
+</UL>
+Il est possible de communiquer d'OLE/COM verse SOM en utilisant un "COM
+emitter".
+
+<P>SOM garantit la compatibilit&eacute; binaire au travers des diff&eacute;rentes
+versions (en g&eacute;n&eacute;ral, les interfaces binaires ne supportent
+pas le sous-classage : elles appellent la mauvaise m&eacute;thode). Dans
+l'id&eacute;al, seule une alt&eacute;ration de l'application devrait entra&icirc;ner
+une recommpilation. Il est donc n&eacute;cessaire d'identifier des "transformations
+s&ucirc;res" (safe transformation), i.e. des modifications du source qui
+ne devraient pas entra&icirc;ner d'incompatibilit&eacute; binaire.
+
+<P>Dans un langage proc&eacute;dural, c'est assez simple. Il y en a cinq
+:
+<OL>
+<LI>
+am&eacute;lioration de performances</LI>
+
+<LI>
+&eacute;limination d'&eacute;checs</LI>
+
+<LI>
+augmentation du nombre de param&egrave;tres</LI>
+
+<LI>
+ajout de nouvelles proc&eacute;dures</LI>
+
+<LI>
+retrait de proc&eacute;dures priv&eacute;es</LI>
+</OL>
+En langage OO, il y en a davantage :
+<OL>
+<LI>
+am&eacute;lioration de performances</LI>
+
+<LI>
+&eacute;limination d'&eacute;checs</LI>
+
+<LI>
+augmentation du nombre de param&egrave;tres</LI>
+
+<LI>
+ajout de nouvelles proc&eacute;dures</LI>
+
+<LI>
+retrait de proc&eacute;dures priv&eacute;es</LI>
+
+<LI>
+ajout de nouvelles variables d'instances</LI>
+
+<LI>
+ajout de m&eacute;thodes</LI>
+
+<LI>
+insertion de nouvelles classes</LI>
+
+<LI>
+migration de parents vers le bas</LI>
+
+<LI>
+migration de m&eacute;thodes vers le haut</LI>
+
+<LI>
+retrait de m&eacute;thodes priv&eacute;es</LI>
+
+<LI>
+retrait de donn&eacute;es d'instances priv&eacute;es</LI>
+
+<LI>
+r&eacute;organisation des m&eacute;thodes</LI>
+
+<LI>
+r&eacute;organisation des variables d'instances</LI>
+
+<LI>
+migration de contrainte de m&eacute;taclasse vers le bas</LI>
+</OL>
+SOM est le seul &agrave; assurer la compatibilit&eacute; binaire dans tous
+ces cas de figure *sauf* 3- . Ira a alors pr&eacute;sent&eacute; un tableau
+avec d'autres produits est un Yes/No sur chacune de ces caract&eacute;ristiques.
+Les produits : ST, C++, Delta/C++, Objective C. C++ est clairement mauvais
+(No partout sauf 0 1 3 4) et Objective C a environ la moiti&eacute; de
+No. Se reporter p34 du proceeding du tutorial pour la totalit&eacute; du
+tableau.
+
+<P>Echelle des temps :
+
+<P>Avr 92 : SOM 1.0, OS/2 2.0
+
+<P>Sep 93 : SOM 2.0, OS/2 2.0
+
+<P>Oct 94 : SOM 2.1, OS/2 Warp
+
+<P>Deuxi&egrave;me partie du tutorial : Metaclass programming. J'ai dix
+lignes de notes mais je vais m&ecirc;me pas les retaper. Ou bien c'est
+trop g&eacute;nial et j'ai rien compris (je suis pourtant un peu familier
+avec CLOS et Self) ou bien c'est du fogware.
+<H1>
+Les conf&eacute;rences techniques</H1>
+Environ 170 personnes inscrites, la salle &eacute;tait relativement pleine
+pour chaque session.
+
+<P>
+<HR>
+<H2>
+<A NAME="conf1"></A>Simple activation for distributed objects</H2>
+Ann Wollrath, Geoff Wyant, Jim Waldo
+<H3>
+Sun MicroSystems</H3>
+<I>Les noms de Wyant et Waldo m'&eacute;taient plut&ocirc;t familiers.
+Mon tr&egrave;s pr&eacute;cieux BBDB vient de m'apprendre que Geoff Wyant
+a &eacute;t&eacute; un des premiers &agrave; r&eacute;cup&eacute;rer une
+version de Koalatalk. Waldo, aucune trace (une id&eacute;e Koala ?). C'est
+la fille qui a fait la pr&eacute;sentation (tr&egrave;s mignonne qui plus
+est, je me suis dit que la conf. commen&ccedil;ait plut&ocirc;t bien).</I>
+
+<P>Leur m&eacute;canisme d'activation des objets a pour but d'&ecirc;tre
+souple, d'offrir un protocole simple, bas&eacute; sur Modula 3 <I>comme
+vous voyez, il n'y a pas que DEC &agrave; l'utiliser </I>. Les interfaces
+sont &eacute;crites en IDL avec de l'h&eacute;ritage simple (pas d'h&eacute;ritage
+multiple en IDL).
+
+<P>Le mod&egrave;le du client peut avoir deux formes de r&eacute;f&eacute;rences
+:
+<UL>
+<LI>
+interne, en pointant sur un proxy distant (c'est lui la r&eacute;f&eacute;rence
+sur l'objet distant)</LI>
+
+<LI>
+externe</LI>
+</UL>
+L'activation peut &ecirc;tre de trois types :
+<UL>
+<LI>
+eager : tous les objets sont activ&eacute;s au d&eacute;marrage de l'application.
+Pratique (pas de question &agrave; se poser lors de l'invocation d'une
+m&eacute;thode sur un objet, on sait que celui-ci a &eacute;t&eacute; cr&eacute;&eacute;)
+mais peut cr&eacute;er des "temp&ecirc;tes d'activation" (beaucoup de trafic
+r&eacute;seau) et ne g&egrave;re pas les cha&icirc;nes circulaires de r&eacute;f&eacute;rences</LI>
+
+<LI>
+lazy : on d&eacute;f&egrave;re l'activation de l'objet jusqu'&agrave; la
+premi&egrave;re invocation d'une ce ses m&eacute;thodes. L'impl&eacute;mentation
+est analogue &agrave; celle des d&eacute;fauts de pages. Cette m&eacute;thode
+&eacute;vite les deadlocks, mais elle doit &ecirc;tre utilis&eacute;e au
+runtime</LI>
+
+<LI>
+split : les objets ne sont activ&eacute;s que quand ils sont convertis
+d'une forme de repr&eacute;sentation externe en interne. Cela &eacute;vite
+les deadlocks mais complique l'impl&eacute;mentation. C'est cette m&eacute;thode
+qu'ils ont utilis&eacute;e</LI>
+</UL>
+
+<HR>
+<H2>
+<A NAME="conf2"></A>Dynamic insertion of object services</H2>
+Ajay Mohindra
+<H3>
+IBM Watson Research Center</H3>
+Il s'agit de trouver un moyen d'ajouter des services &agrave; des objets
+dynamiquement, c'est-&agrave;-dire pendant que l'application est en train
+de s'ex&eacute;cuter (par opposition &agrave; l'approche statique, qui
+consiste &agrave; ajouter des services au moment de la d&eacute;finition
+des classes).
+
+<P>Pour cela, il est n&eacute;cessaires de d&eacute;finir trois classes
+par service : persistance, transaction, et les deux &agrave; la fois. La
+conclusion de l'article est que l'ajout de dynamique est viable et qu'il
+ajoute peu d'overheads par rapport &agrave; l'approche statique (benchmarks
+&agrave; l'appui).
+
+<P>
+<HR>
+<H2>
+<A NAME="conf3"></A>Object oriented components for high-speed network programming</H2>
+Douglas Schmidt, Tim Harrisson, Ehab Al-Shaer
+<H3>
+Washington University, St. Louis</H3>
+Doug pr&eacute;sente les r&eacute;sultats collect&eacute;s au cours d'un
+projet consistant &agrave; distribuer des images m&eacute;dicales sur des
+r&eacute;seaux ATM. Ils ont utilis&eacute; CORBA mais cela s'est r&eacute;v&eacute;l&eacute;
+dangereux pour des transferts volumineux. Ils en ont donc profit&eacute;
+pour &eacute;tablir des comparaisons de performances en utilisant ttcp
+(un outil de benchmarking TCP) entre C, ACE (sa biblioth&egrave;que C++
+de Tcp_wrappers) et CORBA (Orbix 1.3, Orbelin 1.2).
+
+<P>Les tests ont consist&eacute; &agrave; faire des mesures en faisant
+varier la taille des queues des sockets (de 8k a 64k), sur des c&acirc;bles
+Etherne 10Mb et ATM 155b. Aucun des ORB ne supportait CORBA 2.0.
+
+<P>C et ACE sont tr&egrave;s proches en performances, prouvant que les
+wrappers C++ n'ajoutent pratiquement aucun overhead. Les ORB sont loin
+derri&egrave;re. C/ACE n'ont atteint que 50% du potentiel th&eacute;orique
+d'ATM &agrave; cause des Sparc, qui sont des goulets d'&eacute;tranglement
+&agrave; des vitesses si &eacute;lev&eacute;es. Avec ATM, le r&eacute;seau
+n'est donc plus du tout le facteur limitant dans la transmission <I>Une
+conclusion auxiliaire de Doug consiste &agrave; dire que les r&eacute;seaux
+haute vitesse sont d'excellents moyens de faire appara&icirc;tre des faiblesses
+d'optimisation du code r&eacute;seau, celles-ci &eacute;tant en g&eacute;n&eacute;ral
+masqu&eacute;es par le faible d&eacute;bit du c&acirc;ble. Autrement dit,
+toutes les applications qui doivent aller vite devraient obligatoirement
+passer le "test du feu" qui consiste &agrave; tourner sur ATM </I>.
+
+<P>Par exemple, les "sequence" de CORBA vont plus vite que les "string"
+(ce sont tous les deux des types IDL) parce que les "string" ont un param&egrave;tre
+"length" dont la consultation co&ucirc;te cher sur des r&eacute;seaux haut
+d&eacute;bit.
+
+<P>C/ACE se comportent mieux quand la taille de la queue des sockets est
+augment&eacute;e <I>elle &eacute;tait de 100k max. en Solaris 5.3 et ils
+l'ont abaiss&eacute;e &agrave; 64k max. en Solaris 5.4. C'est &ccedil;a
+le progr&egrave;s </I>.
+
+<P>ORBIX est meilleur que ORBeline sur ce plan car il fournit des hooks
+pour faire ce genre de r&eacute;glage fin, c'est ce genre de d&eacute;tail
+qui fait affirmer Doug que m&ecirc;me pour des interfaces de haut niveau,
+il faut imp&eacute;rativement avoir une id&eacute;e de ce qui se passe
+"sous le capot" (cf. ma remarque en intro).
+
+<P>Avec un profiler, il a d&eacute;termin&eacute; que ACE/C passaient l'essentiel
+de leur temps dans send()/write(), et que le co&ucirc;t de m&eacute;thodes
+virtuelles peut donc &ecirc;tre compl&egrave;tement n&eacute;glig&eacute;.
+En revanche, les ORB passent une grande partie de leur temps dans write(),
+memcpy() et strlen(), &agrave; cause des recopies incessantes des donn&eacute;es
+dans les donn&eacute;es d'instances.
+
+<P>
+<HR>
+<H2>
+<A NAME="conf4"></A>Program explorer : a program visualizer for C++</H2>
+Danny Lange, Yuichi Nakamura
+<H3>
+IBM Research Center, Tokyo Research Labs</H3>
+La compr&eacute;hension de programmes OO est complexe, car ils combinent
+des vues abstraites et concr&egrave;tes, des h&eacute;ritages, du polymorphisme
+et de l'encapsulation. Les informations statiques (en-t&ecirc;tes de classes,
+etc...) n'est pas suffisante. L'approche des auteurs est donc de combiner
+l'information statique avec une information fournie dynamiquement, pendant
+que le programme s'ex&eacute;cute (sous forme de trace). Pour ce faire
+:
+<UL>
+<LI>
+raffinement de l'ex&eacute;cution en mode trace</LI>
+
+<LI>
+construction de vues incr&eacute;mentales</LI>
+
+<LI>
+changer l'ex&eacute;cution.</LI>
+</UL>
+Dans la pratique, &ccedil;a revient &agrave;
+<UL>
+<LI>
+instrumenter le code et faire tourner le programme sous debugger</LI>
+
+<LI>
+utiliser des traps (tr&egrave;s lent)</LI>
+
+<LI>
+utiliser des sondes (probbing) ainsi que le metaclassing de SOM <I>pas
+si fogware que &ccedil;a donc...</I></LI>
+</UL>
+
+<HR>
+<H2>
+<A NAME="conf5"></A>Software configuration management in an OO database</H2>
+Mick Jordan
+<H3>
+Sun Microsystems</H3>
+Les environnements de d&eacute;veloppement actuels proposent un d&eacute;fi
+non n&eacute;gligeable dans la maintenance de la coh&eacute;rence. Ces
+probl&egrave;mes ne sont pas correctement r&eacute;solus pas les fichiers
+conventionnels, les r&eacute;pertoires, etc... De plus, la gestion des
+configurations est en g&eacute;n&eacute;ral tr&egrave;s insuffisante et
+difficile &agrave; utiliser. La technologie des DB OO peut aider en fournissant
+une base de contr&ocirc;le centralis&eacute;e, en modelant les syst&egrave;mes
+pr&eacute;cis&eacute;ment et en supportant la cr&eacute;ation de nouveaux
+types d'objets.
+
+<P>C'est le but du projet FOREST. Il utilise OBJECTStore (un OODBMS) qui
+fournit la persistance d'objets C++ et un mod&egrave;le de client-serveur)
+et VESTA (qui stocke des composants sous une forme non modifiable).
+
+<P>FOREST int&egrave;gre le management de configurations, l'&eacute;dition
+et la construction de syst&egrave;mes. C'est une base de donn&eacute;es
+partag&eacute;es par les utilisateurs. <I>&ccedil;a pourrait peut-&ecirc;tre
+int&eacute;resser le SEMIR, dans le principe du moins. Dans la pratique,
+je ne sais pas si &ccedil;a reste encore exp&eacute;rimental ou s'ils arrivent
+vraiment &agrave; manager des sites avec &ccedil;a</I>
+
+<P>
+<HR>
+<H2>
+<A NAME="conf6"></A>Debugging storage management problems in garbage-collected
+environments</H2>
+David Detlefs, Bill Kalsow
+<H3>
+DEC Systems Research Center, Palo Alto</H3>
+Le garbage collecting (GC) a &eacute;t&eacute; pr&eacute;sent&eacute; comme
+une panac&eacute;e <I>y compris par l'auteur lui-m&ecirc;me, comme il le
+pr&eacute;cise avec un sourire </I>, mais c'est un peu exag&eacute;r&eacute;
+("marketing hype"). Le GC r&eacute;sout le probl&egrave;me des pointeurs
+dans le vide (dangling pointers) et des fuites de m&eacute;moire, mais
+<UL>
+<LI>
+il ralentit l'ex&eacute;cution</LI>
+
+<LI>
+parfois le tas devient trop gros, &agrave; la suite d'allocations excessives</LI>
+</UL>
+Le probl&egrave;me du "gros tas" <I>j'y peux rien, c'est la traduction
+de "big heap" :-) </I>vient des structures de donn&eacute;es sans limites,
+caus&eacute; par exemple par des applications &agrave; dur&eacute;e de
+vie initialement courte qui deviennent &agrave; longue dur&eacute;e. Il
+peut aussi y avoir des r&eacute;f&eacute;rences cach&eacute;es, et inatteignables
+pour des raisons d'encapsulation (il cite l'exemple de l'impl&eacute;mentation
+d'une pile qui utilise un tableau pour stocker ses donn&eacute;es, et qui
+restitue les &eacute;l&eacute;ments de la pile en d&eacute;cr&eacute;mentant
+l'index sans d&eacute;r&eacute;ferencer les &eacute;l&eacute;ments retir&eacute;s).
+
+<P><I>Je ne vais pas d&eacute;tailler la solution qu'il propose vu que
+celle-ci est intimement li&eacute;e &agrave; Modula 3 et &agrave; ses primitives
+de debug. J'estime que le titre, tr&egrave;s prometteur, tient un peu de
+l'arnaque car il laisse entendre une solution g&eacute;n&eacute;rale, alors
+que celle-ci est en fait sp&eacute;cifique &agrave; Modula 3</I>
+
+<P>
+<HR>
+<H2>
+<A NAME="disc1"></A>Pot-pourri sur les langages OO pour le Web</H2>
+Participants :
+<UL>
+<LI>
+Ted Goldstein (Sun)</LI>
+
+<LI>
+James Gosling, Sun (notre idole &agrave; tous, naturellement pr&eacute;sent
+pour parler de Java. Il avait un superbe tee-shirt "Surfing the web with
+Java" avec une planche &agrave; voile dessus</LI>
+
+<LI>
+Luca Cardelli, pour Obliq naturellement</LI>
+
+<LI>
+Antony Courney, l'auteur de Phantom</LI>
+
+<LI>
+Nitin Borwanker, pr&eacute;sent pour jouer le r&ocirc;le de contradicteur
+(il a &eacute;t&eacute; recrut&eacute; par Usenix &agrave; la suite de
+messages dans ce sens envoy&eacute;s dans la mailing-list Tcl)</LI>
+</UL>
+. James Gosling
+
+<P>Java est con&ccedil;u pour construire des applications distribu&eacute;es
+"safe". James n'avait pas du tout pens&eacute; &agrave; &eacute;crire un
+langage qui serait utilis&eacute; pour b&acirc;tir des syst&egrave;mes
+distribu&eacute;s. Il avait commenc&eacute; avec C++ mais &ccedil;a a rapidement
+d&eacute;g&eacute;n&eacute;r&eacute;, et l'id&eacute;e de Java est venue.
+Hotjava a &eacute;t&eacute; &eacute;crit &agrave; partir de standards externes
+(nntp, ftp, http, etc...). Java en quelques mots <I>en toute modestie pr&eacute;cise-t-il
+</I>: OO, distribu&eacute;, interpr&eacute;t&eacute;, robuste, safe, neutre
+du point de vue architecture <I>Anselm est bien plac&eacute; pour confirmer
+que c'est un peu exag&eacute;r&eacute; dans la pratique </I>, portable,
+permet de hautes performances, etc...
+
+<P>La s&eacute;curit&eacute; repose la v&eacute;rification du bytecode,
+sur des espaces de noms clairement d&eacute;finis, et des politiques ind&eacute;pendantes
+dans les packages de haut niveau (r&eacute;seau, syst&egrave;mes de fichiers).
+Java est disponible sur NT, Solaris. Win95 et Mac pour bient&ocirc;t, et
+d'autres portages en consid&eacute;ration.
+
+<P>. Luca Cardelli
+
+<P>On conna&icirc;t Obliq, je passe.
+
+<P>. Antony Courtney
+
+<P>Il pr&eacute;sente Phantom, un langage interpr&eacute;t&eacute; pour
+des applications distribu&eacute;es. Phantom a &eacute;t&eacute; d&eacute;marr&eacute;
+en 1994 et &eacute;tait bas&eacute; sur le scopique lexical distribu&eacute;
+d'Obliq. Phantom est similaire par bien des c&ocirc;t&eacute;s &agrave;
+Java <I>personnellement, je ne trouve pas, je soup&ccedil;onne Courtney
+d'essayer de surfer la vague montante </I>et a une syntaxe correspondant
+&agrave; un sous-ensemble de Modula 3, typ&eacute; statiquement.
+
+<P>Initialement, il &eacute;tait destin&eacute; &agrave; impl&eacute;menter
+un syst&egrave;me de conf&eacute;rece distribu&eacute;e <I>tiens tiens
+</I>mais il a rapidement &eacute;volu&eacute;. Sa principe innovation est
+que le client est dynamiquement &eacute;tendu. Actuellement, l'utilisateur
+interagit avec des serveurs, mais ceux-ci ne communiquent pas entre eux
+<I>Courtney touche &agrave; un domaine un peu plus social de l'Internet
+l&agrave; (et que j'estime particuli&egrave;rement int&eacute;ressant):
+W3 promeut &eacute;norm&eacute;ment une consultation statique et solitaires
+des informations. Courtney voudrait aller au-del&agrave; </I>. Sa prochaine
+&eacute;tape est donc de faire communiquer des clients WEB entre eux.
+
+<P>. Nitin Borwanker
+
+<P><I>Intervention un peu clownesque et utopique IMHO, mais il parle quand
+m&ecirc;me avec conviction </I>. Borwanker est un d&eacute;fenseur des
+Protocoles OO, pas des Langages OO. Il y a en effet de nombreux probl&egrave;mes
+avec le code :
+<UL>
+<LI>
+les guerres de langages sont in&eacute;vitables</LI>
+
+<LI>
+on aboutit donc a des il&ocirc;ts d'incompatibilit&eacute;s linguistiques
+<I>j'aime bien cette m&eacute;taphore, m&ecirc;me si dans la pratique il
+est tr&egrave;s rare de trouver des d&eacute;veloppeurs qui ne connaissent
+qu'UN SEUL langage</I></LI>
+
+<LI>
+fragmentation du march&eacute;</LI>
+</UL>
+Le monde a donc besoin de protocoles OO : on &eacute;changerait des token
+qui ont une signification s&eacute;mantique, afin d'&eacute;viter des guerres
+de langages. Les guerres de protocoles finissent toujours pas d&eacute;boucher
+sur un consensus (il appuie son argument en exhibant les RFC). Il suffit
+donc que les parties int&eacute;ress&eacute;s se rassemblent et parlent.
+
+<P>Question amus&eacute;e de Gosling a Borwanker : "dois-je comprendre
+que tu es pour le protocole finger ? " (plus gros ver de l'Internet connu).
+Borwanker reconna&icirc;t &agrave; contre-coeur qu'il y a des d&eacute;fauts
+&agrave; son approche...
+
+<P><I>Autre remarque amusante de Gosling, mais en dehors du sujet : il
+a d&eacute;j&agrave; re&ccedil;u en mail une macro emacs &eacute;crite
+en elisp qui impl&eacute;mente un interpr&egrave;te Basic au complet </I>.
+
+<P><I>Plut&ocirc;t d&eacute;cevante la confrontation au final. Gosling
+n'essayait pas trop de d&eacute;fendre Java, un peu normal vu que c'est
+probablement le langage qui a le plus de chance de s'imposer dans ce domaine</I>
+
+<P>
+<HR>
+
+<P><A NAME="conf7"></A>Phantom, an interpreted language for distributed
+programming
+
+<P>Antony Courtney
+<H3>
+Trinity College Dublin</H3>
+Le but de Phantom est de construire des applications qui sont distribu&eacute;e
+de fa&ccedil;on inh&eacute;rente, graphiquement interactives et extensibles
+dynamiquement. Les syst&egrave;mes existants ne sont pas suffisants (LOO
+bas&eacute;s sur RPC : C++, CORBA, ILU, etc...).
+
+<P>Le probl&egrave;me avec C++ c'est que si l'application est tr&egrave;s
+g&eacute;n&eacute;rale, cela repr&eacute;sente beaucoup de travail. Si
+l'application est plus sp&eacute;cifique, cela restreint l'interaction.
+HTML et CGI n'ont qu'un lot restreint de codes et donn&eacute;es. Ils sont
+sans &eacute;tat, ont une r&eacute;ponse interactive horrible et leur syntaxe
+rend la r&eacute;daction de documents &agrave; la main fastidieuse <I>pas
+vraiment un probl&egrave;me pour moi, ils sont tous les deux appel&eacute;s
+&agrave; &ecirc;tre utilis&eacute;s par des g&eacute;n&eacute;rateurs automatiques
+IMHO </I>.
+
+<P>Phantom permet la distribution transparent du code et des donn&eacute;es.
+Il garantit la s&eacute;curit&eacute; sur le r&eacute;seau et est un vrai
+langage. Il exclut les features qui ne sont pas safe, incorpore les threads
+et poss&egrave;de un GC. L'utilisation du scoping lexical d'Obliq permet
+un acc&egrave;s contr&ocirc;l&eacute; aux ressources locales. Il est bas&eacute;
+sur une machine virtuelle byte-cod&eacute;e, utilise Tk et les pthreads
+du MIT.
+
+<P>Futur : compl&eacute;ter le support de la distribution dans le runtime
+et impl&eacute;menter l'authentification.
+
+<P>
+<HR>
+<H2>
+<A NAME="conf8"></A>A framework for higher-order functions in C++</H2>
+Konstantin Laufer
+<H3>
+Loyola University of Chicago</H3>
+C++ ne supporte pas les "function closures" <I>une id&eacute;e pour traduire
+&ccedil;a ? Je ne crois pas l'avoir jamais entendu ni lu en fran&ccedil;ais
+</I>Konstantin veut incorporer un style fonctionnel en C++. Il donne un
+exemple d'une impl&eacute;mentation <I>tr&egrave;s, mais alors TRES tr&egrave;s
+mauvaise </I>d'une fonction foreach() en C++ avec des void * <I>heureusement
+pour lui, il passe rapidement &agrave; un exemple un peu plus convaincant
+avec des templates, et &eacute;voque rapidement STL </I>.
+
+<P>Est-il possibiler de g&eacute;n&eacute;raliser tout en conservant la
+s&eacute;curit&eacute; fournie par les types ? Oui, avec des "functoids".
+
+<P>Ce sont des templates de classes Fun<In,Out> avec un op&eacute;rateur()()
+red&eacute;fini. Ils utilisent l'idiome enveloppe/lettre <I>d&eacute;crit
+dans le bouquin de Coplien </I>mais o&ugrave; le constructeur de copie
+est virtuel.
+
+<P>
+<HR>
+<H2>
+<A NAME="conf9"></A>Lingua Franca : an IDL for structural subtyping distributer
+object systems</H2>
+Patrick Muckelbauer, Vincent Russo
+<H3>
+Purdue University, West Lafayette</H3>
+Le but est de construire un syst&egrave;me distribu&eacute; de mani&egrave;re
+structur&eacute;e et fortement typ&eacute;e afin de minimiser le couplage
+entre les composants. Les collections autonomes d'objets constituent des
+domaines. L'approche utilis&eacute;e utilise IDL.
+
+<P>Lingua Franca -> C++ translator -> C++ d&eacute;clarations (avec client/serveur,
+RTTI)
+
+<P>
+<HR>
+<H2>
+<A NAME="disc2"></A>Pot-pourri : COM/CORBA</H2>
+
+<H3>
+Mod&eacute;rateur : Mark Linton</H3>
+<I>Indubitablement un des points forts de cette conf&eacute;rence. COM
+et CORBA &eacute;taient chacun repr&eacute;sent&eacute;s par deux personnes
+qui ont d&eacute;montr&eacute; pas &agrave; pas la constitution d'un client
+CORBA puis COM. Le client doit fournir un acc&egrave;s distant &agrave;
+une grille (un tableau bi-dimensionnel. Ce pot-pourri a &eacute;t&eacute;
+surnomm&eacute; par Linton "laptop wars" parce que les deux partis ont
+fait leur pr&eacute;sentation avec des portables sur barco (sp?) , en utilisant
+des transparents r&eacute;dig&eacute;s avec Powerpoint. C'est surtout ce
+dernier point qui &eacute;tait int&eacute;ressant : les CORBA ont choisi
+l'exemple, et les COM ont alors repris leurs transparents en faisant les
+modifications pour l'adapter &agrave; COM. Il ressort que ces transformations
+sont mineures, et que COM et CORBA sont *extr&ecirc;mement* voisins. La
+s&eacute;ance a dur&eacute; un peu plus d'une heure mais elle aurait d&ucirc;
+prendre un apr&egrave;s-midi entier. Dommage.</I>
+<H4>
+Writing a CORBA application</H4>
+La pr&eacute;sentation est faite par un gars d'Iona. La cr&eacute;ation
+d'une application CORBA se fait en plusieurs &eacute;tapes :
+<UL>
+<LI>
+d&eacute;finition de l'interface IDL</LI>
+
+<LI>
+compilation de l'interface IDL</LI>
+
+<LI>
+impl&eacute;mentation</LI>
+
+<LI>
+&eacute;criture du serveur</LI>
+
+<LI>
+enregistrement du serveur</LI>
+
+<LI>
+&eacute;criture du client</LI>
+</UL>
+Tous ces processus ont &eacute;t&eacute; illustr&eacute;s avec des exemples
+de code. Extrait de l'interface IDL :
+
+<P><TT>interface grid {</TT>
+
+<P><TT>long get (in int, in int)</TT>
+
+<P><TT>set (in int, in int, in int long)</TT>
+
+<P><TT>};</TT>
+
+<P>Exemple d'utilisation par un client :
+
+<P><TT>#include&nbsp;<quelques_headers></TT>
+
+<P><TT>CORBA::impl_is_ready() // CORBA pret ?</TT>
+
+<P><TT>p = grid::_bind(); // recherche sur le reseau</TT>
+
+<P><TT>try {</TT>
+
+<P><TT>p -> set(2, 3, 123); // stockage dans la grille de 123 a la position
+2,3</TT>
+
+<P><TT>p -> get(2, 3);</TT>
+
+<P><TT>}</TT>
+
+<P><TT>catch {</TT>
+
+<P><TT>...</TT>
+
+<P><TT>}</TT>
+
+<P>L'impl&eacute;mentation consiste &agrave; &eacute;crire une classe C++
+qui h&eacute;rite de _sk_grid (le squelette g&eacute;n&eacute;r&eacute;
+par la compilation de l'interface IDL) :
+
+<P><TT>class grid_i : public virtual _sk_grid { // grid_i = implementation</TT>
+
+<P><TT>// impl&eacute;mentation (C++) des op&eacute;ration set() get()
+etc...</TT>
+
+<P><TT>}</TT>
+
+<P>L'impl&eacute;mentation se fait en C++ standard, mais il faut faire
+attention &agrave; la m&eacute;moire (par exemple, toujours retourner des
+copies des donn&eacute;es). Ensuite, on enregistre le serveur aupr&egrave;s
+de CORBA ("putit grid /net/corba/grid").
+<H4>
+Writing a COM application</H4>
+<I>Quelques mots sur le pr&eacute;sentateur : il s'appelle Don Box et m'a
+tr&egrave;s fortement impressionn&eacute;. Point de vue physique, pour
+ceux qui ont vu Wayne's World, il ressemble comme deux gouttes d'eau &agrave;
+Wayne : longs cheveux blonds, lunettes en &eacute;cailles carr&eacute;es,
+l&eacute;g&egrave;re barbe. Il a une voix qui porte, et est v&eacute;ritablement
+int&eacute;ressant pour chaque mot qu'il prononce. Il est aussi tr&egrave;s
+dr&ocirc;le. Pendant tout le temps qu'il &eacute;tait assis, il portait
+une veste par-dessus un tee-shirt blanc avec un petit logo Windows dessus.
+Quand son tour est venu, il s'est lev&eacute;, a retir&eacute; sa veste,
+a march&eacute; au centre de l'estrade, a tourn&eacute; le dos &agrave;
+l'assistance genre "je mets de l'ordre dans mes transparents" alors que
+c'&eacute;tait en fait pour montrer le dos de son tee-shirt, sur lequel
+&eacute;tait marqu&eacute; en gros caract&egrave;res "Windows 95 sucks
+less".</I>
+
+<P>L'&eacute;criture d'une application COM passe par les m&ecirc;mes &eacute;tapes
+que CORBA. Une application COM utilise en plus un num&eacute;ro d'identit&eacute;
+unique (d&eacute;j&agrave; &eacute;voqu&eacute; dans le tutorial COM) :
+une UUID. La syntaxe de leur IDL est l&eacute;g&egrave;rement diff&eacute;rente
+:
+
+<P><TT>void set ([in] short n, [in] short n, [in] long value)</TT>
+
+<P>La compilation de l'interface IDL fournit un fichier de plus :
+
+<P>grid.h, grid_i.c (interface commune)
+
+<P>grid_p.c dlldata.c (lien &agrave; la DLL et squelette d'impl&eacute;mentation).
+
+<P>COM ne g&egrave;re pas les exceptions, contrairement &agrave; CORBA
+<I>Don avoue qu'il aurait bien aim&eacute; avoir le m&eacute;canisme d'exception
+de CORBA </I>mais il poss&egrave;de un mod&egrave;le binaire, contrairement
+&agrave; CORBA o&ugrave; c'est totalement non sp&eacute;cifi&eacute;. Trois
+ex&eacute;cutables sont cr&eacute;&eacute;s &agrave; la fin du processus
+: le client, le serveur et une DLL (qui contient le proxy).
+
+<P>A chaque interface correspond une classe C++, et &agrave; chaque op&eacute;ration
+correspond une fonction membre. Si l'appel de la m&eacute;thode se r&eacute;v&egrave;le
+&ecirc;tre un appel local, aucun code Microsoft ne s'interpose entre le
+client et le serveur. Sinon, c'est le proxy qui est utilis&eacute; (avec
+des vptr et des vtbl).
+
+<P>
+<HR>
+<H2>
+<A NAME="conf10"></A>Adding group communication and fault-tolerance to
+CORBA</H2>
+Silvano Maffeis
+<H3>
+Cornelle University, Ithaca</H3>
+Probl&egrave;mes dans CORBA :
+<UL>
+<LI>
+pannes partielles (une machine crashe)</LI>
+
+<LI>
+r&eacute;seaux partitionn&eacute;s (un routeur crashe)</LI>
+
+<LI>
+impossible de faire la distinction entre un objet qui ne peut pas r&eacute;pondre,
+ou qui r&eacute;pond lentement</LI>
+
+<LI>
+d&eacute;lais de communication impr&eacute;visibles</LI>
+</UL>
+Supports actuels de CORBA :
+<UL>
+<LI>
+TCP/IP sur ONC/RPC</LI>
+
+<LI>
+fiabilit&eacute; point &agrave; point uniquement (pas multicast)</LI>
+
+<LI>
+pas de maintient de l'ordre en multicast</LI>
+
+<LI>
+pas d'abstraction de groupe</LI>
+</UL>
+Il faudrait quelque chose come ISI ou Horus. ISIS tourne sur Unix, VMS
+et Windows. C'est un produit commercial tr&egrave;s stable. Horus est un
+syst&egrave;me runtime et des biblioth&egrave;ques C. Il est tr&egrave;s
+souple et adaptable. Il autorise du multicase ATM sur UTP
+
+<P>La somme des deux donne Electro ORB (CORBA 2.0), dont le champ d'application
+est : syst&egrave;mes &agrave; distribution fiable, applications client-serveur,
+groupware, transmissions de donn&eacute;es efficaces.;
+
+<P>Les groupes sont cr&eacute;&eacute;s en &eacute;tendant le BOA (Basic
+Object Adaptor) avec BOA::create_groupe(), BOA::join_group (), etc... Electro
+ORB sera disponible en ao&ucirc;t.
+
+<P>
+<HR>
+<H2>
+<A NAME="conf11"></A>The Spring object model</H2>
+Sanjay Radia, Graham Hamilton, Peter Kessler, Michael Powell
+<H3>
+SunSoft Inc.</H3>
+Spring est le "nouvel" <I>je dirais : exp&eacute;rimental </I>OS de Sun.
+Il a d&eacute;marr&eacute; en d&eacute;cembre 1988. Il fournit une distribution
+transparente, s&eacute;curit&eacute;, uniformit&eacute; et mod&egrave;le
+des applications coh&eacute;rents (contrairement &agrave; Unix qui, par
+exemple, a besoin de plusieurs serveurs de noms tous diff&eacute;rents
+: num&eacute;rotation des machines, partages de /etc/hosts, etc...).
+
+<P>Tactiques utilis&eacute;es : interfaces fortes, typage fort, s&eacute;praration
+claire de l'interface et de l'impl&eacute;mentation, h&eacute;ritage des
+interfaces, objets distribu&eacute;es.
+
+<P>L'h&eacute;ritage de l'impl&eacute;mentation est diff&eacute;rent de
+l'h&eacute;ritage de l'interface <I>cf. le chapitre d'introduction du livre
+Design Pattern </I>. Les objets sont des instances d'interfaces. Les auteurs
+ont aussi fait attention de ne pas impl&eacute;menter toutes les fonctionnalit&eacute;s
+qui leur venaient &agrave; l'esprit afin de ne pas cr&eacute;er un monstre.
+
+<P>Les objets travaillent sur la base de contrats, mat&eacute;rialis&eacute;s
+par les interfaces, et qui &eacute;tablissent ce que les objets peuvent
+faire. Elles sont faites en IDL mais l&eacute;g&egrave;rement plus &eacute;tendu
+<I>leur version inclut des modes de param&egrave;tres suppl&eacute;mentaires
+que in, out et in out : borrow, copy, consume, produce. Ils ont essay&eacute;
+de convaincre l'OMG d'ajouter ces nouveaux modes &agrave; IDL mais ont
+&eacute;chou&eacute; </I>.
+
+<P>Les objets de Spring exportent des objets de comparaison afin de d&eacute;terminer
+de fa&ccedil;on s&ucirc;re les &eacute;quivalences <I>par exemple, un fichier
+en Unix est repr&eacute;sent&eacute; par un entier, et peut &ecirc;tre
+compar&eacute; avec un temps en seconde ou bien encore une quantit&eacute;.
+Notez que c'est &eacute;galement un des arguments (tr&egrave;s sens&eacute;s
+IMHO) avanc&eacute;s par Schmidt pour justifier ACE </I>.
+
+<P>Il existe des mappings de leur IDL pour C++ et Java. Spring est utilis&eacute;
+pour son propre d&eacute;veloppement <I>un signe certain que &ccedil;a
+commence &agrave; &ecirc;tre solide </I>. Il existe actuellement une centaine
+d'interfaces : threads, m&eacute;moire virtuelle, nommage, fichiers, devices,
+etc...
+
+<P><I>Les auteurs ont fait beaucoup de pression dans la conf&eacute;rence
+pour gagner des utilisateurs : distribution de compilations d'articles
+&eacute;crits sur Spring, appels &agrave; testeurs, etc...</I>
+
+<P>
+<HR>
+<H2>
+<A NAME="conf12"></A>Integration of concurrency control in a language with
+subclassing and subtyping</H2>
+Calors Baquero, Rui Oliveira, Francisco Moura
+<H3>
+Universidade do Minho, Portugal</H3>
+La gestion explicite de la concurrence cause une forte interf&eacute;rence
+avec l'h&eacute;ritage. Les auteurs ont donc cr&eacute;&eacute; un langage,
+BALLOON, qui est un langage OO pour exp&eacute;rimenter la concurrence.
+
+<P>Il poss&egrave;de une s&eacute;paration tr&egrave;s claire des types
+et des classes <I>si vous n'&ecirc;tes pas convaincu que la classe d'un
+objet est tr&egrave;s diff&eacute;rente avec le type de cet objet, lisez
+l'introduction du livre Design Pattern </I>. Un type peut avoir de multiples
+impl&eacute;emtations.
+
+<P>La g&eacute;n&eacute;ricit&eacute; est r&eacute;alis&eacute;e via des
+composants g&eacute;n&eacute;riques. BALLOON s&eacute;pare l'impl&eacute;mentation
+d'une interface potentielle.
+
+<P>Les auteurs ont illustr&eacute; leur langage avec un exemple d'&eacute;chiquier
+simplifi&eacute; : une tour, un fou et une reine, h&eacute;ritant de tour
+et fou pour impl&eacute;menter ses d&eacute;placements. Le langage offre
+des primitives de synchronisation pour retarder l'utilisation d'une m&eacute;thode
+jusqu'&agrave; ce qu'une autre m&eacute;thode soit ex&eacute;cut&eacute;e.&nbsp;
+<HR>
+
+<P><A NAME="conf13"></A>Generic containers for a distributer object store
+
+<P>Carstein Weich
+<H3>
+Universitatsstr Klagenfurt, Austria</H3>
+Le but est de cr&eacute;er une base de donn&eacute;es distribu&eacute;es,
+stock&eacute;e en m&eacute;moire, et bas&eacute;e sur l'impl&eacute;mentation
+des ensembles. Quelles primitives sont n&eacute;cessaires ? insert(), remove(),
+map(), member?(). Impl&eacute;mentations possibles : rassembler des composants,
+utiliser des types customs ou encore des algorithmes pr&eacute;d&eacute;finis
+(STL).
+
+<P>STL permet de param&egrave;trer le type de l'&eacute;l&eacute;ment,
+la structure du conteneur, fournit des algorithmes r&eacute;utilisables,
+et utilise une structure s&eacute;quentielle comme primitive de base. Carstein
+veut utiliser Modula 3, il a donc exclu STL.
+
+<P><I>Il donne un exemple d'impl&eacute;mentation en Modula 3, rien de
+nouveau. Je me demande l'int&eacute;r&ecirc;t de sa pr&eacute;sentation</I>
+<BR>&nbsp;
+
+<P><A HREF="index.html">Retour &agrave; ma homepage&nbsp;</A>
+</BODY>
+</HTML>

@@ -1,0 +1,191 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Language" content="en-us">
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<meta name="GENERATOR" content="Microsoft FrontPage 5.0">
+<meta name="ProgId" content="FrontPage.Editor.Document">
+<title>Rod Johnson</title>
+</head>
+
+<body>
+
+<h2 align="center">TheServerSide Symposium</h2>
+<h2 align="center">Boston, MA, June 2003</h2>
+<p>&nbsp;</p>
+<p>These three days have a blast.&nbsp; First of all, I have to compliment
+Floyd, Ed (good luck on your new endeavor, Ed!) and all the other people involved in organizing this symposium
+(especially Jay).&nbsp; Everything went without a hitch and the quality of the
+presentations was up to my expectations.</p>
+<p>It's also been the occasion for me to meet face to face a lot of people that
+I have been communicating with, either through blogs or by email.&nbsp; In no 
+particular order:&nbsp; <a href="http://blogs.atlassian.com/rebelutionary/">Mike 
+Cannon-Brookes</a>, <a href="http://crazybob.org/roller/page/crazybob">Crazy Bob</a>,
+<a href="http://roller.anthonyeden.com/page/jcarreira">Jason Carreira</a>, Rod 
+Johnson, <a href="http://hibernate.sourceforge.net">Gavin King</a>, Vincent 
+Massol, <a href="http://www.freeroller.net/page/mschinc">Merrick</a>, etc...</p>
+<p>Cameron has done a pretty good job at reporting live from the event, but here
+is my take on what I've heard during these three days.&nbsp;&nbsp;</p>
+
+<h3>Friday, June 27th</h3>
+<h4>EJB, AOP and the future of J2EE, Rod Johnson</h4>
+<p>Between the extraordinary wealth of information contained in his book and his
+Spring framework, Rod doesn't lack material to talk about.&nbsp; In this talk,
+he tackled the difficulties of development in J2EE today and how aspect-oriented
+programming and other frameworks (such as Spring) might help alleviate some of
+the complexities.&nbsp; Rod believes that AOP offers a simpler yet more powerful alternative to EJB
+and predicts that it will overtake EJB in the coming year.</p>
+<p>While I obviously find the AOP concept very promising, I have a hard time
+picturing it entering mainstream in the coming year, much less replacing a
+technology so widespread as EJB.&nbsp; I think Rod is falling prey to an overly
+enthusiastic view on AOP.&nbsp; Interestingly, Rod revised his estimate on a
+panel later to two years, which I still think is not very realistic.</p>
+<p>In some way, EJB offers a static version of AOP except that that pointcuts
+are restricted and not extensible.&nbsp; These are transactions, securitys and threading.</p>
+<p>Here are the problems Rod sees with EJB::</p>
+<ul>
+  <li>It is intrusive</li>
+  <li>You are stuck with a heavyweight container</li>
+  <li>You can't run the container on the client</li>
+</ul>
+<p>AOP has problems as well:</p>
+<ul>
+  <li>Objects don't assume they might be advised</li>
+  <li>Rogue advice or interceptors can break the application</li>
+  <li>What happens when you have a lot of aspects?</li>
+</ul>
+<p>Rod believes that we should embrace AOP incrementally and limit it to
+business objects accessed by interfaces only.</p>
+<p>Couldn't agree more.&nbsp; There are still too many unknowns in AOP right now
+and we need to tread carefully, especially when it comes to deploying
+applications in production.</p>
+<h4>JDO, Dion Almaer</h4>
+<p>Dion did a good job at introducing JDO to the audience and he is also the
+first person to have ever used the word &quot;proprietarily&quot; in a
+presentation (the meaning seems to be &quot;by using
+properties&quot;).&nbsp; JDO is an interesting technology that addresses some
+(not all) of the problems with EJB.&nbsp; For example, the specification
+supports inheritance and includes the description for properties such as IgnoreCache, Optimistic,
+NonTransactionalRead, etc...</p>
+<p>While these are very welcome additions (which are currently offered by
+proprietary extensions in EJB implementations), it is unfortunate that most of
+these are optional for vendors to implement.&nbsp; This severely cripples the
+ability to move between JDO implementations because vendors are free to
+implement or not these features, which can have some dire consequences for your
+application (anywhere from being less performant to breaking down pure and
+simple).</p>
+<p>Contrary to EJB, transactions in JDO are not declarative:&nbsp; you open
+and commit them in your code.&nbsp; I find this a little disappointing but by no
+means a showstopper.</p>
+<p>The main problem I see with JDO is in the query capabilities.&nbsp; For
+example, the only way to retrieve partial objects (SELECT in SQL) is to use
+field groups, and that's already twisting the feature.&nbsp; As far as I can
+tell, there is still no support for sub-queries, so I wonder how JDO can avoid
+doing several round-trips to the database in certain cases where one SQL
+statement would cause the database to be hit only once.</p>
+<p>JDO has a few niceties&nbsp; (like its quasi non-intrusiveness in your code)
+but the way it stands right now, I don't believe it offers features that are
+compelling enough to convince people to switch away from EJB).</p>
+<p>Friday night, Cameron, Bob, Rob and myself (soon joined by more people) went
+out to Boston to get a taste for the local breweries.</p>
+<h3>Saturday, June 28th</h3>
+<h4>Making a WebLogic developer's life easy, Cedric Beust, Rob Woollen</h4>
+<p>Rob opened this presentation by giving an overview of all the various tools
+and ant tasks we shipped with WebLogic 8.1:</p>
+<ul>
+  <li>How to package your utility classes.<br>
+&nbsp;</li>
+  <li>How to use the split directory structure.&nbsp; Some of the benefits:&nbsp;
+no copying of files is required, you can edit your JSP files in place, clear
+distinction between your source files and those that are generated, faster
+build/deploy cycle, etc...<br>
+&nbsp;</li>
+  <li>weblogic.appc, which supersedes all the previous compilers we used to have (jspc,
+ejbc, etc...).&nbsp; appc parses an ear file, makes sense of the various modules
+it contains and invokes the right tools for you.&nbsp; appc is also available 
+  through ant with the task wlcompile.<br>
+&nbsp;</li>
+  <li>New ant tasks:&nbsp; wlconfig (to configure your MBeans without having to
+know the name syntax), wlcompile, wldeploy, wlpackage</li>
+</ul>
+<p>In my part of the presentation, I gave an overview of EJBGen, then did a demo
+of the EJBGen Workshop extension, which makes EJB development even easier.&nbsp;
+I showed the EJB design view, how to import an EJB from a jar file or from a
+table and how to use the property sheet to edit the attributes supported by
+EJBGen.</p>
+<p>Then I gave a quick overview of our upcoming aspect-oriented framework, which
+is based on AspectJ and allows you to implement aspects on deployed J2EE
+applications by providing predefined pointcuts such as EJB (business methods,
+CMP fields), JMS (message publishing), JDBC (emission of SQL), etc...</p>
+<p>I will be blogging about this more in details when we release it (very soon).</p>
+<h4>Java Persistence Frameworks, Bruce Tate</h4>
+<p>In this talk, Bruce Tate (who wrote &quot;Bitter EJB&quot;) gives an overview
+of the choices offered to Java developers to persist their objects.&nbsp; In
+turn:&nbsp; POJO's (implement your own persistence), EJB, JDO, open source
+(Hibernate).&nbsp; No mention of Prevayler, although it can be argued that
+Prevayler falls short of providing some critical persistence services (such as a
+query language).</p>
+<p>Bruce says that POJO's quickly break for complex object models mostly because
+of the object-relational impedance mismatch.&nbsp; It's also very hard to
+implement scalable services such as caching or lazy loading.</p>
+<p>Bruce is not a big fan of EJB's but he does a reasonable job at presenting
+both sides of Entity beans.&nbsp; His evaluation of JDO ends up on a similarly
+mixed feeling.&nbsp; </p>
+<p>On the other hand, Hibernate receives a lot of praise, and I can only agree
+there.&nbsp; Hibernate is a pretty outstanding product and definitely something
+to keep an eye on.</p>
+<p>Somebody asks Bruce if the fact that JDO is a standard shouldn't make the
+scale tilts in its favor, as opposed to something that is proprietary, like
+Hibernate.&nbsp; Interestingly, it's precisely because JDO is a standard that
+you need to consider each vendor on a case-per-case basic and do a very thorough
+survey of what features it implements.&nbsp; On the other hand, despite its
+proprietary side, there is no such problem with Hibernate because it's coming
+from only one team.</p>
+<h3><b>Saturday night</b></h3>
+<p>Because of a logistic problem (the main room was booked for a wedding),
+Saturday evening was held outdoors, which turned out to be a very good idea
+considering the temperature was around 90 degrees all day.&nbsp; Over a
+barbeque, Floyd spent an hour holding an open microphone with all the attendees
+in order to get some feedback on how to improve TheServerSide community.&nbsp; </p>
+<p>Rick Ross then stepped up for the evening keynote and he spend forty-five
+minutes describing the state of Java</p>
+<p>Rick was followed by a panel about &quot;The future of J2EE&quot; made of Rod
+Johnson, Randy Heffner, Jim Kutson (WebSphere architect and former JSR 109
+lead), John Crupi (Sun), Mike Gruba (Compuware) and myself.&nbsp; The panel
+lasted about an hour and a half and received some interesting questions about
+where J2EE is now and where it should be headed.&nbsp; You can find a good 
+picture of the panel (courtesy of Craig Pfeifer)
+<a href="http://photos.autenroad.com/album11/abd">here</a>.</p>
+<h3><b>Sunday</b></h3>
+<h4>AOP in Java, Bob Lee</h4>
+<p>Bob is the author of jadvise, and he was also the first person to implement
+aspects in WebLogic.&nbsp; In this talk, he gave a quick overview of
+aspect-oriented programming, showing the example of the Observer interface (a
+welcome change from the usual logging or caching examples we see everywhere).</p>
+<p>jadvise implements method interception for plain old Java objects, allowing
+for dynamic proxy-like functionalities without using interfaces.&nbsp; He
+instruments bytecode with javassist, which allows him to dynamicall add and
+remove interceptors (and aspects) at runtime.&nbsp; javassist is also used to
+replace method implementation.</p>
+<p>Performance-wise, jadvise does the right thing:&nbsp; the original method is
+invoked with hardly any overhead when no aspects are present.&nbsp; Note that it
+is not possible to advise methods, because Bob wants to keep his framework
+simple.</p>
+<p>Bob then shows a very interesting demo:&nbsp; instrumenting a simple class
+but using an external library that displays sequence diagrams.&nbsp; Since he
+added a timer to slow down the whole application, you can see the sequence
+diagram being drawn before your eyes, making it very clear to everyone how
+interception is being performed.&nbsp; Nice trick.&nbsp; I expect we will see
+more of this sequence diagram trick in future demos.</p>
+<p>Bob received a lot of interesting questions at the end of his talk.&nbsp; One
+of them was about the definition of pointcuts.&nbsp; He mentioned that he was
+currently looking at defining pointcuts in bean shell, which does away with all
+the casting problems we usually see in non-static AOP frameworks.&nbsp; Other
+questions involved the cost of instrumenting bytecode, whether it worked well
+with signed jar files (it does), and many other questions which showed a keen
+interest from the audience.</p>
+<p>Very enjoyable presentation.</p>
+
+</body>
+
+</html>

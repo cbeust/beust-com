@@ -1,0 +1,658 @@
+<HTML>
+<HEAD>
+   <META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+   <META NAME="GENERATOR" CONTENT="Mozilla/4.02 [en] (X11; I; SunOS 5.5 sun4u) [Netscape]">
+   <TITLE>Treading Threadland</TITLE>
+</HEAD>
+<BODY>
+
+<CENTER>
+<H1>
+<B>Treading Threadland</B></H1></CENTER>
+
+<CENTER><A HREF="mailto:beust@sophia.inria.fr">Cedric Beust</A></CENTER>
+&nbsp;
+<DIV ALIGN=right>
+<H5>
+<FONT FACE="Times New Roman,Times">threads.html</FONT></H5></DIV>
+
+<DIV ALIGN=right>
+<H5>
+<FONT FACE="Times New Roman,Times">beust@sophia.inria.fr</FONT></H5></DIV>
+
+<DIV ALIGN=right>
+<H5>
+<FONT FACE="Times New Roman,Times">September 1997</FONT></H5></DIV>
+
+
+<P>This short memo is not meant to cover all the thread area. It is merely
+a bunch of notes and reflexions I had while venturing in the dangerous
+but fascinating world of multi-threading programming. This article contains
+some programming data but is mostly stuffed with dangerously non-technical
+terms like "warm and fuzzy". Be warned.
+
+<P>Content :
+<BR>&nbsp;
+<UL>
+<LI>
+<A HREF="#THIS IS NOT ABOUT SEWING">This is not about sewing</A></LI>
+
+<LI>
+<A HREF="#MT SAFETY">MT safety</A></LI>
+
+<LI>
+<A HREF="#SHARING FAIRLY">Sharing fairly</A></LI>
+
+<LI>
+<A HREF="#NOT A PERFECT WORLD">Not a perfect world</A></LI>
+
+<LI>
+<A HREF="#GOING MULTITHREADED">Going multithreaded</A></LI>
+
+<LI>
+<A HREF="#THREADING MODELS">Threading models</A></LI>
+
+<LI>
+<A HREF="#JAVA">Java</A></LI>
+
+<LI>
+<A HREF="#WHAT DO THREADS BUY ME ?">What do threads buy me ?</A></LI>
+
+<LI>
+<A HREF="#I AM STILL NOT CONVINCED">I am still not convinced</A></LI>
+
+<LI>
+<A HREF="#REFERENCES">References</A></LI>
+
+<LI>
+<A HREF="#NOTES">Notes</A></LI>
+</UL>
+
+<HR WIDTH="100%">
+<H3>
+<A NAME="THIS IS NOT ABOUT SEWING"></A>THIS IS NOT ABOUT SEWING</H3>
+If you deliver libraries, you must have felt a pressing demand from you
+customers for multi-thread support. However, the early signals will show
+that they usually aren't quite sure about what they exactly want, or even,
+what multi-threading is about at all. My guess is that it's usually more
+like a query that emanate from their superiors, which they diligently forwarded
+to their favorite component software suppliers. This falls in a category
+I'd call "a box to check on a list". These managers have precise requirements
+to meet, no matter how technically sound it might be (or not be). There
+are many items that fall in this category, I will discuss about this in
+some other memo, one day.
+
+<P>Back to the issue. The first thing to realize about multi-threading,
+with regard to libraries, is that it is a two-level process :
+<OL>
+<LI>
+multi-thread safe</LI>
+
+<LI>
+multi-thread hot (a)</LI>
+</OL>
+These two steps must be performed in that order. In the early days, people
+were mostly interested in just being multi-thread safe. I'm not sure this
+was very much used in these days (see for example the multi-threaded version
+of Xt, the Intrinsics, which caused great disarray in the development teams
+in Boston, and ended up being used by almost nobody). The main reason for
+this was probably the scarcity of thread implementations, and above all,
+their sloppyness.
+
+<P>At one point in time, things changed. I couldn't say for sure what the
+trigger was (it could be Windows 95 and/or NT, offering stable thread implementations),
+but suddenly, people started considering threads very seriously. Please
+note that this predates Java. Java did bring an even broader exposure to
+threads, but I'd say it was mostly responsible for people switching to
+step 2), while the initial awareness was for step 1) only. More about this
+later.
+
+<P>Now, people would dig for older publications on various topics such
+as reentrancy or deadlocks. While these areas had been explored in great
+details in parallelism researches, they still hadn't found their true place
+in the industrial computing world. Gone are these days. Multi-threading
+is mainstream, for better or for worse.
+<H3>
+<A NAME="MT SAFETY"></A>MT SAFETY</H3>
+Taking an object-oriented library to multi-thread safety uncovers an unexpectedly
+high number of problems. The first one you ponder is on the very meaning
+of "MT Safety". What does it mean for a library to be MT safe ? What is
+an "MT safe function" ? Do all functions of the API have to be MT safe
+in order for the whole framework to be MT safe ?
+
+<P>Whole books could be written on this topic. I'd sum up my position with
+a mixed answer : solve most of the problems with as little coding as possible.
+100% has always been a bad figure in computing. You don't want to solve
+100% of the problem, because the curve to this if you parameterize it with
+coding is asymptotic. The closer you get to 100%, the longer it takes to
+reach it. 80% is much more realistic. You can solve 80% of most problems
+in a finite time of coding.
+
+<P>So, you don't want all your public functions to be MT safe. Only some
+of them. And for those, even with the best provisions, you will never be
+safe from a malicious use. The bottom line is : you can never say that
+a function is MT safe. But you can document in what conditions it should
+be called, and what resources it uses (implying that these resources should
+not be locked at the moment of the call, but it already takes a smart programmer
+to make this deduction, so don't hesitate to be redundant in documenting).
+
+<P>Uh... I just used a very usual word ("lock") in a rather uncommon place.
+I guess a more detailed explanation is in order.
+<H3>
+<A NAME="SHARING FAIRLY"></A>SHARING FAIRLY</H3>
+The first step to MT safety is make sure that common resources are used
+rationally. I am not going to get into the definition of mutexes or semaphores.
+If you don't know how these work and what their purpose is, you probably
+didn't even read that far. You can think that MT safety is all about locking
+carefully, and if you do that, you get a free lunch and can proceed to
+more interesting businees. The reality is a bit less shiny. Too much locking
+will ruin all your work.
+
+<P>I might be a bit rude there, but I'd say I much prefer a very precisely
+documented function that does the minimal locking work, rather than a barricaded
+function that will preclude any accident from happening, but urging me
+into buying a faster processor for my machine in doing so.
+
+<P>This speed consideration is not very important in C++ because you can
+design locking mechanisms that can be conditionally inlined when you are
+in a shipping period. But Java raised the issue again, since conditional
+code is very difficult to achieve on Windows environment developments (as
+of today. I really hope things will change in a near future. Please Symantec,
+Microsoft, IBM, Borland, Asymetrix, etc... : let us use some kind of preprocessor
+on our sources before compiling them).
+
+<P>Of course, in an ideal world, you can have your cake and eat it too
+: use an unsafe function if you know what you are doing, or a safe one
+if you can't predict the calling environment.
+
+<P>This is an important issue, and offering this choice is just as important
+in thread libraries. In order to enter Threadland, we had to devise our
+own platform-independant thread library (none of the tools like Roguewave's
+existed by then). It was very instructive, and since I wasn't the one who
+wrote this library, I won't comment on how neat it is, and how clever some
+of the mechanisms used in it are. There is however one point I'd like to
+stress out : among the available classes are Safe Mutexes and Unsafe Mutexes.
+
+<P>The distinction between "safe" and "unsafe" goes beyond this specific
+example, based on mutexes. The general idea is : on a first approximation,
+use safe mutexes everywhere. They will never crash, possibly block, and
+may even leave a trace to let you know if the lock they are trying to get
+is already locked by some other thread, patting you on the shoulder to
+let you know maybe you don't understand the flow of your program as you
+think and you might want to review it again.
+
+<P>When you get a better grasp of what is going on, you might venture into
+using unsafe mutexes, that will offer the best performance if used correctly.
+Typically, sometimes your code will necessarily need to lock several times
+the same resource. It might be safe to do so within the same instance or
+thread, of a class, but not if some other instance/thread locks the object.
+If you are in a private function (i.e. you know who is calling it), you
+can "safely use the unsafe API".
+
+<P>Why am I mentioning this ? The morale is that you must give the choice
+to the user, because you alone cannot know how your API will be used. It
+is already very difficult to write reusable API's and sometimes, users
+will surprise you when trying to achieve things with your code you never
+thought of. With multi-threading, you can assume even less than that, and
+the only choice is : work with the user. Make them intimate with your multi-threaded
+work by documenting, explaining, and offering choice as much as possible.
+<H3>
+<A NAME="NOT A PERFECT WORLD"></A>NOT A PERFECT WORLD</H3>
+Things always fail. And the more complex they become, the more likely they
+are to fail. Two programming shifts have appeared recently that contributed
+to making development a much more complex process : distributing computing
+and multi-threading.
+
+<P>Distributed computing introduced the network as a possible point of
+failure. It adds flexibility but also adds a lot of hassle on the programmer
+who has to take into accounts a greater number of cases where the code
+might fail. Basically, you can't assume any longer that calling a function
+will succeed (by "succeed", I mean the program counter will reach the entry
+point of the function, i.e. the code of this function will be executed).
+
+<P>Multi-threading offers a slightly different facet. Two new problems
+arise :
+<UL>
+<LI>
+the possibility of a deadlock, already mentioned ;</LI>
+
+<LI>
+failing to acquire a lock (note that the "front-end problem" is actually
+"simultaneously and safely accessing the same data", but this boils down
+to getting a lock)</LI>
+</UL>
+Just like a remote call can fail in a distributed world, the lock you want
+to acquire might not be ready when you need it. You now have a very difficult
+question to ponder : what am I supposed to do ?
+
+<P>In a simple world, you don't even bother. The thread API will leave
+you no choice but blocking until the lock is freed by some other thread.
+More sophisticated thread API's will offer you an alternative : the possibility
+to "try a lock", that is, see if the resource can be locked and immediately
+fail if it can't be. Let's consider both cases.
+<UL>1) tryLock() doesn't exist</UL>
+
+<UL>
+<UL>Strangely enough, this imposed behavior is not that dramatic in most
+cases, and it probably explains why tryLock() is not implemented everywhere.
+The point is that very often, acquiring the lock is the only thing that
+matters to your code. If you can't grab it, then there is no point in processing
+any further since you are not supposed to do anything else. Thus, blocking
+is quite logical.
+
+<P>This used to be fine, but is not any longer as of today where graphic
+user interfaces are so pervasive. At the very least, you will have to make
+sure your application is still updating its graphics. Even if it's to do
+nothing but show a hourglass. The user will tolerate your application being
+frozen while it is trying to progress, but they will most likely at least
+require their screen not to be filled with empty rectangles and the possibility
+to cancel the action that doesn't seem feasible at the moment. And for
+all this to happen, a portion of your code has to be alive in order to
+process the graphic events. Moreover, this live portion of code must be
+able to break the current attempt of locking. The safest and deadliest
+way to do this is to kill the offending thread. A smoother one is to let
+the blocking thread know that it should give up trying to get the lock
+and give it an occasion to exit gracefully, releasing all the resources
+it acquired so far. We are entering another very complex area of multi-threading
+programming here (thread interruption), and it would deserve a full article
+on its own.
+
+<P>It's amazing how things go fast in the computing world. The previous
+paragraph might lead you into thinking that the latest interface breakthrough
+was from non-graphic interfaces to graphic interfaces. This is not quite
+true. Progress is still being made in the GUI world, and a part of it comes
+from multi-threading (another one comes from innovations like Microsoft's
+flat buttons, but this is another topic). Do you remember the early versions
+of Netscape ? Selecting a menu was done the "old" way on Unix. They would
+grab the X server, interrupting any other ongoing action. This is no longer
+the case. A menu can be selected while the HTML part of the browser is
+still busy retrieving and displaying data over the network. I can't say
+for sure, but I wouldn't be surprised to hear that a separate thread is
+being used for each of these actions.
+
+<P>The morale is : if you can't test a lock, it makes programming simpler
+(you don't have to ask yourself questions) but it results in restrictions
+in your application that users tolerate less and less each day.</UL>
+</UL>
+
+<UL>2) tryLock() exists</UL>
+
+<UL>
+<UL>It is a well-established rule in computer science that the easier the
+task is for the programmer, the more difficult the resulting application
+will be for the end-user. Put differently, the more complex the code you
+write is, the more likely it will end up being easy for the user.
+
+<P>tryLock() is one of these many apparently harmless functionalities that
+can drive a programmer crazy. From the previous section, it is pretty clear
+that tryLock() should be used wherever possible, but it turns out that
+it raises unbelievably complex issues which the programmer is sometimes
+better off ignoring completely...
+
+<P>The whole problem boils down to : what if tryLock() returns false, which
+means that calling lock() will block the thread ? Note that it is not a
+failure indication. The message here is not "the resource is not available",
+but rather "the resource is not currently available". It makes a difference
+because it is a warning much more than an error. The difference is relatively
+small, though, because all it does is adding one possible split in the
+flow of your program :
+<BR>&nbsp;
+<UL>a) should I try again until I get what I want (possibly performing
+some action in the meantime) ?
+<BR>&nbsp;</UL>
+
+<UL>b) should I fail ?
+<BR>&nbsp;</UL>
+Option a) might look like you should actually use lock(), but it is actually
+very different. The key point here is that unlike lock(), you are given
+the opportunity to take whatever action you deem necessary in order for
+your tryLock() to eventually succeed. For example, try another printer,
+another network port to connect to, or even simply wait for some server
+to be launched by a third party (for example, in CORBA, servers can be
+activated in different modes, among which shared and non-shared. You might
+want to try a shared server first and if it's busy, ask for a non-shared
+server to be spawned.).
+
+<P>Option b) is the most difficult to handle. If the resource you were
+trying to acquire was essential to your application, you are now in a state
+that is close to terminal. This problem will look familiar to people who
+have been following the evolution of C++ for some time. Long ago, Stroustrup
+and the C++ committee were working on exceptions, and were considering
+the problem of resumption. When an exception is thrown, should the language
+give some means to resume the execution of the program, or should it just
+help propagate the exception and no more ? After lenghty discussions, it
+was eventually decided that C++ would not allow exception resumption. I
+refer you to Stroustrup's book (see the References section) for the exact
+details of the decision.
+
+<P>Someone said "he who doesn't learn history is condemned to repeat it".
+I happen to think that organizational committees like C++' can't be wrong.
+You might not agree with me, but if you read the aforementioned book, you
+will at least have to admit the technical soundness of the arguments. It
+was not a political choice, but a technical one, weighing carefully all
+the pros and cons of each approach.</UL>
+</UL>
+So... what we have here is a singularly contradictory situation :
+<UL>
+<LI>
+we should use tryLock() whenever possible ;</LI>
+
+<LI>
+tryLock() is extremely hard to handle gracefully but some can be learned
+from exceptions.</LI>
+</UL>
+The bottom line : it is very dependant on the level of flexibility you
+are willing to offer to the user. It's all a matter of trade-offs. In the
+last resort, don't hesitate to shift the decision toward the user (by popping
+a dialog or something similar). Most of the time, they will be the only
+one that can make the right choice. But bear in mind that resuming a failed
+execution is not always easy, and making this possible will force your
+code into a certain design that must be carefully thought in the first
+place.
+<H3>
+<A NAME="GOING MULTITHREADED"></A>GOING MULTITHREADED</H3>
+This section is a very short list of gross recipes in order to switch into
+the multi-threaded world.
+
+<P>Your first enemy is static (global) variables. You have to spot them
+all (c) and track them throughout their code. The first step is to guard
+them with mutexes, but this is definitely not a systematic process. You
+have to stare at your code until you are certain that the code you see
+is not having unseen effects on other parts of the library. And with statics,
+you never can tell for sure.&nbsp; Especially if the code you are writing
+is destined to go into a shared library, which has its own rules for initializing
+static parts of the program. If you write code for a library, always make
+sure it will work both in a static and a shared libraries.
+
+<P>I will make a short parenthese on the Singleton design pattern, which
+many programmers use. If you don't use this design pattern yet and tend
+to prefer static functions, you might want to think again. I strongly recommend
+you avoid the following code :
+<UL>
+<PRE>A::Function1();</PRE>
+
+<PRE>A::Function2();</PRE>
+
+<PRE>A::Function3();</PRE>
+</UL>
+and use instead
+<UL>
+<PRE>A::GetSingleton().function1();</PRE>
+
+<PRE>A::GetSingleton().function2();</PRE>
+
+<PRE>A::GetSingleton().function3();</PRE>
+</UL>
+The idea is pretty obvious : cut down the number of static functions in
+your API. Make them converge as much as possible toward a unique function,
+on which you can focus your protection efforts. Once again, the underlying
+goal is : choice. If you decided to make GetSingleton() a mutex-protected
+function, you might want to supply an UnsafeGetSingleton() function that
+will skip the mutex check and document precisely in what conditions this
+function should be used.
+
+<P>In the thread litterature, you will see a lot of concern about deadlocks.
+Indeed, this is the first drawback that comes to people's mind about multi-threaded
+programming. My experience might be biased on this, but I am not sure this
+is the issue at stake here. Most (not to say all) of the problems I faced
+with multi-thread were not due to interblocking, or starvation. What happened
+most of the time was due to memory.
+
+<P>There shows my bias. If I mention memory problems, I can't possibly
+be using Java. That's right. I was using C++. Java makes all this discussion
+moot since you will never meet early deallocation problem with Java. You
+are still confronted with another kind of problems, but I'll get back to
+this below.
+
+<P>Back to C++ and memory problems. Most of the problems you will face
+will stem from deallocated memory which you are still accessing, or other
+problems of that kind. Sorry, no silver bullet to offer here, you are really
+on your own. Tools like Purify and likes are priceless at this point. You
+will probably find out that containers of pointers are a major pain, and
+that you really have to take measures to handle them cleanly (let it be
+addition or removal of elements), and most of all, that you have to make
+your destructors sturdy as concrete.
+
+<P>Maybe you assumed I had a silver bullet to offer at some point, according
+to the wording I used above. Well, I lied. I really have no silver bullet.
+Neither on C++, nor on Java. Especially because the litterature is abundant
+on this latter. You will definitely want to take a look at Doug Lea's book
+"Concurrent programming in Java". I find the overall work a bit messy and
+in need of some ordering, but each part taken separately is filled with
+insightful advice that will give you a crash course in deadlocks and related
+issues in no time.
+<H3>
+<A NAME="THREADING MODELS"></A>THREADING MODELS</H3>
+Let us take a quick ride into the very technical area. Concretely, let's
+examine the examples of a mono-threaded model and a multi-threaded one.
+I will use what I am most familiar with : Orbix.
+
+<P>The recent versions of Orbix offered multi-threading. At level two,
+that is, "multi-thread hot". This is especially meant to be used on the
+server side.
+
+<P>The mono-threaded model is very simple, and quite common in client-server
+applications : the server listens to several file descriptors simultaneously,
+and dispatches the incoming messages to the appropriate object implementations.
+Selection is based both on the file description number, and on more specific
+information contained in the data that was just received (the effective
+type of the object, what function, what parameters, etc...).
+
+<P>The first design revamp you might be tempted to make is : one client,
+one thread. You break multiplexing and spawn one thread per file descriptor.
+Orbix takes the paradigm one step further (b) by allowing
+<UL>
+<LI>
+one thread per object ;</LI>
+
+<LI>
+one thread per request.</LI>
+</UL>
+However neat and flexible these offers are, I will stick to the simplest
+part (one thread per client) and carry on with my example.
+
+<P>Incoming requests all reach a central point in the server, where the
+request is unmarshalled, and then forwarded to the right dispatcher, which
+then proceeds to dispatch it to the right function. In order to accomodate
+the different models, you can wedge in your own "request unmarshaller",
+and therefore, get a chance to examine the request before it is effectively
+dispatched. The idea behing the whole design is to create your own dispatcher
+and tell Orbix not to take care of these requests.
+
+<P>Basically, you will create a new thread at each new connection, and
+each of these threads will then "block" on a "queue" (more about this below).
+When a request hits your server, your request marshaller is invoked and
+asked to examine the request. If you choose to leave it, it will be handed
+to the next request unmarshaller, otherwise, the request becomes your sole
+responsibility and Orbix proceeds to read the next request from the network.
+
+<P>Your unmarshaller will unfold the request and transmit it to the right
+thread. Since you are now "in-process" (that is, in the same process),
+it is no longer a matter of listening to a file descriptor. At the thread
+level, threads block on what is most commonly referred to as a "condition
+variable". This condition variable is an indicator of the current status
+of the private queue of requests of the thread. As long as the queue is
+empty, the thread sleeps. If awakened by the main dispatcher thread, the
+sleeping thread awakens, spins the queue, processes all pending requests,
+and gets back to sleep when it is done.
+
+<P>As you can see, the resulting design is fairly complex with respect
+to the monothreaded one. And indeed, it takes some time and a reasonable
+amount of aspirine to put it to work. Another vexing point is that your
+goal is not to enhance the existing process, but merely to make it work
+just as well as the mono-threaded one. This is pretty similar to the daily
+job of a system administrator : when they do their job correctly, nobody
+notices anything, things just go smoothly.
+
+<P>But in the end, when it works, you really end up with the impression
+that you master the inner workings of your framework. And before I went
+multi-threaded, I wasn't sure I could have said this of any application
+I had ever developed before.
+<H3>
+<A NAME="JAVA"></A>JAVA</H3>
+Java offers a very attractive range of functionalities, both old and new.
+But most of all, it exposed programmers to multi-threading. So far, only
+a fairly small subset of developers had tackled the issue. Now, it's very
+hard not to use threads when programming in Java. Threads pop up at the
+very least occasion : if you want to monitor several file descriptors,
+if you want to post timer events, etc...
+
+<P>What's nice is that Java's thread API is simple and powerful. It is
+not free from design and implementation mistakes, as have shown the recent
+discussion on termination of threads on the Java mailing-list (in short
+: it is broken, and the current API is being deprecated), but it raises
+the overall awareness of everyone on the issue. Most of all, it created
+a standard naming for thread discussions, kind of like Design Patterns
+(the book) coined the major terms we use every day in our discussions now.
+<H3>
+<A NAME="WHAT DO THREADS BUY ME ?"></A>WHAT DO THREADS BUY ME ?</H3>
+Once again, I don't want to go over a carefully detailed analysis of the
+pros and cons of multi-threading. Plenty of material on the topic exists.
+I just want to stress a few "social" points that I only rarely saw addressed.
+
+<P>When asked about switching to multi-threading, most experienced programmers
+(but not familiar with the issue) will invariably respond that everything
+that can be done with several threads can be done just as well with one
+process, possibly multiplexing and decoupling on an incoming stream of
+events.
+
+<P>This is the standard answer, and is touted and loudly advocated by respectable
+people like John Ousterhout. This is a very reasonable answer, and actually,
+there are even works backing up this thread denial in terms of performances,
+like Doug Schmidt's findings (roughly put : multi-threaded servers are
+not necessarily faster than mono-threaded ones). Granted, most of the time,
+you are better off without threads. But it doesn't cover "all" the time.
+"Sometimes", evenemential programmation just won't cut it.
+
+<P>Consider a server that is being accessed by several dozens of clients.
+The server manipulates several millions of objects, and sometimes has to
+create objects on clients in response to their queries (a fairly common
+situation at some of our customers sites). Two situations can block the
+server in a mono-threading world :
+<UL>
+<LI>
+the creation of remote objects is synchronous. The server has to wait for
+the answer from the client "the object is constructed, here is its reference,
+now you can call functions on it". Then it can carry on ;</LI>
+
+<LI>
+the in-process time spent to service a request is long. Bear in mind that
+"long" is very relative. One second is an eternity in the kind of environment
+I described in this example. It means that the calling client is being
+blocked (which can be acceptable) but that all others can't be serviced
+either (which is not).</LI>
+</UL>
+Forking is not an option. However efficient "forkness" has become with
+the advent of functions such as vfork(), it is still an order of magnitude
+above threads. And sharing resources with forked processes comes with its
+own set of problems, which we don't want to consider here.
+
+<P>Multi-threading programming is not just a fancy. Its benefits are undoubtedly
+very exaggerated, but you just can't afford ignoring the matter any more,
+because sometimes, it is the only acceptable solution to a problem.
+<H3>
+<A NAME="I AM STILL NOT CONVINCED"></A>I AM STILL NOT CONVINCED</H3>
+All you will get in this paragraph is how I personally feel about this
+whole issue. Be afraid. Be very afraid.
+
+<P>Several months after working on this and eventually shipping the project,
+I came down to a halt and pondered what I had just done. And I was strangely
+satisfied. Much more satisfied than "visually appealing applications" I
+had written before, and of which I was rather proud as well. No, strangely
+enough, what I really appreciated about this is that it's invisible. Nobody
+but me knows how complex the inner workings of what I developed is. The
+worst is that the shipped product behaves just the same as its former version.
+It adds a few functionalities, thanks to "multi-thread hotness" (or should
+I say "heat" ?). But apart from that, it can barely be distinguished from
+its predecessor.
+
+<P>But what is going inside is mindbogglingly complex and sometimes led
+me to really agitated nights. But I documented it extensively. I needed
+to. Because however complex it is, it works, and it's not by accident.
+It involved rethinking a major part of the initial library, and reshaping
+it in a very alien way. It's a design that is necessarily "up to bottom".
+You have to design it in your head first, unlike most of the everyday programming
+where you can afford building piece of code by piece of code once the design
+has been approved by your team. Somehow, it takes the code review process
+down one level : it used to be performed by the team, now you need to do
+it by yourself and for yourself.
+
+<P>Programming is an abstract art, but compared with multi-threading programming,
+mono-threading programming looks very concrete. I used to see only concrete
+things. Now I see both. And I never programmed the same way again. Programming
+to multi-threads is an extremely rewarding experience, and you really end
+up feeling warm and fuzzy inside. You can question its use, but the beauty
+is not in it being the end to all. It's just cool. And if this doesn't
+convince you, nothing will.
+
+<P>At the very least, now you know I was serious about the "warm and fuzzy"
+part.
+<BR>&nbsp;
+<H3>
+<B><A HREF="mailto:beust@sophia.inria.fr">Cedric Beust</A></B></H3>
+&nbsp;
+<BR>&nbsp;
+<BR>&nbsp;
+<BR>&nbsp;
+<H3>
+<A NAME="REFERENCES"></A>REFERENCES</H3>
+I am such a lazy person. I must have all the exact references somewhere,
+but I am too lazy and I rely on Web engines to give you the exact places
+where this stuff can be found. Let me know if you can't find what you are
+looking for and I will provide you with a more precise location.
+<UL>
+<LI>
+<A HREF="http://java.sun.com://people/pavani/techconf.html">Pavani Diwanji's
+paper</A>&nbsp; on the difficulties of using native threads in the Solaris
+JVM ;</LI>
+
+<LI>
+advanced-java mailing-list archives ;</LI>
+
+<LI>
+John Ousterhout's talk on "why threads are a bad thing" ;</LI>
+
+<LI>
+<A HREF="http://www.cs.wustl.edu/~schmidt">Douglas Schmidt'</A>s numerous
+articles.;</LI>
+
+<LI>
+Doug Lea's "Concurrent programming in Java". ;</LI>
+
+<LI>
+<A HREF="http://java.sun.com/products/jdk/preview/docs/guide/misc/threadPrimitiveDeprecation.html">Why
+Java's thread API (and more specifically, stopping threads) is being deprecated</A>
+;</LI>
+
+<LI>
+Design and Evolution of C++, by Bjarne Stroustrup (on exception resumption)
+;</LI>
+</UL>
+
+<H3>
+<A NAME="NOTES"></A>NOTES</H3>
+(a) I don't like "hot". I tend to favor "active", but any other idea is
+welcome.
+
+<P>(b) This is not an Orbix advertisement. Orbix just happens to offer
+the most flexible thread models among all currently existing ORBs. My disclaimer
+will be twofold : 1) other ORBs will most likely appear shortly with models
+at least as flexibls as Orbix' and 2) Orbix has many other shortcomings.
+
+<P>(c) A consistent naming of static variables and functions helps a lot
+in such situations, like capitalizing their name.
+<BR>&nbsp;
+<BR>&nbsp;
+<BR><A HREF="index.html">BACK TO MY HOME PAGE</A>
+
+<P>
+<IMG SRC=/cgi-bin/counter?beust&font=stamp>
+<P>
+
+<P>&nbsp;
+
+<P>Cedric Beust beust@ilog.fr $Id: treading-thread,v 1.7 1997/09/24 14:41:39
+beust Exp $
+<BR>&nbsp;
+</BODY>
+</HTML>

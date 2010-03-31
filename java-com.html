@@ -1,0 +1,174 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type"
+content="text/html; charset=iso-8859-1">
+<title> Java and COM : an ideal combination ? </title>
+<STYLE type="text/css">
+<!--
+BODY {
+text-align: justify;
+background: white;
+}
+
+.code {
+}
+
+-->
+</STYLE>
+</head>
+
+<body>
+
+<h1 align="center">
+Java and COM : an ideal combination ?
+</h1>
+<p>
+<em>
+Microsoft's Component Object Model has been undergoing quite a few revisions over the past few years. While a lot has been said about it being a failure in each of its incarnation (DDE, OLE, COM, ActiveX, etc...), there are still quite a few strong points that should be awarded to this technology. This article tries to point out where COM strengths and weaknesses are and how the whole technology fits in the bigger picture.
+</em>
+<p>
+
+
+<h4 align="right">Cedric Beust</h4>
+
+<h2>
+COM as a universal glue 
+</h2>
+COM has succeeded where all the previous attempts on Unix and the "free" world have failed: true language neutral universality. Interoperability has been a long sought grail by the free community (probably pioneered by ILU and then incarnated in CORBA) but if I look the state of affairs today (say, a Linux and a CDE/Solaris desktop), we're like ten years behind. 
+<p>
+
+For example : what if I want to use Netscape's HTML engine and only that ? Or if I need a PNG-parsing routine and I have gimp... how do I do that ? How about hacking emacs in Java instead of elisp ? 
+<p>
+
+All of those are pipe dreams in Unix land. Unix users have lived under the illusion that supplying the source was the ultimate freedom, but the reality shows otherwise. Mozilla's millions of lines of code buy me nothing if I need to extract a CSS engine. 
+<p>
+Microsoft has united a political priority (not disclosing its sources) with a pragmatic decision : components should only expose a carefully chosen subset of themselves. This approach has a lot of benefits, not unlike those brought forth by Javadoc : developers have less to document but they need to document it well. That's exactly what COM offers : true componentization. 
+
+<p>
+However, while this componentization is true, it is also crude in many respects. For example, it relies heavily on binary compatibility, thus imposing constraints such as immutable interfaces. Then again, it is a trade-off : sacrificing design beauty for practical reasons. And indeed, the immutability of interfaces allows to do away with a lot of extremely complex problems, such as versioning and binary compatibility (fragile base class problem). 
+
+<p>
+Windows development has been following a path radically different than Unix' over the past few years. COM developers have really put reuse to work, while Unix developers are still stuck in the "closed software" principle. Every Unix software that is released every day is another piece of black box from which hardly anything can be reused by the community. Including those coming from non-benefit communities, such as Linux'. 
+
+<p>
+
+I am truly impressed by what Microsoft has achieved with COM. Granted, it might have been one of these serendipitous discoveries like many can be found in the past (after all, it all started as OLE, a very simple interoperability protocol), but the net result now is that any developer is free to choose whatever language they like to do the job, instead of the job imposing the language. 
+
+<p>
+
+<h2>
+COM and Java 
+</h2>
+<p>
+All languages are not exactly equal in front of COM, though. As I said above, they can achieve the same results, but the amount of efforts will vary depending on how well supported the language is supported. And there is discrimination in this area. 
+<p>
+
+C++ is the most flexible and most supported language for COM programming. Visual C++ makes everything possible and all type libraries, IDL interfaces and headers are there. The price is of course, complexity. Even with ATL, C++ exposes a lot of gory details from COM (too many to my taste).
+<p>
+Visual Basic is definitely the highest level language in that area. COM is hardly ever mentioned in the original documentation but it is actually everywhere inside Visual Basic. Visual Basic makes it extremely easy to use the power of COM without ever realizing it. Maybe the best evidence supporting this would be the fact that I recently received a virus written in Visual Basic. 
+
+<p>
+
+It was definitely not extremely well disguised but it would : 
+
+<ul>
+<li>Extract all the email addresses stored in your address book (it can scan for several types of address books) 
+
+<li>Send itself as an attachment to everyone in there (probably the best way to make deadly enemies out of very good friends without even realizing it) 
+
+<li>Scan all your hard disks including the network ones, and storing itself there 
+
+<li>Scan for IRC clients and auto-DCC itself to random users when you connect on the network. 
+</ul>
+
+
+<p>
+
+All that in less than two hundred lines. 
+<p>
+While giving a virus as an example is probably not the best choice to illustrate the soundness of a concept, it clearly gives an idea of the underlying power of COM when exploited from Visual Basic. 
+
+<p>
+And then, there is Java. The ugly duckling. 
+<p>
+
+Why calling it that way ? Because Microsoft doesn't seem very keen on supporting Java. While most of what we've heard so far is mainly rumors, a lot of things seem to indicate that Microsoft will discontinue Visual J++ and will merge their Java and C++ efforts into some product named COOL. 
+
+<p>
+And it's really too bad, because Java and COM make an extremely attractive combination. I won't mention the purely linguistic aspects because they've been beaten to death, but where Java really shines in COM programming when : 
+
+
+<p>
+          Opposed to C++ 
+
+<ul>
+<li>         no more low-level detail stuff (ReleaseRef(), includes, library links, etc...) 
+<li>         no more QueryInterface() (casts do that) 
+</ul>
+
+
+          Opposed to Visual Basic 
+
+<ul>
+<li>         "true" OO language (classes, polymorphism, inheritance, strong typing) 
+<li>         native support for "implementation of interfaces" 
+<li>         knows what a pointer is (or a reference if you prefer to call it that way) 
+</ul>
+<p>
+All Java objects in Microsoft's JVM silently inherit IUnknown, so they are automatically first class COM citizens. Utilities such as JAVAREG.EXE can even make "pure" Java classes (compiled with Sun's JDK for example) into automation servers. You can create a complete ActiveX control scriptable from any language without even having to type "IDispatch" once. 
+<p>
+Everything is not rosy for Java and COM, though, and there are still a few holes : 
+
+<p>
+<ul>
+<li>          some interfaces don't have type libraries, so you need to create them yourself from an IDL file (I had to do that for IObjectWithSite)
+<li>          JACTIVEX.EXE doesn't support double pointers, which are fairly usual in COM. Microsoft's next JDK (the one following 3.2) should address that.
+</ul>
+
+<h2>
+What COM is not
+</h2>
+<p>
+COM should not be compared to CORBA. Granted, the two technologies bear a lot of resemblances but they address different needs. Although COM has no competitor in its arena, its distributed counterpart, DCOM, is very much lagging behind when compared to CORBA (even more if you add CORBA’s latest additions : CORBA services, the Portable Object Adapter and the imminent CORBA Component Model).
+<p>
+
+Microsoft is trying to address this with MTS, its transaction server, and the latest incarnation of COM, dubbed COM+. All those technologies are gathered under the generic name DNA. I am much skeptical about Microsoft’s ability to make these technologies happen in the distributed world. While Microsoft obviously owns the desktop, distributed computing very often implies cross-platform capabilities, which are nowhere near.
+<p>
+
+Another new player in this area is Sun’s Enterprise JavaBeans specification. Microsoft is officially not supporting this technology (they are not even competing in this area). While EJBs have a lot of very attractive feature, their absolute binding to 100% Java might become an issue over time.
+
+<p>
+
+<h2>
+COM percolation 
+</h2>
+I can see a few signs of COM being acknowledged as a tool to achieve interoperability on several platforms through Java. 
+<p>
+
+The Rolls Royce is of course Visual J++, which offers an amazing COM support, both at the JVM level (automatic COM objects, casts that QueryInterface(), automatic garbage collection, etc...) and the IDE level (easy to import a type library, automatic registration of the output .DLL/.EXE, etc...). Of course, the price to pay is that you have to run a Microsoft's non-standard JVM. 
+<p>
+If you need to run on a standard JVM, you can turn to : 
+<p>
+<ul>
+<li>
+Linar's JIntegra. It is a (commercial) 100% Java product that implements the DCOM protocol. It uses a simple .jar file and a (JNI) DLL which allows you to, say control an Excel spreadsheet from a Solaris box in Java. 
+<li>
+Dan Adler's Jacob, a freely distributable 100% Java implementation of COM. Dan implements most of com.ms.com.* packages, but his library is not as advanced as JLinar (yet). 
+</ul>
+<p>
+
+<h2>Conclusion
+</h2>
+<p> 
+
+A lot of care should be taken when one attempts to dismiss COM on the sole basis that it’s a proprietary technology. First, public implementations of COM such as Dan Adler’s prove that its “closedness” is actually quite relative, and second, its very nature enables infinitely extensible applications. Even Microsoft’s flag products expose so-called “add-ins” which are a set of interfaces allowing any external party to cleanly plug in their own extensions. Examples of such extensions abound but the most impressive to me remains 2lkit, a product that adds Swing support to Visual J++, including a fully blown WYSIWYG builder.
+<p>
+ 
+
+<h4 align="right">Cedric Beust, Nov 2nd, 1999</h4>
+
+
+ 
+</body>
+</html>

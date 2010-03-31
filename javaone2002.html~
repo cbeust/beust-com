@@ -1,0 +1,202 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Language" content="en-us">
+<meta name="GENERATOR" content="Microsoft FrontPage 5.0">
+<meta name="ProgId" content="FrontPage.Editor.Document">
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<title>Monday Keynote</title>
+</head>
+
+<body>
+
+<div>
+  <!-- Converted from text/plain format -->
+  <h2 align="center">JavaOne 2002</h2>
+  <h2 align="center">San Francisco Moscone Center, March 25-29</h2>
+  <p align="center">&nbsp;</p>
+  <p><font face="Comic Sans MS" size="2"><strong>Monday Keynote</strong></font></div>
+<div>
+  &nbsp;</div>
+<div>
+  <font face="Comic Sans MS" size="2">John Gage is up to the plate again, and 
+  he's speaking slower than ever.&nbsp; But he is still interesting and is actually 
+  good at communicating things that would otherwise be boring.&nbsp; </font>
+</div>
+<div>
+  &nbsp;</div>
+<div>
+  <font face="Comic Sans MS" size="2">We were inflicted the now ritual &quot;whoever 
+  was there 7 years ago at the first JavaOne, please stand up&quot; but one thing 
+  blatantly missing was the bragging about the attendance.&nbsp; Two years ago, 
+  20,000 people, last year 17,000 and this year, from unofficial sources, 
+  12,000.&nbsp; Quite a steep decline.&nbsp; No wonder they would be quiet about it.</font></div>
+<div>
+  &nbsp;</div>
+<div>
+  <font face="Comic Sans MS" size="2">Shortly after the keynote started, the 
+  moment I was dreading came up:&nbsp; Pat Sueltz came on stage.</font></div>
+<div>
+  &nbsp;</div>
+<div>
+  <font face="Comic Sans MS" size="2">She has considerably improved over the 
+  past year (see <a href="http://beust.com/cedric/javaone-2001.html">
+  http://beust.com/cedric/javaone-2001.html</a>) but it still took her only 
+  thirty seconds to blurt out a cocky statement:&nbsp; that she was there since the 
+  very beginning.&nbsp; That might be true, but she conveniently omits to mention 
+  that she only joined Sun two years ago.&nbsp; I'm not sure why she brushes me the 
+  wrong way like this, but I believe it's due in great part to the 
+  condescendence in her tone.&nbsp; Even when she calls up people on stage (&quot;Please 
+  welcome my chief technology officer&quot;).&nbsp; Well, at least this year, she was 
+  dressed reasonably well.</font></div>
+<div>
+  &nbsp;</div>
+<div>
+  <font face="Comic Sans MS" size="2">The highlight of the keynote was Rich 
+  Green, in charge of the Java and XML platform.&nbsp; He opened saying that the 
+  previous week, he was testifying in the Microsoft case, and at this point, I 
+  was expecting the inevitable obligatory Microsoft mudsling.&nbsp; Well, it didn't 
+  happen.&nbsp; Rich used this introduction to make general and valid comments about 
+  the importance of open processes and API's.&nbsp; All the more credit to him for 
+  not taking the bait.</font></div>
+<div>
+  &nbsp;</div>
+<div>
+  <font face="Comic Sans MS" size="2">His speech was focused on the growth of 
+  Java, of course, and the ever-increasing share of wireless devices running 
+  Java out there.&nbsp; I'm still not quite sure about the reality of the numbers, 
+  though, because what I hear at JavaOne certainly doesn't match my perception 
+  of the world, but I might be wrong (and probably biased since I'm still having 
+  a hard time seeing Java perform any decent job in tiny devices).</font></div>
+<div>
+  &nbsp;</div>
+<div>
+  <font face="Comic Sans MS" size="2">Gosling followed him, proceeded with the 
+  time-honored tradition of t-shirt slinging and then, skipped his traditional 
+  speech (usually not that interesting, IMO) to get directly to two demos.</font></div>
+<div>
+  &nbsp;</div>
+<div>
+  <font face="Comic Sans MS" size="2">The first one was for a CAD program which 
+  uses the Java3D and Java2D API's to render complex scenes in very acceptable 
+  times (caveat:&nbsp; some parts of it are written in C++ and accessed through JNI).&nbsp; 
+  Nice piece of work.</font></div>
+<div>
+  &nbsp;</div>
+<div>
+  <font face="Comic Sans MS" size="2">Then NetBeans took the stage with a 
+  plug-in for J2EE development (Gosling seems to be involved with NetBeans 
+  now).&nbsp; The demo was hard to follow because of the tiny fonts (and probably due 
+  to the fact that they are using Netscape...) and frankly, I think NetBeans 
+  doesn't hold a candle to the likes of Rational Rose, Together (admittedly way 
+  too expensive) or even JBuilder.&nbsp; And mark my words, but I predict that 
+  Eclipse is going to cast a huge shadow on all these products in a very near 
+  future.</font></div>
+<div>
+  &nbsp;</div>
+<div>
+  <font face="Comic Sans MS" size="2">In the evening, I went to the JavaWorld 
+  award party, where I met some familiar faces (including Marc Fleury, who was 
+  in competition with us and WebSphere for the best application server.&nbsp; JBoss 
+  won, by the way).&nbsp; The JavaWorld award parties used to be big and animated, 
+  this one was a dud.&nbsp; Very few people, some shy applauses and hardly anyone 
+  paying attention to the addressing keynote, nor the comments from the 
+  participants.</font></div>
+<div>
+  &nbsp;</div>
+<div>
+  <font face="Comic Sans MS" size="2">After that, we headed for the Borland 
+  party next door, which was a lot of fun.&nbsp; Not as good as eWorld in San Diego, 
+  but darn good anyway.&nbsp; One piece of advice:&nbsp; don't trust their coat check.&nbsp; 
+  They lost my bag there.</font></div>
+<div>
+  &nbsp;</div>
+<div>
+  <font face="Comic Sans MS" size="2"><strong>Tuesday Keynote</strong></font></div>
+<div>
+  &nbsp;</div>
+<div>
+  <font face="Comic Sans MS" size="2">McNealy came on stage and he managed to do 
+  a very decent job at keeping everyone interested while keeping the Microsoft 
+  quips to a minimum.&nbsp; He emphasized the growth of Java and the importance of 
+  open standards (and before you point it out, I'm not the one repeating things, 
+  Sun is) and called the current conference &quot;JavaWon&quot;.</font></div>
+<div>
+  &nbsp;</div>
+<div>
+  <font face="Comic Sans MS" size="2">I'm usually not fond of Scott's speeches 
+  but I was pleasantly surprised about this one.&nbsp; It looks like the high school 
+  recess is finally over and we can get down to business.</font></div>
+<div>
+  &nbsp;</div>
+<div>
+  <font face="Comic Sans MS" size="2">I know that Larry Ellison tried hard to 
+  get a keynote this year.&nbsp; I don't know if he really succeeded, but I was very 
+  puzzled to see somebody else come on stage (Thomas Kurian, Senior vice 
+  president of the Oracle Server Technologies Division).</font></div>
+<div>
+  &nbsp;</div>
+<div>
+  <font face="Comic Sans MS" size="2">The sad thing for him is that as soon as 
+  Scott was finished, half of the attendance left, leaving a nervous Kurian 
+  enumerating figures such as &quot;8000 people bought Oracle 9 and it's the fastest 
+  growing application server in the market&quot; (just like Linux which went up from 
+  1% market share to 2%, a 100% increase.&nbsp; Woohoo).&nbsp; The demonstration of 
+  JDeveloper that followed was very unimpressive.</font></div>
+<div>
+  &nbsp;</div>
+<div>
+  <b><font face="Comic Sans MS" size="2">High performance JFC applications</font></b><p>
+  <font face="Comic Sans MS" size="2">This presentation was made by three 
+  engineers from the Swing team, and it was a bit disappointing.&nbsp; Each of 
+  them addressed a different domain:&nbsp; high-level Swing, performance in 
+  repaint and hardware acceleration.</font></p>
+  <p><font face="Comic Sans MS" size="2">The first part mentioned some obvious 
+  tricks such as writing your own custom model whenever it's appropriate, and 
+  also gave some overview of the new API's introduced in the JDK 1.4.&nbsp; The 
+  following two parts were very low-level and probably only of relevance to 
+  people doing imaging.</font></p>
+  <p><font face="Comic Sans MS" size="2">One thing worth noting is that JDK 1.4 
+  introduces the EventHandler as a way to create listeners.&nbsp; This class 
+  belongs to the dynamic proxy package but it's being reused in this context in 
+  order to avoid the proliferation of anonymous listener classes that simply 
+  &quot;bounce back&quot; control to the callers.&nbsp; I'm happy that Sun finally 
+  acknowledged this problem but...</font></p>
+  <p><font face="Comic Sans MS" size="2">Does the concept remind you of 
+  something?&nbsp; Right.&nbsp; Delegates.&nbsp; One of the two reasons why Sun 
+  sued Microsoft in the first place:&nbsp; because Microsoft had introduced this 
+  concept in their own virtual machine and it was not Java.&nbsp; At least they 
+  finally acknowledged the soundness of it (I've been asking for them ever since 
+  I started using VJ++).</font></p>
+  <p><font face="Comic Sans MS" size="2">My impression is that most JFC users 
+  are more into high-level interfaces than low-level 2D and 3D graphics, and I 
+  was hoping to get more insight about performances at this level, but I came 
+  back empty-handed.</font></p>
+  <p><b><font face="Comic Sans MS" size="2">EJB 2.0:&nbsp; 20 things you've 
+  never seen</font></b></p>
+  <p><font face="Comic Sans MS" size="2">Tyler was giving this presentation, 
+  which attracted a very compact crowd (people were sitting in the aisles).&nbsp; 
+  He proceeded in dispelling all the myths that have plagued EJB because of the 
+  deficiencies in the 1.1 specification and then emphasized how an improvement 
+  EJB 2.0 was, even over solutions like Stateless Session Beans + JDBC.</font></p>
+  <p><font face="Comic Sans MS" size="2">The crowd was riveted.&nbsp; I was 
+  checking regularly around me, and they were busily scribbling notes and 
+  following every word Tyler was saying.&nbsp; The funny anecdotes that he 
+  dispensed here and there definitely contributed to make people relate to the 
+  problems he was addressing.&nbsp; There were a lot of questions after the 
+  presentation and he was still being harassed on his way back to the booth :-)</font></p>
+  <p><font face="Comic Sans MS" size="2">I have no doubt that all the attendees 
+  to this session will go back to their company and try to buy everyone around 
+  them into EJB 2.0.</font></p>
+  <p align="right">&nbsp;</p>
+  <p align="right"><font face="Comic Sans MS" size="2">
+  <a href="http://beust.com/cedric/">Back to my home page</a></font></p>
+  <p>&nbsp;</p>
+  <p>&nbsp;</div>
+<div>
+  <br>
+&nbsp;</div>
+
+</body>
+
+</html>

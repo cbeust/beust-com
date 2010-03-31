@@ -1,0 +1,315 @@
+<HTML>
+<HEAD>
+   <META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+   <META NAME="GENERATOR" CONTENT="Mozilla/4.04 [en] (X11; I; SunOS 5.5.1 sun4u) [Netscape]">
+   <META NAME="Author" CONTENT="Cedric Beust">
+   <META NAME="Description" CONTENT="Summary of a lecture by Bjarne Stroustrup, March 1998">
+   <META NAME="Keywords" CONTENT="C++, STL, Stroustrup, ISO C++">
+   <TITLE>Stroustrup</TITLE>
+</HEAD>
+<BODY>
+
+<CENTER>
+<H2>
+<B>Foundations for native C++ styles</B></H2></CENTER>
+
+<CENTER>
+<H2>
+<B>Bjarne Stroustrup, AT&amp;T</B></H2></CENTER>
+&nbsp;
+
+<P><I>Context : the latest ISO/C++ Committee gathered in Sophia Antipolis
+a few days ago. The meeting was very "calm", since it was the very first
+held since the standard was accepted last November. Bjarne Stroustrup kindly
+accepted to make a public presentation before leaving. Here is a short
+transcript of what he said.&nbsp;</I>
+
+<P>Stroustrup think that programming languages are not interesting, but
+programming is. He started by using Simula but was appalled by the resources
+consumed by the existing compilers. He imagined a language that would combine
+Simula's elegant OO features with those of a "fast" language (BCPL at that
+time).
+
+<P>C++ serves two purposes :
+<UL>
+<LI>
+help humans express ideas (abstraction) ;</LI>
+
+<LI>
+efficiently deal with hardware.</LI>
+</UL>
+Stroustrup doesn't believe in one true language. He thinks that if ever
+one day, someone manages to create the perfect language for a given problem,
+the said problem will have been long gone when the language is ready to
+handle it. With such universal solutions, you usually end up writing 5%
+of your application in this language, and the rest in C (or Assembly).
+
+<P>Classes are used to represent concepts. You need to capture relationships
+between concepts and between classes. The relationships between concepts
+are expressed by parameterized types, and those between classes are represented
+by class hierarchies.
+<BR>&nbsp;
+<H3>
+CONCRETE TYPES</H3>
+Concrete types must be designed very carefully and thoughtfully. A concrete
+type is a "small heavily-used abstraction". Concrete types need a minimal
+interface. What doesn't fit in the interface should be kept in helper functions.
+However, this results in a very loose coupling between the interface and
+the functions, thus the crecaion of namespaces in C++. They help maintain
+consistency in both the naming and the concepts.
+
+<P>For concrete types, no compromises are needed on conventional notations
+runtime space and efficiency
+<BR>&nbsp;
+<H3>
+CONTAINERS AND GENERIC PROGRAMMING</H3>
+Containers must be convenient, efficient and safe. The code must be independant
+from the kind of data that is being manipulated. Efficiency has always
+been C++' main focus. Bjarne cites an anecdote where an experimental feature
+once caused a 3% overhead in the resulting code, and this was deemed unacceptable.
+The feature was removed. The containers must be usable for the most demanding
+applications.
+
+<P>The approach of the C++ Committee is to use abstract classes and iterators.
+There is no reason why an iterator over a list should be very different
+from an iterator over a vector. The first solution that appeared was to
+use a pure interface for Iterator :
+<BR>&nbsp;
+<UL><FONT FACE="Courier New,Courier">template &lt;class T></FONT>
+<BR><FONT FACE="Courier New,Courier">class Iterator {</FONT>
+<BR><FONT FACE="Courier New,Courier">public:</FONT>
+<BR><FONT FACE="Courier New,Courier">&nbsp;&nbsp; T* first() = 0;</FONT>
+<BR><FONT FACE="Courier New,Courier">&nbsp;&nbsp; T* next() = 0;</FONT>
+<BR><FONT FACE="Courier New,Courier">};</FONT></UL>
+and then specialize the templates for the various containers. This approach
+has the following advantages :
+<BR>&nbsp;
+<UL>+ simple, efficient individual containers
+<BR>+ multiple iterator concepts can coexist
+<BR>+ type safe
+<BR>+ non intrusive (works well with C types)</UL>
+but
+<UL>- there is an iterator overhead
+<BR>- complexity (both in terms of performance -- function call needed
+-- and design : this causes an explosive hierarchy of iterators)
+<BR>- there is no commpon point for "special" services (e.g. object I/O)</UL>
+The oldest approach to this kind of problem is to use a common base class.
+It has significant drawbacks, though :
+<UL>- overhead (space and time, why inheriting features you won't necessarily
+need ?)
+<BR>- not type safe (actually, you lose type and must strive to gain it
+back through runtime type identification)
+<BR>- intrusive (doesn't work with C types)
+<BR>- must obey a predetermined pattern, not necessarily suited</UL>
+however
+<UL>+ special service available in the base class.</UL>
+The STL approach solves most of these problems. The requirements are :
+<UL>+ it must be simple, efficient for individual containers and iterators
+<BR>+ no overhead
+<BR>+ type safe
+<BR>+ non intrusive</UL>
+<B><I>Cedric: at this point, I think Bjarne made a mistake in not pushing
+the introduction of the basic concepts of the STL further. The audience
+was ready to hear about the STL iterator hierarchy (input, output, forward,
+bidirectional, random) and traits, and how they are nicely handled through
+templates.</I></B>
+
+<P><B><I>Very recently, I was talking to someone who was puzzled (not to
+say appalled) to find out that there were not just "Iterators" in the STL,
+but "Const Iterators". While I proceeded in explaining how they both differ
+and why they are necessary, I can't help thinking that a gentle introduction
+to the problematic makes all this stuff clear and natural. This shouldn't
+need to be explained, it should come natural. And I have the feeling that
+now would have been the right time for Bjarne to do so.</I></B>
+
+<P><B><I>I suspect that both time constraints and the fact that he didn't
+know how C++ aware his audience was made him switch to another gear.</I></B>
+
+<P>Stroustrup then showed the "classical" STL example, that solves the
+problem of reading the user's input, sort the words and outputs them. The
+listing is less than twenty lines long and was thoroughly explained.
+
+<P><B><I>Cedric: I am not a great fan of this example to illustrate the
+STL. I have the feeling most of the people who see it for the first time
+will be worried by its compacity and will overlook the main point (which
+is : STL allows a great abstraction at almost no cost if compared to a
+"manual" solution).</I></B>
+
+<P><B><I>STL Iterators are already a complex notion to grasp for newcomers,
+and I am not persuaded that showing their use through stream iterators
+is a good idea. After asking a few people around, it turns out they were
+not that repelled by the example, so maybe it's just me.</I></B>
+<H3>
+SPECIALIZATION</H3>
+Stroustrup then mentions an important problem that often turns up in template-related
+discussions : code bloat. Templates are an incredibly useful tool to capture
+abstractions, but if used carelessly, they often cause similar portions
+of object code to be replicated throughout compilation units. Bjarne explains
+how this can be greately reduced through specialization techniques.
+
+<P><B><I>Cedric: this is admittedly a very important problem and there
+are very complex notions at work here (mostly related to : it is necessary
+to know what the different template strategies are available in order to
+use the one that is most suited to your problem). However, I fail to see
+how it fits with Bjarne's overall discussion, mainly focused on high-level
+notions. Anyway.</I></B>
+<H3>
+CLASS HIERARCHIES</H3>
+To illustrate this problem, Bjarne takes a very simple example : the user
+must type an integer in a window and the program has to retrieve it. Usually,
+you will start by defining an abstract interface detailing the miscellaneous
+operations to handle the value type by the user (getValue(), hasChanged(),
+etc...). Then, when you need to interface with the windowing system, you
+can simply make your main class a subclass of the Window class.
+
+<P>However, you are inheriting a lot of uninteresting window implementation
+details doing this. This is a general problem with inheritance : the user
+should not be bothered by this.
+
+<P>It is necessary to be more loosely coupled to the windowing system.
+There are several ways to achieve this, one of them being to use abstract
+interfaces and multiply-deriving concrete implementations from both the
+interface and the window implementations.
+
+<P><B><I>Cedric: another one, more suited IMHO, is delegation, but this
+was not mentioned.</I></B>
+
+<P><B><I>Then again, I found that Bjarne didn't go far enough in his point.
+My perception is that this is another attempt to explain how STL is such
+a fine library. Here, Bjarne tried to show that blindly deriving can be
+nasty, and that this shouldn't be done without careful consideration. The
+STL shows how it is possible to build a sound hierarchy while avoiding
+almost entirely derivation, and promoting aggregation and combining orthogonal
+functionalities. BTW, I love the STL, in case you hadn't noticed.</I></B>
+<BR>&nbsp;
+<H3>
+THE STANDARD</H3>
+Bjarne concluded by summing up the standardization process as of today
+(March 12, 1998). He says he is very pleased with the current state of
+affairs :
+<BR>&nbsp;
+<UL>
+<LI>
+the standard doesn't contain gratuitous features</LI>
+
+<LI>
+there are no missing features</LI>
+
+<LI>
+there are no gross mistakes</LI>
+
+<LI>
+it comes with very nice libraries (STL, Math)</LI>
+</UL>
+&nbsp;
+<H3>
+CONCLUSION</H3>
+Bjarne can't understand how people can spend days trying to determine whether
+putting the keyword "const" at this place is appropriate or not. The programmers
+should focus on design, programming techniques and abstraction. They should
+treat as secondary the language technical details and resist the temptation
+to imitate foreign styles when writing in C++. "Use the type system, don't
+fight it".
+
+<P>Regarding the STL, Bjarne reminded that however well-designed it is,
+it remains a low-level library, which purposefully exposes low-level details
+(like allocators) . It should be seen as a foundation for higher-level
+frameworks.
+
+<P><B><I>Cedric: C++ is in good way, and should become even more enjoyable
+to use in the forthcoming two years, while the standard slowly percolates
+through available implementations. Compiler vendors are working real hard
+to catch up with it, and the first fully ISO-C++ compilers should be expected
+in the next few months (my guess is that VC++ will be the first one, while
+Sun announced that their next major version wouldn't be out before at least
+eighteen months).</I></B>
+<H3>
+QUESTIONS AND ANSWERS</H3>
+Q: What do you thing about Java ?
+
+<P><B><I>Cedric: augh....</I></B>
+
+<P>A: If Java was just a programming language, nobody would have bothered
+at all. It is however an extraordinary example of a company betting its
+very existence on a single idea. Java is very uninteresting (the worst
+language I have seen in years) and it's a shame Sun makes claims that cannot
+possibly be delivered.
+
+<P><B><I>Cedric: I am really saddened by his recent statements on Java.
+Bjarne has always been a model in objectivity and reasoned opinions, but
+I can't understand these emotional sentences. This is even more unforgiveable
+that he could just stick to facts (like the hype) and he would gain immediate
+approval of any crowd, however hostile to C++ they may be.</I></B>
+
+<P><B><I>The worse is that he is usually much more balanced and neutral
+during Committtee sessions. Why he chose to be so aggressive toward Java
+in front of an open audience, I can't understand. Many people will most
+likely consider this as bitterness coming from someone who sees his baby
+somehow "threatened" by a newer and challenging contender.</I></B>
+
+<P><B><I>I don't see things this way at all. I still believe Stroustrup
+is definitely non-emotional on this issue, but is grieved to see that all
+the pragmatic considerations that have always guided the evolution of C++
+have been completely discarded (and even despised) by Java creators.</I></B>
+<BR>&nbsp;
+
+<P>Q: How are the C9X and C++ Committee cooperating ? Isn't this a oneway
+process ?
+
+<P><B><I>Cedric: a very insightful question, which had been discussed a
+few days ago during the meeting</I></B>
+
+<P>A: My impression is that C9X is driven by Fortran programmers trying
+to write Fortran code in C, and who are not that interested in adding design
+features (strong typing mostly).
+
+<P><B><I>Cedric: This is a very hot topic. The feelings on this issue among
+the C++ Committee are mixed, but some of them definitely have a few problems
+with the C9X people. This comes as no surprise actually, that C9X is only
+remotely interested in C++ while the opposite is really true. My feeling
+is that the differences can't be worked out, and I think the forthcoming
+versions of C and C++ will not be compatible. This has become less an issue
+by now, since C++ has now gained wide acceptance, but it would definitely
+have immediately grinded C++ to a halt if such a resolution had been taken
+ten years ago.</I></B>
+<BR>&nbsp;
+
+<P>Q: Is anything missing in the standard ?
+
+<P>A: No.
+
+<P><B><I>Cedric: Of course, Stroustrup (just like everyone else) has minor
+nits about the standard but to put the words in his mouth "I can't think
+of a missing feature I'd like to see added at all costs, nor of a feature
+I'd like to see removed".</I></B>
+<BR>&nbsp;
+
+<P>Q: What would you consider for future additions to the language ?
+
+<P>A: I have been thinking for the past years about including concurrency
+about the language, and the reason why it hasn't been done is that I haven't
+been able to figure out a general-purpose and elegant solution that would
+cover all the possible aspects of concurrency Concurrency can mean many
+different things (process-level, database access, threads, etc...) and
+so far, not a single approach has been identified that could "do it right".
+
+<P><B><I>Cedric: Other considerations for future inclusion in the language
+: garbage collection and embedded C++.</I></B>
+<BR>&nbsp;
+<BR>&nbsp;
+<H3>
+MY CONCLUSION</H3>
+<B><I>A very enjoyable presentation, although it lacked some dynamism.
+I suspect someone like Andrew Koenig or Steve Clamage would have made the
+speech more living somehow. I hope that this brief introduction to the
+STL and generic programming in general convinced some people in the audience
+that C++ is definitely worth a try, and this is even more so since the
+standard has now been accepted.</I></B>
+
+<P><B><I>The next ISO C++ Commitee will be hosted by SGI in the Silicon
+Valley. Then, it will probably be Dublin and then Hawaii.</I></B>
+<BR>&nbsp;
+
+<P><B><A HREF=".">Back to my homepage</A></B>
+</BODY>
+</HTML>
