@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+
+<html lang="en">
+	<head>
+		<title>CedCube: Rubik's cube in HTML 5</title>
+
+		<script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
+		<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+		<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
+		<script href="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+
+	  	<link rel="stylesheet" href="CedCube/css/style.css"></script>
+	  	<script src="CedCube/js-lib/three.min.js"></script>
+		<script src="CedCube/js-lib/OrbitControls.js"></script>
+		<script src="CedCube/js/CedCube.js"></script>
+		<script>
+		    window.onload = function() {
+		        run();
+		    };
+	    </script>
+
+	</head>
+	<body>
+
+<div class="page-header">
+	<h1 class="text-center">CedCube: Rubik's cube in HTML 5</h1>
+	<p class="text-center font-size-medium">
+		<a href="http://beust.com">Cedric Beust</a> (<a href="http://twitter.com/cbeust">@cbeust</a>)
+	</p>
+	<p class="text-center font-size-small">
+		July 2014
+	</p>
+	<table class="cc-table">
+		<tr>
+			<td>
+				<div id="2d-0" class="CedCube"
+			    	cc-params="formula=ULU'R' UL'U'R,startString=ybybbbbbb rrorrrrrr bgggggggg ooroooooo yyyyyybyg .........">
+				</div>
+			</td>
+		</tr>
+	</table>
+</div>
+
+
+<div class="container-fluid">
+	<div class="row">
+
+		<div class="col-sm-1">
+		</div>
+		<div class="col-sm-10">
+
+		</div>
+	</div>
+</dv>
+
+	</body>
+</html>
