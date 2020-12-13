@@ -1,0 +1,746 @@
+<html>
+<head>
+<title>
+
+    Kobalt: a modern, versatile build system by Cedric Beust
+
+</title>
+
+    <script type="text/javascript" src="../sh/scripts/shCore.js"></script>
+    <script type="text/javascript" src="../sh/scripts/shBrushJScript.js"></script>
+    <script type="text/javascript" src="../sh/scripts/shBrushJava.js"></script>
+    <script type="text/javascript" src="../sh/scripts/shBrushPlain.js"></script>
+
+    <script>
+        SyntaxHighlighter.defaults['gutter'] = false;
+        SyntaxHighlighter.defaults['toolbar'] = false;
+        SyntaxHighlighter.all();
+    </script>
+
+<!--[if lt IE 9]><script src="../assets/js/ie8-responsive-file-warning.js"></script><![endif]-->
+<!--
+<script src="../bootstrap/assets/js/ie-emulation-modes-warning.js"></script>
+-->
+
+<!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+<!--[if lt IE 9]>
+  <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+  <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+<![endif]-->
+
+<!-- Favicons -->
+<!--
+<link rel="icon" href="/favicon.ico">
+-->
+
+</head>
+
+<body>
+
+
+    <div class="container">
+
+      <!-- Static navbar -->
+      <nav id="kobalt-navbar" class="navbar navbar-default">
+      </nav>
+
+      <!-- Main content -->
+      <div class="col-md-9">
+
+<h2 class="section" id="java-kotlin">Java and Kotlin</h2>
+
+<p>
+    Java and Kotlin are supported by default by Kobalt. You use the directive <code>project{}</code>
+    to declare a new project and Kobalt will automatically detect how to compile it:
+</p>
+<pre class="brush:java">
+val p = project(wrapper) {
+  name = "kobalt"
+  group = "com.beust"
+  artifactId = name
+  version = "0.1"
+}</pre>
+
+<p>
+The <code>project{}</code> directive creates an object of type <code><a href="https://github.com/cbeust/kobalt/blob/master/src/main/kotlin/com/beust/kobalt/api/Project.kt">Project</a></code></a>.
+</p>
+
+<h3 class="section" id="arguments" indent="1">Arguments</h3>
+<p>
+  You can specify arguments to be passed to the Java and Kotlin compilers as follows:
+</p>
+<pre class="brush:java">
+val p = project {
+    javaCompiler {
+        args("-source", "1.7", "-target", "1.7")
+    }
+    kotlinCompiler {
+        args("-no-stdlib")
+    }
+}</pre>
+
+<h3 class="section" id="project" indent="1">Project</h3>
+
+<p>
+A <code>Project</code> has two mandatory attributes: <code>name</code> and <code>version</code>. If you are planning to deploy your project to a Maven repository, you also have to specify its <code>group</code> (e.g. <code>"com.beust"</code>) and <code>artifactId</code> (e.g. <code>"kobalt"</code>).
+</p>
+
+<p>
+  Additionally, a <code>Project</code> lets you specify the following parameters:
+
+  <dl class="dl-horizontal">
+    <dt>sourceDirectories</dt>
+    <dd>The location of your source files</dd>
+    <dt>sourceDirectoriesTest</dt>
+    <dd>The location of your test source files</dd>
+    <dt>dependencies</dt>
+    <dd>The dependencies for your project</dd>
+    <dt>dependenciesTest</dt>
+    <dd>The dependencies for your tests</dd>
+  </dl>
+
+<p>
+  The source directories point to standard locations by default, so if you're using a standard layout
+  for your project (<code>src/main/java</code>, <code>src/main/kotlin</code>, <code>src/test/java</code>,
+  etc...), you do not need to specify any of these directories.
+</p>
+<h4 class="section" id="mixed-projects" indent="2">Mixed language projects</h4>
+<p>
+  A Kobalt project can mix Kotlin and Java in it, simply specify all the source
+  directories you need:
+</p>
+<pre class="brush:java">
+val p = project(wrapper) {
+    name = "kobalt"
+    // ...
+    sourceDirectories {
+        path("src/nonstandard/java", "src/nonstandard/kotlin")
+    }
+}</pre>
+<p>
+    Kotlin and Java files can be in the same directories.
+</p>
+
+<h3 class="section" id="tasks" indent="1">Tasks</h3>
+<p>
+Once you have at least one project configured, the plug-in lets you invoke the following tasks:
+<dl class="dl-horizontal">
+  <dt>compile</dt>
+  <dd>Compile the project</dd>
+  <dt>compileTest</dt>
+  <dd>Compile the tests</dd>
+  <dt>test</dt>
+  <dd>Run the tests</dd>
+  <dt>clean</dt>
+  <dd>Clean the project</dd>
+</dl>
+
+<h3 class="section" id="templates" indent="1">Templates</h3>
+<p>
+  Both the Java and Kotlin plug-ins provide templates named respectively "java" and "kotlin".
+</p>
+<pre class="brush:plain">
+$ ./kobaltw --listTemplates
+Available templates
+  Plug-in: Kobalt
+    "java"              Generate a simple Java project
+    "kotlin"            Generate a simple Kotlin project</pre>
+
+<p>
+  They are both identical templates so we'll just look over the Kotlin one.
+</p>
+<p>
+      If you invoke <code>./kobaltw --init kotlin</code>, the following will happen:
+</p>
+<ul>
+    <li>If a <code>kobalt/src/Build.kt</code> build file doesn't exist, it will be created.</li>
+    <li>If no Kotlin (or Java) file is found under <code>src</code>, the template will create a simple
+    class with a <code>main</code> method and also a test class.</li>
+</ul>
+<pre class="brush:plain">
+$ ./kobaltw --init kotlin
+Template "kotlin" installed
+Now you can run either `./kobaltw test` or `./kobaltw run`
+
+$ ./kobaltw test
+----- example:test
+===============================================
+Command line suite
+Total tests run: 1, Failures: 0, Skips: 0
+===============================================
+
+All tests passed
+BUILD SUCCESSFUL (5 seconds)
+
+$ ./kobaltw run
+----- example:run
+Hello Kotlin world from Kobalt
+BUILD SUCCESSFUL (0 seconds)
+</pre>
+
+
+
+
+
+<h3 class="section" id="variants" indent="1">Variants</h3>
+<p>
+    Variants let you configure your project to generate different artifacts compiled from different sources depending on the <em>variant</em> you selected.
+</p>
+          <div class="bs-callout bs-callout-warning">
+              <h4>Note</h4>
+              Kobalt's variant system is very similar to <a href="http://developer.android.com/tools/building/configuring-gradle.html">Android's build types</a>, so you should already be familiar with these concepts if you have built Android applications. The difference is that Kobalt supports variants in its core, so that all projects (not just Android's) can take advantage of it.
+          </div>
+
+          <p>
+              A variant is made of at least one of the following two components:
+          </p>
+              <ul>
+                  <li>The product flavor.</li>
+                  <li>The build type.</li>
+              </ul>
+          <p>
+              <strong>Product flavors</strong> usually contain different source files and different logic (e.g. a "free version" and a "pro version". <strong>Build types</strong> lead to different archives (e.g. "debug" and "release", with the "release" version being obfuscated). This effect is achieved by defining identical source files in different directories and then letting Kobalt build the correct one. Each product flavor and build type has a name which translates directory into a source directory. For example:
+          </p>
+<pre class="brush:java">
+productFlavor("free") {
+}
+
+buildType("release") {
+}</pre>
+          <p>
+              With these variants defined, you can now add source files in the "<code>src/free/java</code>" and "<code>src/release/java</code>" directories (Kotlin is also supported):
+          </p>
+<pre class="brush:plain">
+src/free/java/Product.java
+src/release/java/Product.java</pre>
+          <p>
+              If you define at least one variant, new tasks get added to your build:
+          </p>
+<pre class="brush:java">
+$ ./kobaltw --tasks
+
+===== java =====
+compileFreeRelease
+compileFreeDebug
+
+===== packaging =====
+assembleFreeRelease
+assembleFreeDebug</pre>
+<p>
+  For example, if you define two flavors, "pro" and "free", and two build types, "debug" and "release", four tasks will be added that combine these: "proDebug", "proRelease", "freeDebug" and "freeRelease". If you assemble any of these, an artifact named after that combination will be created, e.g. "kobalt-0.273-free-debug.jar".
+</p>
+        <p>
+          Variants can have they own <code>dependencies{}</code> section, which will be used only if this specific
+          variant is being compiled or assembled:
+        </p>
+<pre class="brush:java">
+    productFlavor("debug") {
+        dependencies {
+            compile("joda-time:joda-time:2.9.3")
+        }
+    }
+</pre>
+
+<h3 class="section" id="build-config" indent="1">BuildConfig</h3>
+<p>
+  If you have at least one variant defined in your build file, a special file called <code>BuildConfig.java</code> (or
+  <code>BuildConfig.kt</code>) will be automatically generated.
+</p>
+<div class="bs-callout bs-callout-warning">
+  <h4>Note</h4>
+  You need to define <code>packageName</code> in your project in order for this file to be generated or
+  Kobalt will fail.
+</div>
+<p>
+  This class contains at least two fields defining the current variant:
+</p>
+<pre class="brush:java">
+class BuildConfig {
+    companion object {
+        val PRODUCT_FLAVOR : String = "pro"
+        val BUILD_TYPE : String = "debug"
+    }
+}</pre>
+<p>
+  You can add your own custom fields to this file by calling the <code>buildConfig</code> directive
+  inside your
+  flavor:
+</p>
+<pre class="brush:java">
+productFlavor("free") {
+    buildConfig {
+        field("aStringField", "String", "\"The free field\"")
+        field("anIntField", "Int", "42")
+    }
+}</pre>
+<p>
+  The generated file will then contain:
+</p>
+<pre class="brush:java">
+class BuildConfig {
+    companion object {
+        val PRODUCT_FLAVOR : String = "free"
+        val BUILD_TYPE : String = "debug"
+        val aStringField : String = "The free field"
+        val anIntField : Int = 42
+    }
+}</pre>
+<p>
+    Take a look at the <a href=https://github.com/cbeust/kobalt-examples/tree/master/flavors/src>variants example
+    project</a> to see an actual example using variants and <code>BuildConfig</code>.
+</p>
+
+<h3 class="section" id="tests" indent="1">Tests</h3>
+<p>
+  Kobalt will automatically attempt to run test classes found in the test directory with the
+  correct runner (e.g. TestNG, JUnit, Spek, etc...). Additionally, you can configure how
+  these tests are run with the <code>test{}</code> directive, which accepts the following
+  parameters:
+</p>
+<dl class="dl-horizontal">
+  <dt>args</dt>
+  <dd>The arguments passed to the runner</dd>
+  <dt>includes</dt>
+  <dd>Which classes to include. Note that the parameters to this function are path globs (see below)</dd>
+  <dt>excludes</dt>
+  <dd>Which classes to exclude. Note that the parameters to this function are path globs (see below)</dd>
+</dl>
+<p>
+  Here are a few examples of <code>test{}</code> directives:
+</p>
+<pre class="brush:java">
+test {
+    args("-log", "1", "src/test/resources/testng.xml")
+}</pre>
+          <p>
+              Specifying includes and excludes:
+          </p>
+<pre class="brush:java">
+test {
+    includes("**/D*.class")
+    excludes("**/BrokenTest.class", "**/NotYetImplementedTest.class")
+}</pre>
+<p>
+  Note that <code>includes</code> and <code>excludes</code> are path globs: they must match the
+  entire path of the class and they can use <code>**</code> and <code>*</code> to match any
+  directory or file name.
+</p>
+
+
+
+<h2 class="section" id="application">Application</h2>
+<p>
+    The "application" plug-in lets you run your application directly from <code>kobaltw</code>. You configure
+    it as follows:
+</p>
+<pre class="brush:java">
+application {
+    mainClass = "com.beust.kobalt.wrapper.Main"
+    jvmArgs("-Djava.library.path=libs", "-Ddebug=true")
+    args("doc", "assemble")
+}
+</pre>
+<p>
+    And you launch you app with "<code>run</code>":
+</p>
+<pre class="brush:plain">
+./kobaltw run
+</pre>
+<p>The <code>application</code> directive supports the following parameters:</p>
+<dl class="dl-horizontal">
+    <dt>taskName</dt>
+    <dd>The name of the task that will launch the main class (default: "run")</dd>
+  <dt>args</dt>
+  <dd>Arguments to pass to the program.</dd>
+  <dt>jvmArgs</dt>
+  <dd>Arguments to pass to the JVM.</dd>
+  <dt>mainClass</dt>
+  <dd>The class in your code that contains the <code>main</code> function.</dd>
+</dl>
+<p>
+  Note that you can have multiple <code>application{}</code> directives, each launching a different
+  main class with a different task name:
+</p>
+<pre class="brush:java">
+application {
+    mainClass = "com.example.Main1"
+    taskName = "runMain1"
+}
+
+application {
+    mainClass = "com.example.Main2"
+    taskName = "runMain2"
+}</pre>
+
+          <h2 class="section" id="apt">apt</h2>
+  <p>
+      The <code>apt</code> plug-in adds support for <a href="https://docs.oracle.com/javase/7/docs/technotes/guides/apt/GettingStarted.html">annotation processing</a>. It's made of two parts.
+  </p>
+  <h3 class="section" id="apt-dependency" indent="1">The <code>apt</code> dependency directive</h3>
+<pre class="brush:java">
+    dependencies {
+        apt("com.google.dagger:dagger:2.0.2")
+    }
+</pre>
+  <p>
+      Instead of using <code>compile</code>, you use <code>apt</code> in your dependencies and you point to the jar file that contains the annotation processor. This will instruct any compiler involved in the build to run this annotation processor first.
+  </p>
+  <h3 class="section" id="apt-configuration" indent="1">The <code>apt</code> configuration directive</h3>
+<pre class="brush:java">
+    apt {
+        outputDir = "generated/sources/apt"
+    }
+</pre>
+  <p>This directive lets you configure the output directory and a few other settings that drive the annotation processor. This directive is optional.</p>
+  <p>For a full example defining and then using an annotation processor, see the <a href="http://github.com/cbeust/version-processor">version-processor project.</a></p>
+
+
+<h2 class="section" id="packaging">Packaging</h2>
+
+<p>
+The Packaging plug-in lets you generate (directive <code>assemble</code>) and install (directive <code>install</code>) various archives for your project: jar, war and zip files.
+</p>
+
+<h3 class="section" id="assemble" indent="1">assemble</h3>
+<p>
+    The <code>assemble</code> directive controls which artifacts get generated for your project.
+</p>
+<pre class="brush:java">
+assemble {
+    jar {
+    }
+}
+</pre>
+
+<p>
+  If you don't specify a <code>name</code> for your archive, a default one will be used that contains your project name, version and the corresponding suffix, e.g. <code>kobalt-1.1.jar</code> or <code>sec-0.2.war</code>.
+</p>
+
+<h3 class="section" id="zip" indent="2">zip</h3>
+
+<p>
+All these archives are zip files, so the <code>zip</code> archive is at the top of the hierarchy and <code>jar</code> and <code>war</code> inherit all its attributes, which include <code>name</code>, <code>include</code> and <code>exclude</code>.
+</p>
+
+<h3 class="section" id="include-and-exclude" indent="2">include and exclude</h3>
+
+<p>
+All archives let you include and exclude files.
+</p>
+
+<p>
+  <code>include</code> has two different forms:
+</p>
+
+<pre class="brush:java">
+assemble {
+    zip {
+        include("kobaltw", "README")
+        include(from("doc/"),
+            to("html/"),
+            glob("**html"))
+    }
+}
+</pre>
+
+<p>
+  The first form, with just one parameter, simply copies the file from your directory into the archive, preserving its path. The second form has three parameters which allow you to move the file to a different path into your archive. Note the use of the <code>from</code>, <code>to</code> and <code>glob</code> directives, which are necessary to disambiguate the call.
+</p>
+
+<h3 class="section" id="jar" indent="2">jar</h3>
+
+<p>
+  A <code>jar</code> is like a <code>zip</code> with two additional available parameters:
+</p>
+
+<dl class="dl-horizontal">
+  <dt>fatJar</dt>
+  <dd>If true, all the dependencies and their dependencies will be included in the jar file</dd>
+  <dt>manifest</dt>
+  <dd>Specify attributes to add to the manifest</dd>
+</dl>
+
+<p>
+  Here is how you generate an executable jar file:
+</p>
+
+<pre class="brush:java">
+assemble {
+  jar {
+      fatJar = true
+      manifest {
+          attributes("Main-Class", "com.beust.kobalt.KobaltPackage")
+      }
+  }
+}
+</pre>
+
+
+<h3 class="section" id="war" indent="2">war</h3>
+
+<p>
+  The <code>war</code> directive generates a war file suitable to be deployed into a servlet container.
+</p>
+
+<h3 class="section"  id="mavenJars" indent="2">mavenJars</h3>
+
+<p>
+  The <code>mavenJars</code> directive generates several jar files (binary, source, javadoc) which are required by Maven repositories. It's basically a shortcut that saves you the trouble from having to assemble these jar files manually in your build file. It allows you to specify Manifest attributes, just like the <code>jar</code> directive.
+</p>
+
+<h2 class="section"  id="install" indent="1">install</h2>
+<p>
+  The <code>install</code> section lets you specify how the artifacts get installed. There are two ways to use <code>install</code>.
+</p>
+
+<h3 class="section" indent="2" id="install-target">Bulk install</h3>
+
+<p>
+The simplest way to install is either not specify anything in the <code>install</code> directive or an optional
+  <code>target</code> string, which specifies the target directory (<code>"libs"</code> by default):
+</p>
+<pre class="brush:java">
+    install {
+        target = "libs"
+    }
+</pre>
+
+<p>
+  With this approach, everything that was generated in <code>kobaltBuild/libs</code> gets copied to this
+  target directory.
+</p>
+
+<h3 class="section" indent="2" id="install-include">Fine grained install</h3>
+          <p>
+  You can also be more selective in what you install with either the <code>copy</code> directive to copy
+  individual files or with <code>include</code>, which lets you specify more sophisticated ways of moving
+  files to a destination:
+</p>
+<pre class="brush:java">
+    install {
+        copy(from("README"), to("deploy"))
+        include(from("kobaltBuild/libs"), to("deploy"), glob("**/*"))
+    }
+</pre>
+<h3 class="section" indent="2" id="install-multiple">Multiple install targets</h3>
+
+<p>
+  You can specify multiple <code>install</code> directives by specifying different task names for
+  each of them:
+</p>
+<pre class="brush:java">
+    install {
+        taskName = "installSingle"
+        target = "libs"
+    }
+
+    install {
+        taskName = "installMulti"
+        copy(from("README"), to("deploy"))
+        include(from("kobaltBuild/libs"), to("deploy"), glob("**/*"))
+    }
+</pre>
+
+<p>
+  You might find the directive <code>collect()</code> useful when installing: this function is invoked on a
+  list of dependencies and returns a list of jar files that represent the transitive closure of the dependencies:
+</p>
+<pre class="brush:java">
+    install {
+        collect(compileDependencies).forEach {
+            copy(it.file.absolutePath, to("deploy"))
+        }
+    }
+</pre>
+<h2 class="section" id="publishing">Publishing</h2>
+
+<p>
+  The Publishing plug-in lets you upload files to Bintray and Github. These files can be either generic ones (e.g. a zip file, a README, etc...) or a Maven-compatible form of your project.
+</p>
+
+<h3 class="section" indent="1" id="bintray">Bintray / JCenter</h3>
+<p>
+  You upload files to Bintray with the <code>uploadBintray</code> task. Before you can upload, you need to create a file <code>local.properties</code> in the root directory of your project with the following keys:
+</p>
+
+<pre class="brush:plain">
+bintray.user=...
+bintray.apikey=...
+
+# Optional. Include this if you want to upload to your org's repo instead of your own.
+# bintray.organization=...
+</pre>
+
+<p>
+The values for the <code>user</code> and <code>apikey</code> keys can be found in your bintray profile, as described <a href="https://bintray.com/docs/usermanual/interacting/interacting_editingyouruserprofile.html#anchorAPIKEY">here</a>. Add this file to your <code>.gitignore</code> file and make sure you never upload it to your source control.
+</p>
+
+<p>
+Before you can upload, you also need to create the package in bintray, <a href="https://bintray.com/docs/usermanual/uploads/uploads_creatinganewpackage.html">as explained here</a>. Once this is done, 
+you are ready to do your first upload.
+</p>
+
+<p>
+  The simplest way to define what files will be uploaded is to use <code>mavenJars{}</code>, which will upload all the artifacts necessary for your project to be usable by Maven compatible build tools:
+</p>
+<pre class="brush:java">
+  assemble {
+      mavenJars {}
+  }
+
+  bintray {}
+</pre>
+<p>
+  This directive <a href="#mavenJars">is described here</a> and is a shortcut to upload all the files that are required in a Maven repo (jar file, javadocs, source files and POM file). You can take a look at <a href="https://github.com/cbeust/jcommander/blob/master/kobalt/src/Build.kt">this build file</a> for a full example of how to package and publish a project to Bintray / JCenter.
+</p>
+<p>
+  You can also specify the files to upload individually with the <code>file</code> directive. The following
+  build file uploads a zip file to a bintray directory defined by the version number of your project:
+</p>
+
+<pre class="brush:java">
+bintray {
+  file("${kobalt.buildDirectory}/libs/${kobalt.name}-${kobalt.version}.zip",
+       "${kobalt.name}/${kobalt.version}/${kobalt.name}-${kobalt.version}.zip")
+}
+</pre>
+
+<pre class="brush:plain">
+$ ./kobaltw uploadBintray
+...
+========== kobalt-line-count:uploadBintray
+  kobalt-line-count: Found 2 artifacts to upload
+  All artifacts successfully uploaded
+</pre>
+
+<p>
+  The <code>bintray</code> directive accepts the following parameters:
+</p>
+<dl class="dl-horizontal">
+  <dt>publish (<code>false</code>)</dt>
+  <dd>If true, the uploaded file will be published in your personal space (e.g. <code>https://dl.bintray.com/cbeust/maven</code>). Once the file is uploaded there, it can be automatically synchronized to JCenter by linking your project to JCenter on the Bintray web site. By default, files are <strong>not</strong> published.
+  </dd>
+    <dt>sign (<code>false</code>)</dt>
+    <dd>If true, sign the files with GnuPG (gpg). This is only required if you plan to later synchronize these files from JCenter to Maven Central. Keep this to <code>false</code>if you are only interested in uploading to JCenter.</dd>
+  <dt>file</dt>
+  <dd>The first parameter is the file you want to upload and the second one is the path where it will be uploaded to.</dd>
+  <dt>name</dt>
+  <dd>The package name on Bintray, if different than the project name.</dd>
+  <dt>description</dt>
+  <dd>The description of the current version.</dd>
+  <dt>issueTrackerUrl</dt>
+  <dd>The URL to an issue-tracking system where fellow developers can follow and help you solve bugs and defects.</dd>
+  <dt>vcsTag</dt>
+  <dd>The VCS tag for the current version.</dd>
+</dl>
+<p>
+    If there is a need to specify some of the OpenPGP key information when signing, it can be stored in the <code>local.properties</code> file as follows:
+</p>
+<pre class="brush:plain">
+gpg.keyId=24875D73
+gpg.password=secret
+gpg.secretKeyRingFile=/Users/me/.gnupg/secring.gpg
+</pre>
+
+<h3 class="section" indent="1" id="configuring-pom">Configuring your POM file</h3>
+<p>
+  When you upload your package to Bintray or JCenter in Maven form, Kobalt will create a default
+  POM file for you. You can configure it with the <code>pom{}</code> directive in your project.
+  Here is an example:
+</p>
+
+<pre class="brush:java">
+import org.apache.maven.model.*
+
+val kobalt = project {
+    pom = Model().apply {
+        name = project.name
+        description = "A build system in Kotlin"
+        url = "http://beust.com/kobalt"
+        licenses = listOf(License().apply {
+            name = "Apache 2.0"
+            url = "http://www.apache .org/licenses/LICENSE-2.0"
+        })
+        scm = Scm().apply {
+            url = "http://github.com/cbeust/kobalt"
+            connection = "https://github.com/cbeust/kobalt.git"
+            developerConnection = "git@github.com:cbeust/kobalt.git"
+        }
+        developers = listOf(Developer().apply {
+            name = "Cedric Beust"
+            email = "cedric@beust.com"
+        })
+    }
+
+</pre>
+
+<p>
+  Note that the classes used in this snippet (<code>Model</code>, <code>License</code>, etc...) are
+  the actual Apache Maven class, so you have access to the full POM model.
+</p>
+
+        <!---
+<h2 class="section" id="dokka">Dokka</h2>
+
+<p>
+  <a href="https://github.com/Kotlin/dokka">Dokka</a> is Kotlin's documentation tool. The Kobalt Dokka plug-in allows you to launch it and configure it as follows:
+</p>
+<pre class="brush:java">
+    import com.beust.kobalt.plugin.dokka.dokka
+    // ...
+
+    dokka {
+        outputFormat = "markdown"
+        sourceLinks {
+            dir = "src/main/kotlin"
+            url = "https://github.com/cy6erGn0m/vertx3-lang-kotlin/blob/master/src/main/kotlin"
+            urlSuffix = "#L"
+        }
+    }
+</pre>
+<p>
+  You can then generate your documentation by running the <code>dokka</code> task. Here is the full list of configuration parameters allowed:
+</p>
+          <dl class="dl-horizontal">
+              <dt>samplesDir</dt>
+              <dd>The list of directories containing sample code (documentation for those directories is not generated but declarations from them can be referenced using the <code>@sample</code> tag).</dd>
+              <dt>includeDirs</dt>
+              <dd>The names of directories containing the documentation for the module and individual packages.</dd>
+              <dt>outputDir</dt>
+              <dd>The output directory where the documentation is generated.</dd>
+              <dt>outputFormat</dt>
+              <dd>The output format: <code>html</code>, <code>markdown</code>, <code>jekyll</code>,
+              or <code>javadoc</code>.</dd>
+              <dt>sourceLinks</dt>
+              <dd>The source link mappings.</dd>
+              <dt>moduleName</dt>
+              <dd>The name of the module being documented (used as the root directory of the generated documentation).</dd>
+              <dt>skip</dt>
+              <dd>If true, don't generate anything.</dd>
+          </dl>
+-->
+
+      </div>
+
+
+      <!-- Table of contents -->
+      <div class="col-md-3" id="table-of-contents">
+      </div>
+
+<!-- Bootstrap core JavaScript
+================================================== -->
+<!-- Placed at the end of the document so the pages load faster -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+<script src="../bootstrap/dist/js/bootstrap.min.js"></script>
+<script src="../js/kobalt.js"></script>
+<script>generateKobalt(2);</script>
+
+  <!--
+  <script src="../../assets/js/docs.min.js"></script>
+-->
+<!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+<!--
+<script src="../../assets/js/ie10-viewport-bug-workaround.js"></script>
+-->
+
+</body>

@@ -1,0 +1,281 @@
+<HTML>
+<HEAD>
+   <META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+   <META NAME="Author" CONTENT="Cedric Beust">
+   <META NAME="GENERATOR" CONTENT="Mozilla/4.05 [en] (X11; I; SunOS 5.6 sun4u) [Netscape]">
+   <TITLE>Naming conventions in Java</TITLE>
+</HEAD>
+<BODY>
+&nbsp;
+<CENTER>
+<H1>
+<B>&nbsp;NAMING CONVENTIONS IN C++ AND JAVA :</B></H1></CENTER>
+
+<CENTER>
+<H1>
+<B>CAN THEY BE RECONCILED ?</B></H1></CENTER>
+
+<DIV ALIGN=right><B><A HREF="mailto:beust@sophia.inria.fr">Cedric Beust</A></B></DIV>
+
+<CENTER>&nbsp;</CENTER>
+
+
+<P>In this article, I discuss the various naming conventions that are used
+in C++ and Java, and try to explain which ones should be adopted in Java
+and what others could be left. The end goal is to make the transition to
+a more uniform Java naming style as smooth as possible. Everything that
+follows should be read as personal ideas and advice, not as imperative
+directions you should adhere to unconditionally. You should start by reading
+<A HREF="http://gee.cs.oswego.edu/dl/html/javaCodingStd.html">Doug Lea's
+coding standard</A> to get a general idea on conventions, and then use
+the following discussion to make decisions for yourself.
+<BR>&nbsp;
+<H3>
+STANDARD CONVENTIONS IN C++</H3>
+Usually, a C++ class header will present the public, protected and then
+private parts, in that order. While there is no real guideline regarding
+private and protected layout, we usually see in the public part :
+<UL>
+<LI>
+constructors</LI>
+
+<LI>
+copy constructors</LI>
+
+<LI>
+destructors</LI>
+</UL>
+then follow member functions, operators and friendship statements.
+
+<P>As a corollary, the datamembers (usually private or protected) will
+be sent back to the bottom of the class. The rationale here is that when
+you are looking at a header, you are interested in the interface part of
+the class, and you don't want to have your reading impeded by implementation
+details.
+
+<P>Member functions usually start with a lower case (following the Smalltalk
+trend), and static ones are capitalized :
+<BLOCKQUOTE><TT>// C++</TT>
+<BR><TT>void aFunction();</TT>
+<BR><TT>static void AStaticFunction();</TT></BLOCKQUOTE>
+Most of the time, datamembers will be flagged with a specific naming convention.
+The most common is a leading underscore, but you can see variations :
+<BLOCKQUOTE><TT>// C++</TT>
+<BR><TT>int _name;</TT>
+<BR><TT>int name_;</TT>
+<BR><TT>int m_name;</TT>
+<BR><TT>int ivName;&nbsp;&nbsp; // for "instance variable"</TT></BLOCKQUOTE>
+and for static :
+<BLOCKQUOTE><TT>// C++</TT>
+<BR><TT>static int _Name;</TT>
+<BR><TT>static int Name_;</TT>
+<BR><TT>// not sure what the static equivalent for m_name is...</TT>
+<BR><TT>static int cvName;&nbsp;&nbsp;&nbsp; // for "class variable"</TT>
+<BR>&nbsp;</BLOCKQUOTE>
+
+<H3>
+STANDARD CONVENTIONS FOR JAVA</H3>
+These conventions are much looser in Java.
+
+<P>public, protected and private functions are usually scattered throughout
+the class, and attributes tend to be declared at the top of the class.
+
+<P>The naming of methods obeys the same rule as C++, but it also applies
+to static functions :
+<BLOCKQUOTE><TT>public void aFunction();</TT>
+<BR><TT>static public void aStaticFunction();</TT></BLOCKQUOTE>
+No naming convention is used for attributes, they just can't be distinguished
+from standard "auto" variables (more on this below). Referencing attributes
+is often performed via this :
+<BLOCKQUOTE><TT>// Java</TT>
+<BR><TT>void f(String name) {</TT>
+<BR><TT>&nbsp; this.name = name;</TT>
+<BR><TT>}</TT></BLOCKQUOTE>
+There is of course much more to be said on Java conventions, but I will
+focus on these issues since they are relevant to C++. Once again, take
+a look at <A HREF="http://gee.cs.oswego.edu/dl/html/javaCodingStd.html">Doug
+Lea's</A> ideas on the matter.
+<H3>
+WHY DO THESE NOTATIONS DIFFER ?</H3>
+Obviously, Java has a lot less standard naming guidelines than C++. This
+can probably be explained by the relative youth of the language compared
+to C++. However, I just can't accept this excuse as is, because at least
+something should have been learned with C++. While Java authors tried to
+reuse some of the knowledge gained during the evolution of C++, they seem
+to have left aside crucial pieces of information. Meaningful naming is
+one of those. But as we will see below, things are not as dramatic as they
+might seem.
+
+<P>Let's first take a look at the rationale behind some of C++ namings.
+<BR>&nbsp;
+<BLOCKQUOTE>- Differentiating static and member functions
+<BLOCKQUOTE>The idea between this distinction is that making a member function
+static (or the other way around) is not just a syntactic change. It has
+deep implications that often go as far as the design of the whole framework
+itself. While static functions are simply "datamember functions without
+a this parameter", their place in the overall environment is considerably
+modified when this status changes.
+
+<P>Imposing a name distinction forces the programmer to go through all
+their code again and make sure that not only the former code will keep
+compiling and working, but possibly remove or add lines of code. For example,
+making a member function static will probably allow you to create less
+objects, thus avoiding needless new's.</BLOCKQUOTE>
+</BLOCKQUOTE>
+
+<BLOCKQUOTE>- Differentiating datamembers and local variables
+<BLOCKQUOTE>This is a very important step, and I really feel angry each
+time I see this teaching was lost when moving to Java. Without a proper
+naming convention, you can run in very stupid bugs that should never happen.
+Consider :
+<BR>&nbsp;
+
+<P><TT>// Java</TT>
+<BR><TT>class A {</TT>
+<BR><TT>&nbsp; String name;</TT>
+<BR><TT>&nbsp; public void f(String h) {</TT>
+<BR><TT>&nbsp;&nbsp;&nbsp; this.name = name;</TT>
+<BR><TT>&nbsp; }</TT>
+<BR><TT>}</TT></BLOCKQUOTE>
+
+<BLOCKQUOTE>This code will compile just fine but the bug will make you
+lose some precious time.
+
+<P>Another gain in differentiating datamembers is when you need to read
+code. Without the proper convention, it is very difficult to see if a function
+modifies <TT>this</TT> or not (in C++, whether it is <TT>const</TT> or
+not). If you go for the leading _ notation, the presence of a _ in the
+piece of code you are perusing gives you an immediate hint about what the
+functions does on <TT>this</TT>.
+
+<P>One last important gain : it completely rules out possible "hiding"
+<BR>situations :
+
+<P><TT>// Java</TT>
+<BR><TT>class A {</TT>
+<BR><TT>&nbsp; int a;</TT>
+<BR><TT>&nbsp; public void f() {</TT>
+<BR><TT>&nbsp;&nbsp;&nbsp; int a = 0;</TT>
+<BR><TT>&nbsp;&nbsp;&nbsp; //</TT>
+<BR><TT>&nbsp;&nbsp;&nbsp; a = 42;&nbsp;&nbsp; // mmmh... do we mean a
+or this.a ?</TT>
+<BR><TT>&nbsp; }</TT>
+<BR><TT>}</TT></BLOCKQUOTE>
+</BLOCKQUOTE>
+&nbsp;
+<BLOCKQUOTE>- Layout of the classes
+<BLOCKQUOTE>While seeing datamembers declared at the top of a class will
+surely shock most C++ programmers, it can actually make sense if you add
+interfaces into the equation.
+
+<P>C++ doesn't have "native" support for interfaces. Usually, the <TT>.hpp</TT>
+file will be used as the interface (definition) of the class (possibly
+using pure virtual functions, but that's a detail).
+
+<P>While Java doesn't distinguish "header file" and "implementation file",
+interfaces serve this purpose just fine. The situation can be summed up
+this way :
+<BR>&nbsp;
+<BR>&nbsp;
+<CENTER><TABLE BORDER COLS=3 WIDTH="60%" NOSAVE >
+<TR ALIGN=CENTER NOSAVE>
+<TD></TD>
+
+<TD NOSAVE>Java</TD>
+
+<TD>C++</TD>
+</TR>
+
+<TR ALIGN=CENTER NOSAVE>
+<TD NOSAVE>Interface</TD>
+
+<TD ALIGN=CENTER NOSAVE>interface</TD>
+
+<TD NOSAVE>.hpp file</TD>
+</TR>
+
+<TR ALIGN=CENTER NOSAVE>
+<TD NOSAVE>Implementation</TD>
+
+<TD NOSAVE>.java file</TD>
+
+<TD>.cpp file</TD>
+</TR>
+</TABLE></CENTER>
+&nbsp;
+
+<P>Seeing the picture with the above table in mind, you can see how it
+makes sense to have attributes declared on top of the <TT>.java</TT> file
+: it's because this file is the implementation of the class. Anybody reading
+it will be interested in implementation details, and in that respect, a
+cursory glance of the attributes might be of some help.
+
+<P>Of course, for this to fully work, one must program extensively with
+interfaces, and I can only hope that interfaces will be more and more used
+in the future.</BLOCKQUOTE>
+</BLOCKQUOTE>
+&nbsp;
+<H3>
+RECOMMENDATIONS WITH JAVA NAMING</H3>
+Obviously, some compromises must be made in the current situation : C++
+conventions are probably a little too stringent and not necessarily in
+phase with Java, while the current Java conventions (or lack thereof) are
+definitely not sufficient for any midsized project.
+
+<P>Of all the above points, there is but one that should be adopted without
+exception in Java : standard convention for attributes.
+
+<P>Attributes <B>must</B> be distinguished from plain old "automatic" variables
+syntactically. You can adopt whichever norm you prefer (the most widespread
+being probably <TT>_name</TT> and <TT>m_name</TT>), but use it consistently
+and encourage everyone around you to do the same.
+
+<P>There will be reluctance, of course, because some people have aesthetic
+considerations when it comes to code appearance, but with proper highlighting,
+the uniform naming makes a lot of sense.
+
+<P>I personally use a "soft" highlighting to flag attributes in my code,
+and I use a "strong" highlighting (for example using a different background
+or a bold case) when such attributes are assigned. This makes a tremendous
+difference when browsing code. Here is an example :
+<BR><IMG SRC="highlight.gif" HEIGHT=251 WIDTH=300>&nbsp;
+
+<P>(this example also features some personal highlighting which a few people
+will most likely find way too psychedelic to their taste, so you should
+focus on the attributes colors solely).&nbsp; The sample code in elisp
+that allows that kind of highlighting can be found <A HREF="colors.el">here</A>.
+
+<P>Apart from this mandatory requirement, the other conventions in C++
+can or should be dropped in order not to make the transition to a better
+Java coding style too painful. I can live without being able to distinguish
+static functions from member ones. The same goes for attributes. Note that
+it is a compromise I have accepted to make, but if I was to work alone
+on a project, I would probably stick to them anyway because I know that
+it won't annoy greatly "standard" Java programmers if they must read my
+code one day.
+
+<P>I would insist on having static functions prefixed with their class,
+though :
+<BLOCKQUOTE><TT>void f() {</TT>
+<BR><TT>&nbsp; aNonStaticFunction();</TT>
+<BR><TT>&nbsp; ClassName.aStaticFunction();</TT>
+<BR><TT>}</TT></BLOCKQUOTE>
+This seems to be a reasonable compromise as far as naming is concerned
+and makes it clear that the invoked function is not using <TT>this</TT>
+at all.
+<BR>&nbsp;
+<H3>
+&nbsp;THANKS TO...</H3>
+&nbsp;
+<BR><A HREF="mailto:jm@excitehome.net">Jean-Michel Leon</A>
+
+<P><A HREF="mailto:dl@altair.cs.oswego.edu">Doug Lea</A>
+
+<P><A HREF="mailto:Bill.Foote@eng.sun.com">Bill Foote</A>
+
+<P>for their helpful hints on these matters.
+
+<P>&nbsp;
+<BR>&nbsp;
+</BODY>
+</HTML>

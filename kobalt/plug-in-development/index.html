@@ -1,0 +1,636 @@
+<html>
+    <head>
+        <title>
+        Kobalt, by Cedric Beust
+        </title>
+
+        <script type="text/javascript" src="../sh/scripts/shCore.js"></script>
+        <script type="text/javascript" src="../sh/scripts/shBrushJScript.js"></script>
+        <script type="text/javascript" src="../sh/scripts/shBrushJava.js"></script>
+        <script type="text/javascript" src="../sh/scripts/shBrushPlain.js"></script>
+        <script type="text/javascript" src="../sh/scripts/shBrushXml.js"></script>
+        <script>
+                SyntaxHighlighter.defaults['gutter'] = false;
+                SyntaxHighlighter.defaults['toolbar'] = false;
+                SyntaxHighlighter.all();
+        </script>
+        <!-- Optional Bootstrap Theme -->
+        <link href="data:text/css;charset=utf-8," data-href="../bootstrap/dist/css/bootstrap-theme.min.css" rel="stylesheet" id="bs-theme-stylesheet">
+        <!--[if lt IE 9]><script src="../assets/js/ie8-responsive-file-warning.js"></script><![endif]-->
+        <!--
+        <script src="../bootstrap/assets/js/ie-emulation-modes-warning.js"></script>
+        -->
+        <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+        <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+        <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+        <![endif]-->
+        <!-- Favicons -->
+        <!--
+        <link rel="icon" href="/favicon.ico">
+        -->
+    </head>
+<body>
+<div class="container">
+<!-- Static navbar -->
+<nav id="kobalt-navbar" class="navbar navbar-default">
+</nav>
+<!-- Main component for a primary marketing message or call to action -->
+<h2>How to write a Kobalt plug-in</h2>
+<!-- Main content -->
+<div class="col-md-9">
+<h2 class="section" id="tutorial">Tutorial</h2>
+<p>
+If you are curious to get a quick feel for what a Kobalt plug-in looks like, I suggest you go read how to
+<a href="../ten-minutes/index.html">write and publish a plug-in in ten minutes</a> and then you can come back here
+and keep reading.
+</p>
+<h2 class="section" id="idea-set-up">Setting up IDEA</h2>
+    <h3 class="section" indent="1" id="launch-configuration">Launch configuration</h3>
+<p>
+    The simplest way to run your plug-in in your IDE is to create a main function in the main class of your
+    plug-in as follows:
+</p>
+<pre class="brush:java">
+fun main(argv: Array&lt;String&gt;) {
+    com.beust.kobalt.main(argv)
+}
+</pre>
+    <p>
+        In order for this code to compile, you will have to switch the dependency of your plug-in from
+        <code>kobalt-plugin-api</code> to just <code>kobalt</code>, which is the actual application (and which
+        therefore contains the <code>main()</code> entry point):
+    </p>
+<pre class="brush:java">
+val dev = false // or true for development
+val kobaltDependency = if (dev) "kobalt" else "kobalt-plugin-api"
+
+val p = project {
+    dependencies {
+        compile("com.beust:$kobaltDependency:")
+    }
+</pre>
+<p>
+    Open the Kobalt side bar and sync your build file in IDEA. Your <code>main()</code> function should now build and be launchable.
+    You can right click on that class file and select "Debug &lt;your class name&gt;", which will launch Kobalt
+    with your plug-in. You can set a breakpoint in one of your tasks or anywhere that gets invoked. Don't forget
+    to invoke this launch configuration with the regular parameters passed to Kobalt (e.g. <code>"assemble"</code>).
+</p>
+    <h3 class="section" indent="1" id="local-dependencies">Local dependencies</h3>
+    <p>
+        In the process of building your plug-in, you will probably be invoking it from test projects and since
+        you will be making changes to your plug-in and generating jar files often, you might find it more convenient
+        to have these test projects point to your local jar file instead of the Maven one (which would require you
+        to upload your plug-in all the time). For this, you might find the <code>file()</code> and <code>homeDir
+        ()</code> directives convenient:
+    </p>
+<pre class="brush:java">
+    // Regular dependency
+    compile("com.example:my-plugin:0.1")
+
+    // Development dependency
+    compile(file(homeDir("kotlin/my-plugin/kobaltBuild/libs/my-plugin-0.1.jar"))
+</pre>
+    <p>
+        With this latter configuration, simply build your plug-in to generate the jar file with <code>./kobaltw
+        assemble</code>, switch to your test project and invoke Kobalt on it so that your plug-in will get invoked
+        and you should see the latest version of your code being invoked.
+    </p>
+<h2 class="section" id="philosophy">Plug-in architecture</h3>
+<p>
+<p>
+Plug-ins often produce files and data that other plug-ins need to use in order for a build to succeed. For example,
+the Android plug-in needs to generate a file called <code>R.java</code> and then make this file available at
+compile time by the Java or Kotlin (or any other language) plug-in. Since plug-ins have no idea about what other
+plug-ins are currently enabled and running, they can't directly talk to each other so instead of calling into
+Kobalt, Kobalt calls into them. This is done by declaring various "actors" that Kobalt will invoke whenever
+it needs the information that your plug-in produced. This is a design pattern often referred to as the
+<a href="https://en.wikipedia.org/wiki/Hollywood_principle">"Hollywood Principle"</a>: "Don't call us, we'll call you".
+</p>
+<p>
+These "actors" are exactly what the <code>kobalt-plugin.xml</code> file describes. This file informs Kobalt about
+the various ways in which your plug-in participates in the build system by specifying 1) plug-ins, 2) contributors
+or 3) interceptors.
+</p>
+</p>
+
+<h3 class="section" id="introduction" indent="1">Parts</h2>
+<p>
+<ul>
+    <li><a href="#plugin-xml"><b>kobalt-plugin.xml</b></a>. A file that describes all the components (called "plug-in actors") of your plug-in, such as contributors.</li>
+    <li><a href="#directives"><b>Directives</b></a>. Kotlin functions that users of your plug-in can invoke in their build file, such as <code>project</code> or <code>dependencies</code>. These functions typically configure some data that your plug-in will later use to perform its functions.</li>
+    <li><a href="#tasks"><b>Tasks</b></a>. These tasks are invoked from the command line and ask your plug-ins to perform certain actions.</li>
+    <li><a href="#properties"><b>Properties</b></a>. Plug-ins can export properties and read properties from other plug-ins.</li>
+</ul>
+</p>
+
+<h3 class="section" id="kobalt-plugin-xml" indent="1">kobalt-plugin.xml</h2>
+<p>
+The <code>kobalt-plugin.xml</code> file (stored in <code>META-INF</code> in the jar file of your plug-in) is mandatory and describes all the actors of your plug-in. This file contains a list of class names, each of which is expected to implement at least one of <code>IPluginActor</code>'s interfaces:
+</p>
+<pre class="brush:xml">
+&lt;plugin-actors&gt;
+  &lt;class-name&gt;com.beust.kobalt.plugin.java.JavaPlugin&lt;/class-name&gt;
+  &lt;class-name&gt;com.beust.kobalt.plugin.android.AndroidPlugin&lt;/class-name&gt;
+  &lt;class-name&gt;com.beust.kobalt.plugin.java.JavaBuildGenerator&lt;/class-name&gt;
+  &lt;class-name&gt;com.beust.kobalt.plugin.kotlin.KotlinBuildGenerator&lt;/class-name&gt;
+&lt;/plugin-actors&gt;
+</pre>
+                <p>
+                <code>IPluginActors</code> can be split in several categories:
+                </p>
+                <ul>
+                    <li><strong>Plugins</strong>, which contain <code>@Task</code> annotations.</li>
+                    <li><strong>Interceptors</strong>, which transform data that Kobalt gives them.</li>
+                    <li><strong>Contributors</strong>, which produce additional data.</li>
+                </ul>
+                <p>
+                All plug-in actors are interfaces that extend <code>IPluginActor</code>. Plug-ins extend <code>IPlugin</code>,
+                interceptors extend <code>IInterceptor</code> and contributors extend <code>IContributor</code>. When Kobalt parses your
+                <code>kobalt-plugin.xml</code>, it instantiates all the classes found in the <code>&lt;plugin-actors&gt;</code> tag
+                and then introspects them to find out which <code>IPluginActor</code> interfaces that class implements.
+                </p>
+                <p>
+                If we look a the declarations of these classes, we can get an idea what they do
+                </p>
+<pre class="brush:java">
+class JavaPlugin : ICompilerContributor, IDocContributor {</pre>
+                <p>
+                With this declaration, we know that the <code>JavaPlugin</code> contributes a compiler and a doc generator.
+                </p>
+<pre class="brush:java">
+class JavaBuildGenerator: ITemplateContributor {</pre>
+                <p>
+                This class is declaring that it wants to take part in the <code>--init</code> process (i.e. it can generate a template), discussed below.
+                </p>
+                <h2 class="section" id="actor-list">List of plug-in actors</h2>
+                <p>
+                Here is a list of actors (contributors and interceptors) that you can define in your plug-in.
+                </p>
+                <table class="table table-bordered table-condensed">
+                    <thead>
+                        <td>Interface name</td>
+                        <td>Type</td>
+                        <td>Description</td>
+                    </thead>
+                    <tr>
+                        <td><code><a href="https://github.com/cbeust/kobalt/blob/master/modules/kobalt-plugin-api/src/main/kotlin/com/beust/kobalt/api/IAssemblyContributor.kt">IAssemblyContributor</a></code></td>
+                        <td><a href="https://github.com/cbeust/kobalt/blob/master/modules/kobalt-plugin-api/src/main/kotlin/com/beust/kobalt/api/IPluginActor.kt"><code>IContributor</code></a> </td>
+                        <td>
+                            Plug-ins that want be invoked when the <code>assemble</code> task is called.
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><code><a href="https://github.com/cbeust/kobalt/blob/master/modules/kobalt-plugin-api/src/main/kotlin/com/beust/kobalt/api/IBuildConfigContributor.kt">
+                            IBuildConfigContributor</a></code></td>
+                        <td><a href="https://github.com/cbeust/kobalt/blob/master/modules/kobalt-plugin-api/src/main/kotlin/com/beust/kobalt/api/IPluginActor.kt"><code>IContributor</code></a> </td>
+                        <td>
+                            Plug-ins that want to generate their own <code>BuildConfig</code> file.
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><code><a href="https://github.com/cbeust/kobalt/blob/master/modules/kobalt-plugin-api/src/main/kotlin/com/beust/kobalt/api/IBuildConfigFieldContributor.kt">
+                            IBuildConfigFieldContributor</a></code></td>
+                        <td><a href="https://github.com/cbeust/kobalt/blob/master/modules/kobalt-plugin-api/src/main/kotlin/com/beust/kobalt/api/IPluginActor.kt"><code>IInterceptor</code></a> </td>
+                        <td>
+                            Plug-ins that want to add custom fields to the generated <code>BuildConfig</code> class.
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><code><a href="https://github.com/cbeust/kobalt/blob/master/modules/kobalt-plugin-api/src/main/kotlin/com/beust/kobalt/api/IBuildDirectoryInterceptor.kt">IBuildDirectoryInterceptor</a></code></td>
+                        <td><a href="https://github.com/cbeust/kobalt/blob/master/modules/kobalt-plugin-api/src/main/kotlin/com/beust/kobalt/api/IPluginActor.kt"><code>IInterceptor</code></a> </td>
+                        <td>
+                            Plug-ins that need to generate class files in a different directory than the default one should
+                            implement this interface.
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><code><a href="https://github.com/cbeust/kobalt/blob/master/modules/kobalt-plugin-api/src/main/kotlin/com/beust/kobalt/api/IClasspathContributor.kt">IClasspathContributor
+                        </a></code></td>
+                        <td><a href="https://github.com/cbeust/kobalt/blob/master/modules/kobalt-plugin-api/src/main/kotlin/com/beust/kobalt/api/IPluginActor.kt"><code>IContributor</code></a> </td>
+                        <td>  Classpath contributors let you specify additional jar files or directories that will be used by
+                            the <code>"compile"</code> task.
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><code><a href="https://github.com/cbeust/kobalt/blob/master/modules/kobalt-plugin-api/src/main/kotlin/com/beust/kobalt/api/IClasspathInterceptor.kt">IClasspathInterceptor
+                        </a></code></td>
+                        <td><a href="https://github.com/cbeust/kobalt/blob/master/modules/kobalt-plugin-api/src/main/kotlin/com/beust/kobalt/api/IPluginActor.kt"><code>IInterceptor</code></a> </td>
+                        <td>
+                            Plug-ins that want to modify the classpath before Kobalt uses it should implement this interface.
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><code><a href="https://github.com/cbeust/kobalt/blob/master/modules/kobalt-plugin-api/src/main/kotlin/com/beust/kobalt/api/ICompilerContributor.kt">ICompilerContributor</a></code></td>
+                        <td><a href="https://github.com/cbeust/kobalt/blob/master/modules/kobalt-plugin-api/src/main/kotlin/com/beust/kobalt/api/IPluginActor.kt"><code>IContributor</code></a> </td>
+                        <td>
+                            Plug-ins that want be invoked when the <code>compile</code> task is called.
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><code><a href="https://github.com/cbeust/kobalt/blob/master/modules/kobalt-plugin-api/src/main/kotlin/com/beust/kobalt/api/ICompilerFlagContributor.kt">ICompilerFlagContributor</a></code></td>
+                        <td><a href="https://github.com/cbeust/kobalt/blob/master/modules/kobalt-plugin-api/src/main/kotlin/com/beust/kobalt/api/IPluginActor.kt"><code>IContributor</code></a>
+                        </td>
+                        <td>
+                            Plug-ins that need to add flags to the compiler.
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><code><a href="https://github.com/cbeust/kobalt/blob/master/modules/kobalt-plugin-api/src/main/kotlin/com/beust/kobalt/api/IIncrementalTaskContributor.kt">IIncrementalTaskContributor</a></code></td>
+                        <td><a href="https://github.com/cbeust/kobalt/blob/master/modules/kobalt-plugin-api/src/main/kotlin/com/beust/kobalt/api/IPluginActor.kt"><code>IContributor</code></a> </td>
+                        <td>
+                            Plug-ins that implement this interface provide incremental tasks.
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><code><a href="https://github.com/cbeust/kobalt/blob/master/modules/kobalt-plugin-api/src/main/kotlin/com/beust/kobalt/api/ICompilerInterceptor.kt">ICompilerInterceptor</a></code></td>
+                        <td><a href="https://github.com/cbeust/kobalt/blob/master/modules/kobalt-plugin-api/src/main/kotlin/com/beust/kobalt/api/IPluginActor.kt"><code>IInterceptor</code></a> </td>
+                        <td>
+                            Plug-ins that implement this interface get a chance to alter the dependencies of a project (<code>dependencies{}</code>, <code>dependenciesTest{}</code>, ...) before Kobalt sees them.
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><code><a href="https://github.com/cbeust/kobalt/blob/master/modules/kobalt-plugin-api/src/main/kotlin/com/beust/kobalt/api/IDocContributor.kt">IDocContributor</a></code></td>
+                        <td><a href="https://github.com/cbeust/kobalt/blob/master/modules/kobalt-plugin-api/src/main/kotlin/com/beust/kobalt/api/IPluginActor.kt"><code>IContributor</code></a> </td>
+                        <td>
+                            Plug-ins that know how to generate documentation out of source files should implement this interface.
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><code><a href="https://github.com/cbeust/kobalt/blob/master/modules/kobalt-plugin-api/src/main/kotlin/com/beust/kobalt/api/IMavenIdInterceptor.kt">IMavenIdInterceptor</a></code></td>
+                        <td><a href="https://github.com/cbeust/kobalt/blob/master/modules/kobalt-plugin-api/src/main/kotlin/com/beust/kobalt/api/IMavenIdInterceptor.kt"><code>IInterceptor</code></a> </td>
+                        <td>
+                            Plug-ins that need to rewrite Maven id's should implement this interface.
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><code><a href="https://github.com/cbeust/kobalt/blob/master/modules/kobalt-plugin-api/src/main/kotlin/com/beust/kobalt/api/IProjectContributor.kt">IProjectContributor</a></code></td>
+                        <td><a href="https://github.com/cbeust/kobalt/blob/master/modules/kobalt-plugin-api/src/main/kotlin/com/beust/kobalt/api/IPluginActor.kt"><code>IContributor</code></a> </td>
+                        <td>Some plug-ins produce projects (Java, Kotlin) while others don't (Packaging, Application, etc...). The ones that
+                            do need to register themselves as project contributors. This is how Kobalt collects all the projects defined
+                        after a build file was parsed.</td>
+                    </tr>
+                    <tr>
+                        <td><code><a href="https://github.com/cbeust/kobalt/blob/master/modules/kobalt-plugin-api/src/main/kotlin/com/beust/kobalt/api/IRepoContributor.kt">IRepoContributor</a></code></td>
+                        <td><a href="https://github.com/cbeust/kobalt/blob/master/modules/kobalt-plugin-api/src/main/kotlin/com/beust/kobalt/api/IPluginActor.kt"><code>IContributor</code></a> </td>
+                        <td>
+                            Some plug-ins might want to add their own repository to the list of repositories that Kobalt already supports.
+                            This is the case of the Android plug-in which, once the <code>ANDROID_HOME</code> environment variable has been
+                            defined, will automatically add the repository inside the Android distribution so that support libraries and other
+                            artifacts can be found.
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><code><a href="https://github.com/cbeust/kobalt/blob/master/modules/kobalt-plugin-api/src/main/kotlin/com/beust/kobalt/api/IRunnerContributor.kt">IRunnerContributor</a></code></td>
+                        <td><a href="https://github.com/cbeust/kobalt/blob/master/modules/kobalt-plugin-api/src/main/kotlin/com/beust/kobalt/api/IPluginActor.kt"><code>IContributor</code></a> </td>
+                        <td>
+                            Plug-ins that can operate when the <code>"run"</code> task gets invoked should implement that interface.
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><code><a href="https://github.com/cbeust/kobalt/blob/master/modules/kobalt-plugin-api/src/main/kotlin/com/beust/kobalt/api/ISourceDirectoryContributor.kt">
+                        ISourceDirectoryContributor</a></code></td>
+                        <td><a href="https://github.com/cbeust/kobalt/blob/master/modules/kobalt-plugin-api/src/main/kotlin/com/beust/kobalt/api/IPluginActor.kt"><code>IContributor</code></a>
+                        </td>
+                        <td>
+                            Plug-ins that add source directories.
+                        </td>
+                    </tr>
+                    <tr>
+                    <tr>
+                        <td><code><a href="https://github.com/cbeust/kobalt/blob/master/modules/kobalt-plugin-api/src/main/kotlin/com/beust/kobalt/api/ISourceDirectoryInterceptor.kt">
+                        ISourceDirectoryInterceptor</a></code></td>
+                        <td><a href="https://github.com/cbeust/kobalt/blob/master/modules/kobalt-plugin-api/src/main/kotlin/com/beust/kobalt/api/IPluginActor.kt"><code>IInterceptor</code></a> </td>
+                        <td>
+                            Plug-ins that want to add, remove or alter the source directories should implement this interface.
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><code><a href="https://github.com/cbeust/kobalt/blob/master/modules/kobalt-plugin-api/src/main/kotlin/com/beust/kobalt/api/ITaskContributor.kt">ITaskContributor</a></code></td>
+                        <td><a href="https://github.com/cbeust/kobalt/blob/master/modules/kobalt-plugin-api/src/main/kotlin/com/beust/kobalt/api/IPluginActor.kt"><code>IContributor</code></a> </td>
+                        <td>
+                            Plug-ins that implement this interface provide tasks.
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><code><a href="https://github.com/cbeust/kobalt/blob/master/modules/kobalt-plugin-api/src/main/kotlin/com/beust/kobalt/api/ITemplateContributor.kt">ITemplateContributor</a></code></td>
+                        <td><a href="https://github.com/cbeust/kobalt/blob/master/modules/kobalt-plugin-api/src/main/kotlin/com/beust/kobalt/api/IPluginActor.kt"><code>IContributor</code></a> </td>
+                        <td>When invoked with <code>--init</code> followed by template names separated by commas,
+                            Kobalt will invoke each of these contributors so they can generate their files.
+                            Templates are useful to create projects from scratch with a minimal number of
+                            files to get started. For example, the "java" template will generate a <code>Build.kt</code>
+                            file suitable for a brand new Java project.
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><code><a href="https://github.com/cbeust/kobalt/blob/master/modules/kobalt-plugin-api/src/main/kotlin/com/beust/kobalt/api/ITestRunnerContributor.kt">
+                        ITestRunnerContributor</a></code></td>
+                        <td><a href="https://github.com/cbeust/kobalt/blob/master/modules/kobalt-plugin-api/src/main/kotlin/com/beust/kobalt/api/IPluginActor.kt"><code>IContributor</code></a> </td>
+                        <td>
+                            Plug-ins that can operate when the <code>"test"</code> task gets invoked should implement that interface.
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><code><a href="https://github.com/cbeust/kobalt/blob/master/modules/kobalt-plugin-api/src/main/kotlin/com/beust/kobalt/api/ITestSourceDirectoryContributor.kt">
+                        ITestSourceDirectoryContributor</a></code></td>
+                        <td><a href="https://github.com/cbeust/kobalt/blob/master/modules/kobalt-plugin-api/src/main/kotlin/com/beust/kobalt/api/IPluginActor.kt"><code>IContributor</code></a>
+                        </td>
+                        <td>
+                            Plug-ins that add test source directories.
+                        </td>
+                    </tr>
+                    </table>
+<h2 class="section" id="selection-process">Selection process</h2>
+<p>
+Several plug-ins might want to contribute to a specific task where only one participant should be allowed,
+such as running tests or generating documentation. Even the simple task of compiling should probably only
+ever be performed by no more than one plug-in for a given project. Therefore, when comes the time to
+compile a project,
+Kobalt needs to find which plug-in is the most suitable for that task and pick it. In order to do that,
+plug-ins that contribute to tasks that can only be performed by one candidate need to declare their
+<em>affinity</em> to that task for a given project.
+</p>
+<p>
+Contributors that want to participate in a selection process need to implement the following interface:
+</p>
+<pre class="brush:java">
+interface IProjectAffinity {
+    /**
+     * @return an integer indicating the affinity of your actor for the given project. The actor that returns
+     * the highest affinity gets selected.
+     */
+    fun affinity(project: Project, context: KobaltContext) : Int
+}</pre>
+<p>
+For example, the JavaPlugin implements the <code><a href="https://github.com/cbeust/kobalt/blob/master/modules/kobalt-plugin-api/src/main/kotlin/com/beust/kobalt/api/ICompilerContributor.kt">ICompilerContributor</a></code> interface and then overrides
+the <code>affinity()</code> method to make sure it gets run for Java projects but ignored for others:
+</p>
+<pre class="brush:java">
+override fun affinity(project: Project, context: KobaltContext) =
+if (project.sourceSuffix == ".java") 1 else 0</pre>
+<h2 class="section" id="directives">Directives</h2>
+<p>
+Directives are functions that users of your plug-in can use in their build file in order to configure your plug-in. These can be any kind of Kotlin function but in the interest of preserving a clean syntax in the build file, it's recommended to use the type safe builder pattern, <a href="https://kotlinlang.org/docs/reference/type-safe-builders.html">as described here</a>.
+</p>
+<p>
+Imagine that you want to offer a boolean parameter <code>publish</code> to users of your plug-in, you start by creating a class to hold that parameter:
+</p>
+<pre class="brush:java">
+class Info(val publish: Boolean)
+</pre>
+<p>
+Next, you create a directive that returns such a class and which also allows to configure it via the type safe builder pattern:
+</p>
+<pre class="brush:java">
+@Directive
+public fun myConfig(init: Info.() -> Unit) = Info().apply { init() }</pre>
+<p>
+The <code>@Directive</code> annotation is not enforced but you should always use it in order to help future tools (e.g. an IDEA plug-in) identify Kobalt directives so they can be treated differently from regular Kotlin functions. The code above defines a <code>myConfig</code> function that accepts a closure as an argument. It creates an <code>Info</code>
+object, calls the <code>init()</code> function on it (which runs all the code inside that closure) and then return that <code>Info</code> object.
+</p>
+<p>
+Users can now specify the following in their build file:
+                    </p>
+<pre class="brush:java">
+// Build.kt
+import.com.example.plugin.myConfig
+myConfig {
+    publish = true
+}</pre>
+                    <p>
+                    If you need access to the project being built, just declare an additional parameter of type <code>Project</code> to your directive and have the user pass that project:
+                    </p>
+<pre class="brush:java">
+@Directive
+public fun myConfig(project: Project, init: Info.() -> Unit) : Info {
+// ...
+</pre>
+<pre class="brush:java">
+myConfig(project) {
+    publish = true
+}
+</pre>
+                    <p>
+                    The last piece of this puzzle is how you give this data back to your plug-in so it can act on it. In order to do this, you simply look up the name of your plug-in in the <code>Plugins</code> registry and invoke whatever function you need to run:
+                    </p>
+<pre class="brush:java">
+@Directive
+public fun myConfig(init: Info.() -> Unit) = Info().apply {
+    init()
+    (Kobalt.findPlugin("my-plug-in") as MyPlugin).info = info
+    this
+}</pre>
+<p>
+Obviously, you can choose any kind of API to communicate between the directive and its plug-in. In the code
+above, I chose to directly override the entire <code>Info</code> field, but you could instead choose to call
+a function, just set one boolean instead of the whole object, etc...
+</p>
+<h2 class="section" id="tasks">Tasks</h2>
+<p>
+Tasks are provided by plug-ins and can be invoked from the command line, e.g. <code>./kobaltw assemble</code>. There are two kinds of tasks: static and dynamic.
+</p>
+<h3 class="section" indent="1">Static tasks</h3>
+<p>
+Static tasks are functions declared directly in your plug-in class and annotated with the <code>@Task</code> annotation. Here is an example:
+</p>
+<pre class="brush:java">
+@Task(name = "lineCount", description = "Count the lines", dependsOn = arrayOf("compile"))
+fun lineCount(project: Project): TaskResult {
+    // ...
+    return TaskResult()
+}
+</pre>
+<p>
+A Kobalt task needs to accept a <code>Project</code> in parameter and return a <code>TaskResult</code>, which indicates whether this task completed successfully.
+</p>
+<p>
+The <code>@Task</code> annotation accepts the following attributes:
+<dl class="dl-horizontal">
+    <dt>name</dt>
+    <dd>The name of the task, which will be used to invoke it from the command line.</dd>
+    <dt>description</dt>
+    <dd>The description of this command, which will be displayed if the user invokes the usage for the <code>kobaltw</code> command.</dd>
+    <dt>dependsOn</dt>
+    <dd>A list of all the tasks that this task depends on.</dd>
+    <dt>reverseDependsOn</dt>
+    <dd>Make the following tasks depend on this task.</dd>
+    <dt>runBefore</dt>
+    <dd>A list of all the tasks that this task should run prior to.</dd>
+    <dt>runAfter</dt>
+    <dd>A list of all the tasks that should run before this task does.</dd>
+</dl>
+</p>
+<p>
+    Kobalt defines two different concepts for tasks: dependencies and orderings. And for each of this concept,
+    you can define the relation to go in one direction or the other.
+</p>
+<p>
+    If your task cannot run until another task has run, you need to declare a dependency. Dependencies cause
+    additional tasks than those requested to be executed. For example, <code>"assemble"</code> depends on <code>"compile"</code>, which means that whenever you invoke <code>"assemble"</code>, <code>"compile"</code>
+    will be automatically run first. This is a dependency and it is controlled by <code>"dependsOn"</code> and
+    <code>"reverseDependsOn"</code>. You can see <code>"reverseDependsOn"</code> as a way to insert your task before an existing task.
+</p>
+<p>
+    Orderings, controlled by <code>"runBefore"</code> and <code>"runAfter"</code> merely specify an ordering
+    but do not pull new tasks in. This is how you tell Kobalt "In case the user asks for my task to run,
+    here is when it should be invoked", but your task will run only if it's explicitly invoked by the user.
+</p>
+<p>
+Here are a few different scenarios to illustrate how the three attributes work for the task <code>example</code>:
+</p>
+<p align="center">
+<strong>Result of the command <code>./kobaltw --dryRun compile</code></strong>
+</p>
+<table width="100%" class="table table-bordered table-condensed">
+    <thead>
+        <td align="center">Configuration for <code>example</code></td>
+        <td align="center">Result</td>
+        <td align="center">Note</td>
+    </thead>
+    <tr>
+        <td align="center">dependsOn = "compile"</td>
+        <td>
+<pre class="brush:plain">clean
+compile
+example</pre>
+        </td>
+        <td>
+            Make the <code>"example"</code> task depend on <code>"compile"</code>.
+        </td>
+    </tr>
+    <tr>
+        <td align="center">reverseDependsOn = "compile"</td>
+        <td>
+<pre class="brush:plain">clean
+example
+compile</pre>
+        </td>
+        <td>
+            Insert the <code>"example"</code> task before <code>"compile"</code>.
+        </td>
+    </tr>
+    <tr>
+        <td align="center">runAfter = "compile"</td>
+        <td>
+<pre class="brush:plain">clean
+compile</pre>
+        </td>
+        <td>
+            Make <code>"example"</code> run after <code>"compile"</code> but only if it's invoked explicitly.
+        </td>
+
+    </tr>
+</table>
+<h3 class="section" indent="1">Dynamic tasks</h3>
+<p>
+Dynamic tasks are useful when you want your plug-in to generate one or several tasks that depend on
+some other runtime information (therefore, you can't declare a method and put a <code>@Task</code>
+annotation on it). Plug-ins declare dynamic tasks by implementing the <code>ITaskContributor</code>
+intrface:
+</p>
+<pre class="brush:java">
+interface ITaskContributor {
+    fun tasksFor(project: Project, context: KobaltContext) : List&lt;DynamicTask&gt;
+}</pre>
+<p>
+For example:
+</p>
+<pre class="brush:java">
+override fun tasksFor(project: Project, context: KobaltContext) = listOf(
+    DynamicTask(this
+        name = "dynamicTask",
+        description = "Description",
+        group = "other",
+        project = project,
+        reverseDependsOn = listOf("compile"),
+        closure = { project ->
+            println("Running dynamicTask")
+            TaskResult()
+}))</pre>
+<p>
+<code>DynamicTask</code> mirrors the <code>@Task</code> attributes: <code>name</code>, <code>description</code> and
+dependencies. The only addition is the <code>closure</code> parameter, which specifics the code that will
+run if your task gets invoked. That closure needs to follow the same constraints that a <code>@Task</code> method
+obeys: it takes a <code>Project</code> parameter and returns a <code>TaskResult</code>.
+</p>
+<p>
+Once you have implemented <code>ITaskContributor</code>, you can see your dynamic task in the list of tasks and run it directly:
+</p>
+<pre class="brush:plain">
+$ ./kobaltw --tasks
+  ===== kobalt-line-count =====
+    dynamicTask         Description
+    lineCount           Count the lines
+$ ./kobaltw dynamicTask
+Running dynamictask
+</pre>
+<h2 class="section" id="properties">Properties</h2>
+<p>
+Properties are the mechanism that plug-ins can use to export values and also read values that other
+plug-ins have exported. There are two kinds of properties that plug-ins can manipulate:
+</p>
+<ul>
+    <li><strong>Project properties</strong>: project-specific properties.</li>
+    <li><strong>Plug-in properties</strong>: general properties that are applicable to no project
+    in particular.</li>
+</ul>
+<h3 class="section" indent="1" id="project-properties">Project properties</h3>
+<p>
+<code>Project</code> instances have a property called <code>projectProperties</code> that is an
+instance of the <code>ProjectProperties</code> class. Plugins can put and get values on this
+object in order to store project specific properties.
+</p>
+<pre class="brush:java">
+fun taskAssemble(project: Project) : TaskResult {
+    project.projectProperties.put("packages", packages)
+</pre>
+<p>
+    Another plug-in can then query this property as follows:
+</p>
+<pre class="brush:java">
+    val packages = project.projectProperties.put("packages")
+</pre>
+<h3 class="section" indent="1" id="plugin-properties">Plug-in properties</h3>
+<p>
+The <code>PluginProperties</code> instance can be found on the <code>KobaltContext</code>
+object that your plug-in receives in its <code>apply()</code> method. Once you have an instance of this
+class, you can read or write variables into it:
+</p>
+<pre class="brush:java">
+override fun apply(project: Project, context: KobaltContext) {
+    // Export a property for other plug-ins to use
+    context.pluginProperties.put(PLUGIN_NAME, "somePluginProperty", "someValue")
+    // Read a property from another plug-in
+    val sourceDir = context.pluginProperties.get("pluginName", "somePluginProperty")
+}
+</pre>
+            <h3 class="section" indent="1" id="documenting-properties">Documenting properties</h3>
+            <p>
+            Plug-ins that define properties should annotate them with the <code>@ExportedPluginProperty</code> or
+            <code>@ExportedProjectProperty</code>annotation:
+            </p>
+<pre class="brush:java">
+companion object {
+@ExportedProjectProperty
+const val BUILD_DIR = "buildDir"
+</pre>
+        </div>
+        <!-- Table of contents -->
+        <div class="col-md-3" id="table-of-contents">
+        </div>
+        <!-- Bootstrap core JavaScript
+        ================================================== -->
+        <!-- Placed at the end of the document so the pages load faster -->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+        <script src="../bootstrap/dist/js/bootstrap.min.js"></script>
+        <script src="../js/kobalt.js"></script>
+        <script>generateKobalt();</script>
+        <!--
+        <script src="../bootstrap/dist/js/docs.min.js"></script>
+        -->
+        <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+        <!--
+        <script src="../../assets/js/ie10-viewport-bug-workaround.js"></script>
+        -->
+    </div>
+</body>

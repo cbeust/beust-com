@@ -1,0 +1,46 @@
+body {
+    background-color: #ffffff;
+    margin: 0px;
+}
+
+a {
+   text-decoration: none;
+   color: blue;
+}
+
+a:hover {
+    cursor:pointer;
+}
+
+.cc-table {
+	margin-top: 15px;
+	margin-bottom: 15px;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+td {
+	padding: 10px;
+}
+
+.cc-interface {
+	border: solid 1px black;
+	background-color: #cccccc;
+	color: #ffffff;
+	text-align: center;
+	font-family: Roboto, arial, sans-serif;
+}
+
+.cc-link {
+	margin: 5px;
+}
+
+.cc-formula-text {
+	font-size: 1.8em;
+}
+
+.cc-link {
+   text-decoration: none;
+   font-size: 1.4em;
+   color: blue;
+}

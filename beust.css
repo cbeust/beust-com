@@ -1,3 +1,4 @@
+
 .prettyprint .kwd, .tag {
   font-weight: bold;
   color: #7f0055;
@@ -153,3 +154,12 @@ pre.prettyprint { padding: 2px; border: 1px solid #888; }
 }
 
 /* XML coloring */
+
+a:link {
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+

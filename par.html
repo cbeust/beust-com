@@ -1,0 +1,112 @@
+Scala 2.9 introduced <a href="http://days2010.scala-lang.org/node/138/140">parallel collections</a>, which mirror most of the existing collections with a parallel version. Collections that have been parallelized this way have received a new method called <tt>par</tt> which magically turns iteration on this collection into a parallel version.
+
+<p>
+
+For example, here is a sequential version:
+
+<pre class="brush: scala">
+scala> (1 to 5) foreach println
+1
+2
+3
+4
+5
+</pre>
+
+And the parallel version (notice the extra <tt>par</tt> keyword):
+
+<pre class="brush: scala">
+scala> (1 to 5).par foreach println
+1
+4
+3
+2
+5
+</pre>
+
+Obviously, the ordering will change each time you run the parallel version.
+
+<p>
+
+This piqued my curiosity and I decided to dig a bit further, starting with investigating what exactly is happening behind the scenes.
+
+<p>
+
+First of all, the parallel collections are based on an article called <a href="http://infoscience.epfl.ch/record/150220/files/pc.pdf">"A Generic Parallel Collection Framework"</a>, by Martin Odersky, Aleksander Prokopec et al, which I highly recommend. It's a very interesting analysis of how to decompose the concepts of parallelism, concurrency, collections, ranges and iterators and assemble them in a generic manner.
+
+<p>
+
+Sadly, this article ended up being the only highlight of my research in this area, because the more I dug into the Scala parallel collections, the more disturbed I became. By now, I think that they are a nice but useless toy that is either, in the best case, going to go completely unnoticed and fall into oblivion, and at worst, going to bring a lot of confusion in users who decide to use it.
+
+<p>
+
+Here are some of the problems that I found with the parallel collections.
+
+<p>
+
+<h4>Lack of control</h4>
+
+My first reaction when I saw the output above was to try to verify that indeed, threads were being spawned, and then find out how many of them, how I can control the size of the thread pool, etc...
+
+<p>
+
+I came up pretty much empty on all counts, and if I have missed a piece of the documentation that explains this, I would love to see it, but browsing the sources of <tt>ParSeq</tt> and other classes produced no useful result.
+
+<p>
+
+This is a big deal, and probably the worst problem with this framework. The loop above generated a parallel range of five entries, did it generate five threads? What happens if I try with 1000? 100000? The answer: it works for all these values, which makes me think that the loop is not allocating one thread per value. So it's using a thread pool. But again: what size? Is it configurable?
+
+<p>
+
+Digging deeper, what is the saturation policy? If the pool contains ten threads, what happens when it receives an eleventh value? It probably blocks, but can this be configured? Can the dispatch strategy be configured? Maybe I'm feeding operations of diverse durations and I want to make sure that the expensive operations don't starve the faster ones, how can I do this?
+
+<p>
+
+This absence of configuration is a big blow to the parallel framework, and it relegates its usage to the simplest cases, where it will most likely not bring much speed gain compared to sequential execution.
+
+<h4>Silver bullet illusion</h4>
+
+The example above worked great, let's try another one:
+
+<pre class="brush: scala">
+scala> (1 to 5) mkString(" ")
+res124: String = 1 2 3 4 5
+
+scala> (1 to 5).par mkString(" ")
+res126: String = 1 2 3 4 5
+</pre>
+
+You can run the <tt>par</tt> version over and over, the result will remain the same. This is confusing.
+
+<p>
+
+It should be obvious that not all operations on collections can be parallelized (e.g. folds) but it looks like creating a string out of a list should be, and it's not. I'm not going to go too far down here because the explanation is a mix of implementation details and theoretical considerations (the catamorphic nature of folds), but the key point here is that the range of applications of parallel collections has just narrowed down significantly again.
+
+<h4>Bloat</h4>
+
+I think the decision to retrofit the existing collections with the <tt>par</tt> operation was a mistake. Parallel operations come with a set of constraints that are not widely applicable to sequential collections, which leads to the situation that not all the collections support <tt>par</tt> (e.g. there is no <tt>ParTraversable</tt>) and more importantly, it imposes a burden on everyone, including people who don't care for this functionality.
+
+<p>
+
+In doing this, Scala violates what I consider a fairly important rule for programming languages and API's in general: you shouldn't pay for what you don't use. Not only do the parallel collections add a few megs to a jar file that's already fairly big, but they most likely introduce a great deal of complexity that is going to impact the maintainers of the collections (both sequential and parallel) significantly. It looks like anyone who will want to make modifications to the sequential collections will have to make sure their code is not breaking the parallel collections, and vice versa.
+
+<h4>Unproven gains</h4>
+
+Scala 2.9 is still very recent so it's no surprise that we don't really have any quantitative feedback of real world gains, but I'll make a prediction today that the courageous developers who will decide to embrace the parallel collections wholeheartedly across their code base will see very little gains. In my experience, inner loops are hardly ever the bottleneck in large code bases, and I'd even go further in suspecting that spawning threads for elements of a loop could have adverse effects (context switching, memory thrashing, cache misses) for loops that iterate on very few elements or that are executing very fast operations already. Again, I'm just speculating here.
+
+<h4>Remedies</h4>
+
+Because of all these problems, I predict that in their current shape, the parallel collections will, at beast, go largely unused and at worst, be considered a failed experiment in a year or so.
+
+<p>
+
+I have a couple of suggestions that I think might be a better path for this kind of initiative:
+
+<ul>
+  <li>Split up the parallel and sequential collections, remove <tt>par</tt> and make sure that both hierarchies can be evolved independently of each other.
+  <li>Provide a nice Scala wrapper around the <tt>Executor</tt> framework. Executors have everything that anyone interested in low level parallelism can dream of: configurable thread pool sizes, and even thread pools themselves, thread factories, saturation and rejection policies, lifecycle hooks, etc... You could write a Scala wrapper around this framework in a few hundreds of lines and it would be much more useful than what is currently possible with <tt>par</tt>.
+</ul>
+
+Thoughts?
+
+

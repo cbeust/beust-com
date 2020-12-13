@@ -1,0 +1,153 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<html>
+<head>
+<title>Ultimate Craft Queue</title>
+</head>
+
+<body bgcolor="#ffdead">
+
+<h1 align="center">Ultimate Craft Queue</h1>
+<h2 align="center">A glyph maker's ultimate weapon in the quest to hit the gold cap</h2>
+
+<p align="right">
+C&eacute;dric Beust<br>
+<a href="mailto:cedric@beust.com">cedric@beust.com</a>
+</p>
+
+<p align="center">
+<a href="http://beust.com/ucq/uc1.png">
+<img height="50%" src="http://beust.com/ucq/ucq1.png" />
+</a>
+</p>
+
+Ultimate Craft Queue (UCQ) is a World of Warcraft add-on meant to help glyph makers
+maintain their inventory.  In a nutshell, this add-on lets you say that you want
+your inventory to contain n glyphs of each type, and it will then calculate how many
+glyphs you need to craft to reach that result.  But as you will see below, you
+can actually fine tune the process quite a bit.
+
+<h3>Requirements</h3>
+
+This add-on is based on <a href="http://www.ithinkincode.com/warcraft/index.php/ktq/">Kev's Tool Queue</a>, which provides similar functionalities but
+with less options.  As such, UCQ has the same requirements:
+
+<ul>
+<li><a href="http://wow.curse.com/downloads/wow-addons/details/altoholic.aspx">Altoholic</a>
+<li><a href="http://www.wowace.com/addons/skillet/repositories/lilsparkys-clone/files/">Skillet</a></li>
+<li><a href="http://wow.curse.com/downloads/wow-addons/details/lil-sparkys-workshop.aspx">LilSparky's Workshop</a>
+<li><a href="http://auctioneeraddon.com/dl/">Auctioneer</a> (optional, only needed for the <tt>threshold</tt> functionality, see below)</li>
+</ul>
+
+<h3>Installation</h3>
+
+<a href="http://beust.com/ucq/UltimateCraftQueue.zip">Download the add-on</a> and unzip it
+in your AddOns directory.
+
+<h3>Launching UCQ</h3>
+
+Type
+
+<blockquote>
+/ucq
+</blockquote>
+
+and then open your trade skill window.
+
+<h3>Using UCQ</h3>
+
+<p align="center">
+<img src="http://beust.com/ucq/ucq1.png" />
+</p>
+
+
+Here is the description of all the elements on the user interface.
+
+<p align="center">
+<img src="http://beust.com/ucq/ucq-stacksize.png" />
+</p>
+
+
+This is the main parameter of your crafting: it's the number of glyph
+that you want to have when the crafting is done. UCQ takes your
+alts into account, so you don't need to have these glyphs on the
+current character.
+<p>
+For example, if you set a stack size of 5, that you have two glyphs of X
+     on you and your alt has one, UCQ will add 2 to the queue in order to reach
+     the desired size of 5.
+
+<p align="center">
+<img src="http://beust.com/ucq/ucq-threshold.png" />
+</p>
+
+<p>
+
+The minimum value that a glyph must have to be queued. UCQ will skip all the glyphs
+under this value.
+<p>
+
+<em>Note: this option requires Auctioneer. It will be ignored if Auctioneer is not installed. Also, the price is retrieved from Auctioneer, so be sure your Auctioneer data is accurate</em>
+
+<p align="center">
+<img src="http://beust.com/ucq/ucq-bonusqueue.png" />
+</p>
+
+If a glyph has completely sold out (e.g. you require a stack size of 4 and UCQ determines
+it needs to queue 4 glyphs) then you can use the value in the bonus queue to create
+additional glyphs. The idea is that if that glyph sold out, it's probably because it's
+in high demand, so you might as well craft a few more.
+
+<p>
+<p align="center">
+<img src="http://beust.com/ucq/ucq-skipsingles.png" />
+</p>
+
+Checking this box will instruct UCQ not to queue single items. When you only sold
+one glyph of a certain type, your herbs might be better spent on the bonus queue
+instead of replacing that underperforming glyph.
+
+<p>
+
+<p align="center">
+<img src="http://beust.com/ucq/ucq-overrides.png" />
+</p>
+<p>
+
+This panel lets you override the stack size specified above on a per-class basis.
+For example, you might have determined that on your server, Warrior glyphs always
+sell very well while Priests tend not to.  In such a situation, you might want
+to set the Warrior stack size to 6 and Priest's to 3.  Of course, the adjustments
+described above will still be applied (so if a Priest glyph sold out and you specified
+a bonus queue of 1, UCQ will craft 4 of this glyph).
+
+<p>
+
+Once you're satisfied, make sure that your Advanced Trade Skill window is up and
+press the "Create Queue" button:  you should see the trade skill window populated with the full
+queue:
+
+<p align="center">
+<img src="http://beust.com/ucq/ucq-ats.png" />
+</p>
+<p>
+
+Finally, you can also click on the "Log" tab, which will give you a full summary
+of what glyphs were queued, which ones were not and why, along with a final tally:
+
+<p align="center">
+<img src="http://beust.com/ucq/ucq2.png" />
+</p>
+
+
+<h3>The code</h3>
+
+You can find the code on github:  
+<a href="http://github.com/cbeust/ultimate-craft-queue">
+http://github.com/cbeust/ultimate-craft-queue
+</a>.
+<p>
+Feel free to <a href="mailto:cedric@beust.com">email me</a> or <a href="http://beust.com/weblog/2010/03/03/lua-and-world-of-warcraft/">leave a comment on my blog</a> if you have questions, comments, bug reports or suggestions.
+<hr>
+<address></address>
+<!-- hhmts start --> Last modified: Tue Mar  2 22:11:55 PST 2010 <!-- hhmts end -->
+</body> </html>

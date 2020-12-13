@@ -1,0 +1,126 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN"
+        "http://www.w3.org/TR/REC-html40/loose.dtd">
+<HTML><HEAD>
+<TITLE>FAST FTP Search v4.0 - The World's Largest File Search Engine</TITLE>
+<BASE HREF="http://ftpsearch.lycos.com/">
+<SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript">
+<!--
+var changedfield=1;
+
+function SubmitIfCR(form, key)
+{
+  if (changedfield != 0 && (key == 13 || key == 65293)) {
+    form.submit();
+  } else {
+    changedfield = 1;
+  }
+}
+// -->
+</SCRIPT>
+<SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript">
+<!--
+function breakout() {
+  var loc = "";
+  if (parent.frames.length != 0) {
+    loc += parent.location;
+    loc = loc.toLowerCase();
+    if (loc.substring(0, 19) == 'http://www.fast.no/')
+      return;
+    if (loc.substring(0, 29) == 'http://ftpsearch.ntnu.no/')
+      return;
+      return;
+    parent.location = location;
+  }
+}
+// -->
+</SCRIPT>
+</HEAD>
+<BODY onload="breakout();" BGCOLOR="#FFFFFF" TEXT="#000000"><CENTER>
+<TABLE BORDER=0 WIDTH=600 CELLSPACING=0 CELLPADDING=0>
+<TR><TD BGCOLOR="#EEEEEE" COLSPAN=4 HEIGHT=2 WIDTH=600>&nbsp;<FONT FACE="verdana,helvetica,arial" COLOR="#000000" SIZE=-1><A HREF="http://www.lycos.com/">Lycos Home</A>&nbsp;&gt;&nbsp;<A HREF="http://lycospro.lycos.com/">Pro Search</a>&nbsp;&gt;</FONT>
+</TD></TR><TR><TD BGCOLOR="#CCCCCC" COLSPAN=4 HEIGHT=2 WIDTH=600></TD></TR>
+</TABLE>
+<TABLE BORDER=0 CELLPADDING=0 CELLSPACING=0 WIDTH=600>
+<TR>
+<TD ALIGN=left valign=middle></TD>
+<TD ALIGN=left NOWRAP><FONT FACE="verdana,helvetica,arial"><B>&nbsp;FAST FTP Search</B></FONT></TD><TD WIDTH="70%" ALIGN=RIGHT NOWRAP><FONT FACE="verdana,helvetica,arial"><B>Over 100 Million Files</B></FONT></TD></TR>
+</TABLE>
+<FORM ACTION="/cgi-bin/search" METHOD=GET><TABLE BORDER=0 CELLPADDING=0 CELLSPACING=0 WIDTH=600><TR><TD><INPUT TYPE=hidden NAME=form VALUE=advanced>
+<TABLE BORDER=0 CELLPADDING=0 CELLSPACING=0 WIDTH=600><TR><TD align=left><A HREF="/help/searchparam.html"><FONT FACE="verdana,helvetica,arial"><B>Search Parameters</B></FONT></A></TD><TD align=right><FONT FACE="verdana,helvetica,arial"><A HREF="/desc"><B>FAST Search 1M File Descriptions</B></A></FONT></TD></TABLE>
+<FONT FACE="verdana,helvetica,arial" SIZE=-1>
+<B><A HREF="/help/searchparam.html#Search_for">Search for</A></B>
+<INPUT NAME=query VALUE="" SIZE=35>
+<INPUT  TYPE=submit VALUE="Search">
+<INPUT TYPE=reset VALUE="Start over">
+
+<BR>
+
+<B><A HREF="/help/searchparam.html#Search_type">Search type</A>:</B>
+<SELECT NAME="type">
+<OPTION SELECTED>Case insensitive substring search<OPTION>Case sensitive substring search<OPTION>Case insensitive glob search<OPTION>Case sensitive glob search<OPTION>Case insensitive multiple substrings search<OPTION>Regular expression search<OPTION>Exact search<OPTION>Navigate<OPTION>Case insensitive substring match<OPTION>Case sensitive substring match<OPTION>Case insensitive glob match<OPTION>Case sensitive glob match<OPTION>Regular expression match</SELECT>
+<INPUT  TYPE=checkbox NAME=doexact>
+<B><A HREF="/help/searchparam.html#Try_exact_hits_first">Try exact hits first</A></B><BR>
+
+<B><A HREF="/help/searchparam.html#Max_hits">Max hits</A>:</B>
+
+<INPUT NAME=hits SIZE=5 VALUE="1000" onKeyDown="changedfield=0;" onKeyUp="SubmitIfCR(this.form,event.which);">
+
+<B><A HREF="/help/searchparam.html#Max_matches">Max matches</A>:</B>
+
+<INPUT NAME=matches SIZE=5 VALUE="10000">
+
+<B><A HREF="/help/searchparam.html#Max_hits_per_match">Max hits/match</A>:</B>
+
+<INPUT NAME=hitsprmatch SIZE=5 VALUE="10000">
+
+<BR><B><A HREF="/help/searchparam.html#Limit_to_domain">Limit to domain</A>: </B>
+
+<INPUT NAME=limdom SIZE=12 VALUE="">
+
+<B><A HREF="/help/searchparam.html#Limit_to_path">Limit to path</A>: </B>
+
+<INPUT NAME=limpath SIZE=18 VALUE="">
+
+<BR><B><A HREF="/help/searchparam.html#minimum_size">Minimum size</A>: </B>
+
+<INPUT NAME=limsize1 SIZE=12 VALUE="">
+
+<B><A HREF="/help/searchparam.html#maximum_size">Maximum size</A>: </B>
+
+<INPUT NAME=limsize2 SIZE=18 VALUE="">
+
+<BR><B><A HREF="/help/searchparam.html#date_from">From date</A>: </B>
+
+<INPUT NAME=limtime1 SIZE=12 VALUE="1999/12/15">
+
+<B><A HREF="/help/searchparam.html#date_to">To date</A>: </B>
+
+<INPUT NAME=limtime2 SIZE=18 VALUE="2000/6/5">
+
+<BR><B><A HREF="/help/formatparam.html#sort-option">Sort by</A>: </B>
+<INPUT TYPE=radio NAME=sort VALUE=none> nothing (unsorted)
+<INPUT TYPE=radio NAME=sort VALUE=host> Host, path
+<INPUT TYPE=radio NAME=sort VALUE=hostdist> Host (distance)
+<INPUT TYPE=radio NAME=sort VALUE=size> Size, date
+<INPUT CHECKED TYPE=radio NAME=sort VALUE=date> Date, host
+</TD></TR></TABLE></FORM></CENTER>
+<hr>
+<a href="http://ftpsearch.lycos.com/cgi-bin/search?form=advanced&query=.nfo&type=Case+insensitive+substring+search&hits=100&matches=10000&hitsprmatch=10000&limdom=&limpath=&limsize1=&limsize2=&limtime1=1999-6-15&limtime2=1999-7-5&sort=date">.nfo</a>
+<a href="http://ftpsearch.lycos.com/cgi-bin/search?form=advanced&query=file_id.diz&type=Case+insensitive+substring+search&hits=100&matches=10000&hitsprmatch=10000&limdom=&limpath=&limsize1=&limsize2=&limtime1=1999-6-15&limtime2=1999-7-5&sort=date">file_id.diz</a>
+<a href="http://ftpsearch.lycos.com/cgi-bin/search?form=advanced&query=01.zip&type=Case+insensitive+substring+search&hits=100&matches=10000&hitsprmatch=10000&limdom=&limpath=&limsize1=&limsize2=&limtime1=1999-6-15&limtime2=1999-7-5&sort=date">01.zip</a>
+<a href="http://ftpsearch.lycos.com/cgi-bin/search?form=advanced&query=.c01&type=Case+insensitive+substring+search&hits=100&matches=10000&hitsprmatch=10000&limdom=&limpath=&limsize1=&limsize2=&limtime1=1999-6-15&limtime2=1999-7-5&sort=date">.c01</a>
+<a href="http://ftpsearch.lycos.com/cgi-bin/search?form=advanced&query=.r01&type=Case+insensitive+substring+search&hits=100&matches=10000&hitsprmatch=10000&limdom=&limpath=&limsize1=&limsize2=&limtime1=1999-6-15&limtime2=1999-7-5&sort=date">.r01</a>
+<a href="http://ftpsearch.lycos.com/cgi-bin/search?form=advanced&query=07.zip&type=Case+insensitive+substring+search&hits=100&matches=10000&hitsprmatch=10000&limdom=&limpath=&limsize1=&limsize2=&limtime1=1999-6-15&limtime2=1999-7-5&sort=date">07.zip</a>
+<a href="http://ftpsearch.lycos.com/cgi-bin/search?form=advanced&query=.c07&type=Case+insensitive+substring+search&hits=100&matches=10000&hitsprmatch=10000&limdom=&limpath=&limsize1=&limsize2=&limtime1=1999-6-15&limtime2=1999-7-5&sort=date">.c07</a>
+<a href="http://ftpsearch.lycos.com/cgi-bin/search?form=advanced&query=.r07&type=Case+insensitive+substring+search&hits=100&matches=10000&hitsprmatch=10000&limdom=&limpath=&limsize1=&limsize2=&limtime1=1999-6-15&limtime2=1999-7-5&sort=date">.r07</a>
+<a href="http://ftpsearch.lycos.com/cgi-bin/search?form=advanced&query=14.zip&type=Case+insensitive+substring+search&hits=100&matches=10000&hitsprmatch=10000&limdom=&limpath=&limsize1=&limsize2=&limtime1=1999-6-15&limtime2=1999-7-5&sort=date">14.zip</a>
+<a href="http://ftpsearch.lycos.com/cgi-bin/search?form=advanced&query=.c14&type=Case+insensitive+substring+search&hits=100&matches=10000&hitsprmatch=10000&limdom=&limpath=&limsize1=&limsize2=&limtime1=1999-6-15&limtime2=1999-7-5&sort=date">.c14</a>
+<a href="http://ftpsearch.lycos.com/cgi-bin/search?form=advanced&query=.r14&type=Case+insensitive+substring+search&hits=100&matches=10000&hitsprmatch=10000&limdom=&limpath=&limsize1=&limsize2=&limtime1=1999-6-15&limtime2=1999-7-5&sort=date">.r14</a>
+<a href="http://ftpsearch.lycos.com/cgi-bin/search?form=advanced&query=21.zip&type=Case+insensitive+substring+search&hits=100&matches=10000&hitsprmatch=10000&limdom=&limpath=&limsize1=&limsize2=&limtime1=1999-6-15&limtime2=1999-7-5&sort=date">21.zip</a>
+<a href="http://ftpsearch.lycos.com/cgi-bin/search?form=advanced&query=.c21&type=Case+insensitive+substring+search&hits=100&matches=10000&hitsprmatch=10000&limdom=&limpath=&limsize1=&limsize2=&limtime1=1999-6-15&limtime2=1999-7-5&sort=date">.c21</a>
+<a href="http://ftpsearch.lycos.com/cgi-bin/search?form=advanced&query=.r21&type=Case+insensitive+substring+search&hits=100&matches=10000&hitsprmatch=10000&limdom=&limpath=&limsize1=&limsize2=&limtime1=1999-6-15&limtime2=1999-7-5&sort=date">.r21</a>
+<a href="http://ftpsearch.lycos.com/cgi-bin/search?form=advanced&query=28.zip&type=Case+insensitive+substring+search&hits=100&matches=10000&hitsprmatch=10000&limdom=&limpath=&limsize1=&limsize2=&limtime1=1999-6-15&limtime2=1999-7-5&sort=date">28.zip</a>
+<a href="http://ftpsearch.lycos.com/cgi-bin/search?form=advanced&query=.c28&type=Case+insensitive+substring+search&hits=100&matches=10000&hitsprmatch=10000&limdom=&limpath=&limsize1=&limsize2=&limtime1=1999-6-15&limtime2=1999-7-5&sort=date">.c28</a>
+<a href="http://ftpsearch.lycos.com/cgi-bin/search?form=advanced&query=.r28&type=Case+insensitive+substring+search&hits=100&matches=10000&hitsprmatch=10000&limdom=&limpath=&limsize1=&limsize2=&limtime1=1999-6-15&limtime2=1999-7-5&sort=date">.r28</a>
+</BODY>
+</HTML>

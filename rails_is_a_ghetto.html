@@ -1,0 +1,849 @@
+      <div>
+
+        <ul id="navigationTop">
+          <!-- NAVIGATION TOP -->
+          <a href="http://web.archive.org/web/20080103072111/http://www.zedshaw.com/index.html">^ Me</a> ^ <a href="http://web.archive.org/web/20080103072111/http://www.zedshaw.com/rants/index.html">Rants</a> ^ <span>Rails Is A Ghetto (2007-12-31)</span>
+          <!-- END NAVIGATION TOP -->
+        </ul>
+
+      </div>
+
+      <div id="contentwrapper">
+        <div id="contentcolumnRight">
+          <h2>Rails Is A Ghetto</h2>
+
+
+	<p>I&#8217;ve more or less kept my mouth shut about some of the dumb and plain evil
+stuff that goes on in the Rails community.  As things would happen though
+I&#8217;d take notes, collect logs, and started writing this little essay.
+As soon as I was stable and didn&#8217;t need Ruby on Rails to survive I told
+myself I&#8217;d revamp my blog and expose these fucks.</p>
+
+
+	<p><strong><span class="caps">NOTE</span>: This post is currently an open draft.  Feel free to comment but it will have spelling and grammar errors and some paragraphs might not make sense.  Check my <a href="http://web.archive.org/web/20080103072111/http://www.zedshaw.com/blog/index.html">blog</a> and my <a href="http://web.archive.org/web/20080103072111/http://www.zedshaw.com/feed.atom">atom feed</a> to find out when I post the updates.</strong></p>
+
+
+	<p>This is that rant.  It is part of my grand exit strategy from the Ruby and
+Rails community.  I don&#8217;t want to be a &#8220;Ruby guy&#8221; anymore, and will probably
+start getting into more Python, Factor, and Lua in the coming months.  I&#8217;ve
+got about three or four more projects in the works that will use all of those
+and not much Ruby planned.</p>
+
+
+	<p>This rant is full of stories about companies and people who&#8217;ve either pissed
+in my cheerios somehow or screwed over friends.  I can back all of them up from
+emails, <span class="caps">IRC</span> chat logs, or with witnesses.  Nothing in here is a lie unless it&#8217;s
+really obviously a lie through exaggeration, and there&#8217;s a lot of my opinion 
+as well.</p>
+
+
+	<p>The best part about ripping on these guys though is this:</p>
+
+
+	<pre><code>If they have a blog, speak at conferences, publish papers, 
+or write books then they are <strong>public figures</strong> just like me.</code></pre>
+
+
+	<p>This means that thanks to Larry Flynt I can stab them in the ear verbally,
+insult them, question their sexual orientation, and say anything that&#8217;s
+true and they just have to take it.  Their only recourse is to write their
+pathetic little rebuttals in their stupid little blogs.</p>
+
+
+	<p>I&#8217;ll add one more thing to the people reading this:  I mean business when I say
+I&#8217;ll take anyone on who wants to fight me.  You think you can take me, I&#8217;ll
+<strong>pay</strong> to rent a boxing ring and beat your fucking ass legally.  Remember that
+I&#8217;ve studied enough martial arts to be deadly even though I&#8217;m old, <strong>and</strong> I don&#8217;t
+give a fuck if I kick your mother fucking ass or you kick mine.  You don&#8217;t like
+what I&#8217;ve said, then write something in reply but fuck you if you think you&#8217;re
+gonna talk to me like you can hurt me.</p>
+
+
+	<p>I&#8217;ll never be afraid of some pilsner fresh fat fuck who eats donut hamburgers
+and only gets exercise when he plays World of Warcraft on a <span class="caps">DDR</span> pad.</p>
+
+
+	<p>To prime the pump, let&#8217;s talk about Kevin Clark.  Me and Kevin don&#8217;t get along
+because he once tried to demand some free tech support out of me for Mongrel.
+His dumb little company <a href="http://web.archive.org/web/20080103072111/http://www.powerset.com/">VaporSet</a> had this stupid
+setup where the people deploying Rails didn&#8217;t have root access.  I told Kevin
+that this was stupid and apparently it was Kevin&#8217;s idea because he told
+me &#8220;fuck you&#8221;.  Ever since then Kevin&#8217;s been a mouthy little shit with nothing
+to back it up.</p>
+
+
+	<p>This particular discussion started with Kevin Clark deciding to tell me that my
+idea to restrict access to the main repository for <a href="http://web.archive.org/web/20080103072111/http://savingtheinternetwithhate.com/">Utu</a> until it&#8217;s solid makes me
+a &#8220;dick&#8221;.  But, read to the end of the chat for the punch line.  It&#8217;s great.</p>
+
+
+<blockquote>
+<pre>
+02:18 &lt; zedas&gt; evan: http://utuprotocol.info/repos/
+02:18 &lt; kevinclark&gt; evan: I thought so too, but it still seems to 
+                    happen (atleast on my system). And lightning has 
+                    a few that hang out
+02:18 &lt; zedas&gt; evan: http://utuprotocol.info/repos/utu/changes.rss 
+               is generated from an included xslt i hacked up
+02:18 &lt;@evan&gt; zedas: and who can push code to that location?
+02:18 &lt; zedas&gt; me
+02:18 &lt; MenTaLguY&gt; large git clones can also get kind of bad
+02:18 &lt;@evan&gt; see, thats the problem.
+02:19 &lt;@evan&gt; kevinclark: hang out?
+02:19 &lt; zedas&gt; not a problem at all.  feature since i don't trust 
+               any you mofos :-)
+02:19 &lt;@evan&gt; kevinclark: you mean missing files?
+02:19 &lt;@evan&gt; zedas: then you're set!
+02:19 &lt; kevinclark&gt; evan: I mean generated files are sitting in svn
+02:19 &lt; zedas&gt; evan: no, people can contribute by doing a darcs send 
+               which packs it up and shoots it to my email.
+</pre>
+</blockquote>
+
+	<p>Then kevin comes in:</p>
+
+
+<blockquote>
+<pre>
+02:21 &lt;@evan&gt; we've got very different ideas about how to deal with 
+              contribution, i suspect.
+02:21 &lt; zedas&gt; i also anticipate that there won't be so many people 
+               contributing directly on the main utu server, but 
+               more contributing by writing clients or tools that 
+               use it
+02:21 &lt; kevinclark&gt; evan: I'd say you're polar opposites
+02:22 &lt; zedas&gt; how's that kevinclark?
+02:22 &lt; kevinclark&gt; zedas: I thought you weren't talking to me
+02:22 &lt; boyscout&gt; kev * [1003] /rubinius/trunk (8 files) add 
+                  rb_hash_delete
+02:24 &lt; zedas&gt; kevinclark: well i'm gonna talk to you if you're 
+               making passive aggressive little comments
+02:24 &lt; kevinclark&gt; zedas: they aren't passive aggressive. You don't 
+                    want anyone to check in to your repo. Evan's 
+                    repo is open to anyone who's gotten a patch in. 
+                    polar opposites
+02:24 &lt; kevinclark&gt; and you're still a dick
+02:25 &lt; kevinclark&gt; and I'm enjoying the vacation
+02:25 &lt; kevinclark&gt; so, keep it up
+02:27 &lt; zedas&gt; kevinclark: you just called me a dick?
+02:27 &lt; kevinclark&gt; you can still read too
+02:27 &lt; kevinclark&gt; awesome
+02:27 &lt; zedas&gt; hmmm
+02:27 &lt; zedas&gt; well, i'll just leave this alone for now.
+02:27 &lt; zedas&gt; sorry about that evan.
+02:28 &lt;@evan&gt; no problem.
+</pre>
+</blockquote>
+
+	<p>And then kevin demonstrates why I&#8217;m trying to limit people&#8217;s access to the main
+repository:</p>
+
+
+<blockquote>
+<pre>
+02:47 &lt; brixen&gt; evan: lighting is using autoconf?
+02:47 &lt; brixen&gt; er lightning
+02:48 &lt;@evan&gt; yeah
+02:48 &lt;@evan&gt; well, crap.
+02:48 &lt;@evan&gt; lightning is faulting on i386
+02:48 &lt; kevinclark&gt; hmm?
+02:48 &lt; brixen&gt; yeah r1003 deleted configure
+02:48 &lt; kevinclark&gt; working on mine now
+02:48 &lt; kevinclark&gt; oh, crap
+02:48 &lt; kevinclark&gt; I thought configure was generated
+02:48 &lt; kevinclark&gt; from autoconf
+02:48 &lt;@evan&gt; really?
+02:48 &lt; kevinclark&gt; all my build tools do it ;)
+02:48 &lt; kevinclark&gt; sorry
+02:48 &lt; brixen&gt; well, not from our .configure
+02:48 &lt;@evan&gt; brixen: it should be there.
+02:49 &lt; brixen&gt; I'll restore from r1002
+02:49 &lt; kevinclark&gt; brixen: cool. sorry about that.
+02:49 &lt; brixen&gt; just wasn't sure if the build steps had changed
+02:49 &lt; brixen&gt; kevinclark: np
+02:50 &lt;@evan&gt; brixen: wtf.
+02:50 &lt;@evan&gt; why did it get deleted....
+02:50 &lt;@evan&gt; kevinclark: did you delete it?
+02:51 &lt; kevinclark&gt; evan: I did. Too much time with buildtools that 
+                    were generating configure for me, and I got 
+                    confused.
+02:51 &lt; kevinclark&gt; evan: It got caught with the docs that got 
+                    modified
+02:51 &lt; kevinclark&gt; and I didn't think twice about it
+02:52 &lt;@evan&gt; yeah, just restore it plz, kthxomgwtfbbq
+02:52 &lt; kevinclark&gt; evan: working on it ;)
+02:52 &lt; kevinclark&gt; brixen: you're doing the restore, yeah?
+02:52 &lt; brixen&gt; yeah, one sec
+02:52 &lt; brixen&gt; was just checking it would build
+02:52 &lt; brixen&gt; and it's building :)
+02:53 &lt; kevinclark&gt; sweet
+02:53 &lt; boyscout&gt; brixen * [1004] 
+/rubinius/trunk/shotgun/external_libs/lightning/configure restore
+</pre>
+</blockquote>
+
+	<p>Wow, rails is a ghetto.  The little prick calls me a dick (and in private
+chat said he&#8217;d find me at the next conference but of course never did),
+then he <strong>deletes the fucking configure file for the project!</strong>  Remember
+he was working on <span class="caps">GNU</span> lightning when I started chatting, so this means
+that it took an hour for everyone to figure out that his dumb fuck ass
+deleted it.</p>
+
+
+	<p>Why is this ghetto?  Any experienced developer knows that autoconf
+configure files are a <strong><span class="caps">PAIN IN THE ASS</span></strong> to recreate.  They almost always
+require special reconfigure calls, special m4 macros, or just time.  You
+usually get them right, generate them once, and then leave them in your
+repository for all to use.  To make it worse, Kevin actually wrote a
+supposed <a href="http://web.archive.org/web/20080103072111/http://mkrf.rubyforge.org/">alternative to autoconf,</a> and yet <strong>he doesn&#8217;t know the most basic thing about autoconf</strong>.</p>
+
+
+	<p>Only a fucking tool bag piece of shit would:</p>
+
+
+	<ul>
+	<li>spend 10-20 minutes calling me names over <span class="caps">IRC</span>, </li>
+		<li>not have the balls to say any of that to my face, </li>
+		<li>say I&#8217;m a dick for wanting to use a different (established) publish/review model,</li>
+		<li>and then demolish such an important file for a project,</li>
+		<li>keeping everyone stumped and pissed for an hour,</li>
+		<li>therefore proving me right.</li>
+	</ul>
+
+
+	<p>This is exactly what makes Rails a ghetto.  A bunch of half-trained 
+former <span class="caps">PHP</span> morons who never bother to sit down and really learn the
+computer science they were too good to study in college.  <span class="caps">BTW</span>, this
+is true about Kevin as he&#8217;s an English major or something stupid
+(and it shows).</p>
+
+
+	<p>Hats off to you Kevin, you fucking prick.  I&#8217;m enjoying my vacation too.</p>
+
+
+	<p>After this, I started thinking, since it was the first realization that I picked
+the absolute last wrong community to make my living in.  They were all pricks,
+morons, assholes, and arrogant fucks who didn&#8217;t care about the art or the
+craft.</p>
+
+
+	<p>They were all a bunch of little ghetto fabulous princesses trying to make it in
+this tiny little Rails world and not enough brains between them all to make it
+happen.</p>
+
+
+	<h2>Tied To The Rails</h2>
+
+
+	<p>I&#8217;ve been thinking this over ever since I realized that Mongrel and Rails
+more or less killed my career.  During 2006 I was effectively homeless for
+about 4-6 months out of the year and made no money at all.  During the
+rest of the year the little money I made was impossible to get, and many
+times I was simply not paid.</p>
+
+
+	<p>If it weren&#8217;t for the totally kick ass <a href="http://web.archive.org/web/20080103072111/http://obiefernandez.com/">Obie
+Fernandez</a> I&#8217;d probably be slogging away in some McD&#8217;s
+screaming, &#8220;you want fries with that?!&#8221;  He got me a really good gig
+in Florida and I was able to get back on my feet.  Obie rocks, and he&#8217;s also a good family man, treats his kids well, and is very smart.  He&#8217;s one of the few gems of the Ruby world.</p>
+
+
+	<p><strong>Before</strong> Mongrel I was building kick ass software for the <span class="caps">NYC</span> Dept. of 
+Correction with a tiny team.  We were doing innovative stuff like <span class="caps">REST</span>
+<span class="caps">XML</span> feeds of prisoner releases and <span class="caps">RSS</span> of prisoner transfers.  It was
+fun, I was in charge, and things were pretty good.</p>
+
+
+	<p>Before that I built software for finger print readers, network protocols,
+designed business processes, lead software teams, created portals, and
+generally rocked as a consultant.</p>
+
+
+	<p>After Mongrel I couldn&#8217;t get a gang of monkeys to rape me, so forget any jobs.
+Sure people would contact me for their tiny little start-ups, but I&#8217;d eventually
+catch on that they just want to use me to implement their ideas.  Their ideas
+were horrendously lame.  I swear if someone says they&#8217;re starting a social
+network I&#8217;m gonna beat them with the heel of my shoe.</p>
+
+
+	<h2>The Stories I Could (and Will) Tell</h2>
+
+
+	<p>One company tried to get me to sign a contract that required me to list all of
+my inventions, software, cooking recipes, works of art, writings, poems, essays,
+thoughts, ideas, patentable or unpatentable, prior to taking a <strong>2 hour per
+week gig mentoring someone</strong>.  The list of shit they wanted went on and on,
+ and after I refused and just ignored them they still kept asking me.</p>
+
+
+	<p>Another company told me they had a great job for me and that I&#8217;d be perfect for
+them.  I knew these guys so I at first trusted them, but what a mistake.  Turns
+out that it wasn&#8217;t a job they had, it was an <span class="caps">RFP</span> that they wanted to bid for and
+put my name on the bid so they&#8217;d have an advantage.  Alright, that&#8217;s fine but
+that means they&#8217;re using my name and reputation (that I earned) in a business
+transaction without telling me.  Fine, I better get some fat cash.  They then
+build the team and dole out the positions:  Software Architect to the shithead
+who can&#8217;t code; Project Manager to the <span class="caps">MBA</span> asshole who talks like a car
+salesman; Lead Engineer to the guy using my shit to run his company.  What do
+they give me?  Nothing.  I&#8217;m just Zed.  Nobody needs my skills.</p>
+
+
+	<p>Other companies would hire me to fix something simple, I&#8217;d quote them $500 or so
+to do it, and then they&#8217;d refuse to pay if it didn&#8217;t take me a week to do.  In
+one case I did something in about 5 minutes, sent off my automated billing <span class="caps">PDF</span>
+and they just flat refused.  I had to work for another hour and even then they
+didn&#8217;t want to pay.</p>
+
+
+	<p>A company in <span class="caps">NYC</span> flew me out, put me up, and I gave them a cut-throat deal on my
+rate if they&#8217;d pay me quick.  I needed the money to pay rent, so it had to be
+right after the two weeks of work.  About the middle of the week I hear that the
+<span class="caps">CEO</span> isn&#8217;t going to pay me right away but is instead going to do <span class="caps">NET</span>-30 (an evil
+    practice reserved only for furniture sales).  I tell the guys that I got to
+go and I&#8217;d like my money, but they refuse, I fly out, and I don&#8217;t get paid for
+<strong>60 days.</strong>  What&#8217;d I do for them?  Oh only a custom Mongrel server, a clean
+deployment to Mongrel from fastcgi, and a ton of training for their main man.</p>
+
+
+	<p>Then there&#8217;s the social network idiots.  They all have a social
+network plus something fucking stupid to sell, but of course no <span class="caps">MBA</span> can actually
+code so they come running to me.  However, there&#8217;s a slight problem.  You see,
+<strong>I have a business degree you cock suckers.</strong>  If you tell me that your
+social network will take on facebook because it includes baby pictures then
+I&#8217;m going to laugh in your face.  They are an established player with <span class="caps">CIA</span>
+backing.  You won&#8217;t wipe them out.</p>
+
+
+	<p>Google was a total riot.  They offered me a job twice.  I went with it, and they
+never responded.  Probably because the job they were offering me&#8212;someone who&#8217;s
+been coding for 21 years, 15 professionally&#8212;was as a <strong>junior system
+administrator</strong>.  What the hell does a junior sysadmin do at google?  That&#8217;s
+probably like mopping the floor at a glory hole in Queens.  I told them to review my resume and offer me a real position.</p>
+
+
+	<h2>Revenge Of The Zen Prick</h2>
+
+
+	<p>In Vancouver it was even weirder.  There was no Rails there, and the only Ruby
+on Rails work was at this shitty little company I once worked for name Raymond
+James.  I worked for them on a small gig, not doing much coding, just getting a
+project they screwed up out the door.  Later I got into it with their
+&#8220;Development Manager&#8221; Alex Bunardzic over e-mail where he says something
+strange:</p>
+
+
+<blockquote>
+I would think twice before doing something like that, if I were you. As a
+Development Manager at Raymond James, I am privy to the work details you did for
+us some time ago (it&#8217;s all here, meticulously classified by [MANAGER]), and I
+must say that your references from that job are far from being stellar. To put
+things extremely mildly, you&#8217;ve ended up on our &#8216;not to rehire&#8217; black list.
+
+	<p>You may be looking for work, and people will naturally start asking around.
+I have plenty of contacts in the industry, and you know how people are when
+hiring&#8212;looking for references and for some feedback.</p>
+
+
+I&#8217;m afraid that, after just reviewing the code you&#8217;ve delivered here, I
+won&#8217;t be in the position to say many encouraging things about the quality of
+your work, not to mention your personality traits.
+</blockquote>
+
+	<p>We go at it for a bit, because I didn&#8217;t actually write much code for them and I
+sure as hell didn&#8217;t write bad code since, you know, the damn project actually
+ran after I got there.  Hell, I reverse engineered a Java library they bought
+but lost the source to so we could patch it.  They even asked me to come in a
+few times and help on short gigs after my initial work.  How the hell was I on a
+blacklist, why did they have a blacklist, why didn&#8217;t I know, and why the hell
+was Alex telling people this shit?</p>
+
+
+	<p>As the exchange unfolds (where apparently my use of foul language is bad but his threatening my livelihood is all right), Alex the Zen Master confesses that he got things wrong:</p>
+
+
+<blockquote>
+Here I need to apologize&#8212;I went back and looked over the
+documentation, and was shocked to realize that I&#8217;ve confused you with
+another person! That person&#8217;s name is Shai, and because that name was
+on a quick glance so close to Shaw, I&#8217;ve made a blunder and jumped at
+the premature conclusions.
+
+	<p>...</p>
+
+
+So please scratch all the things I wrote previously concerning your
+past performance&#8212;all of that applies to some person whose name is
+Shain.
+</blockquote>
+
+	<p>That&#8217;s right, this moronic idiot basically told (or just threatened to tell) everybody I was a shitty coder,
+refused to hire me, threatened me with slander, and tried to destroy me
+because he confused me with a &#8220;Shai&#8221; or a &#8220;Shain&#8221; in his blacklist.  He even
+later tried to tell me that there <strong>wasn&#8217;t</strong> a blacklist.</p>
+
+
+	<p>Here&#8217;s the guy who is a development manager for an entire company and he can&#8217;t
+even tell the difference between two completely different people in some weirdo
+black list.  All the more reason to leave Vancouver and try again somewhere else
+with people who don&#8217;t pretend to be Zen masters while they&#8217;re treating you like
+shit with a perfect half smile on their face.</p>
+
+
+	<h2>How&#8217;d This Happen?</h2>
+
+
+	<p>Over and over again I&#8217;d run into these morons who would offer me tiny jobs, no
+jobs, insult my intelligence, treat me like all I can do is code, and when I
+didn&#8217;t fit that mold or wanted to charge them for the privilege they&#8217;d cheat me
+or laugh at me.</p>
+
+
+	<p>Here&#8217;s a bit of background on me:  My education is in business.  I have a BS in <span class="caps">MIS</span> and
+almost finished my MS but ran out of money.  I&#8217;ve got more business education than
+most of the MBAs out there, <strong>and</strong> I have a nearly formal education in software
+development, modeling, statistical analysis, and sociology.  I&#8217;ve done it all,
+but what does the slick talking shit head car sales <span class="caps">MBA</span> loser think I am?</p>
+
+
+	<pre><code>Just a code monkey.</code></pre>
+
+
+	<p>I have this rule that when life isn&#8217;t going well I have to look at myself very 
+hard first, make the changes that might improve things, and then start looking
+at who&#8217;s stomping on my day.</p>
+
+
+	<p>After revitalizing myself, getting out of the Rails business (or trying),
+distancing myself from Mongrel, disconnecting from the Ruby community,
+and focusing on my business skills, I finally felt ready to figure out
+why the hell the Rails community is so completely and totally useless,
+stupid, and arrogant.</p>
+
+
+	<p>I believe, if I could point at one thing it&#8217;s the following statement
+on 2007-01-20 to me by David H. creator of Rails:</p>
+
+
+<blockquote>
+<pre>
+(15:11:12) DHH: before fastthread we had ~400 restarts/day
+(15:11:22) DHH: now we have perhaps 10
+(15:11:29) Zed S.: oh nice
+(15:11:33) Zed S.: and that's still fastcgi right?
+</pre>
+</blockquote>
+
+	<p>Notice how it took me a few seconds to reply.  This one single statement
+basically means that we all got duped.  The main Rails application that
+<span class="caps">DHH</span> created required restarting ~400 times/day.  That&#8217;s a production 
+application that can&#8217;t stay up for more than 4 minutes on average.</p>
+
+
+	<p>Let me put this into perspective for you:  I&#8217;ve ran servers that needed 
+to be restarted once in a year.  They were written in <span class="caps">PHP</span>, Python, Java, 
+C, C++, you name it.  Hell, I&#8217;ve got this blog on a server I&#8217;ve restarted
+maybe 10-20 times the whole year.</p>
+
+
+	<p>Now, <span class="caps">DHH</span> tells me that he&#8217;s got <strong>400 restarts</strong> a mother fucking <strong>day</strong>. 
+That&#8217;s 1 restart about ever 4 minutes bitches.  These
+restarts went away after I exposed bugs in the GC and Threads which 
+Mentalguy fixed with fastthread (like a Ninja, Mentalguy is awesome).</p>
+
+
+	<p>If anyone had known Rails was that unstable they would have laughed in his face.
+Think about it further, this means that the <strong>creator</strong> of Rails in his flagship
+products could not keep them running for <strong>longer than 4 minutes on average.</strong></p>
+
+
+	<p>Repeat that to yourself.  &#8220;He couldn&#8217;t keep his own servers running for longer than 4 minutes on average.&#8221;</p>
+
+
+	<p>Assuming his statements are true (which we may never know) he basically duped us all.</p>
+
+
+	<p>Now I&#8217;m glad he did since Rails is a pretty nice idea, and it demolished the Java world
+I hated so much.  What bothers me though, is that while all of the Rails Core fuck tards
+would insult me, tell me I was wrong, laugh at me, marginalize me, tell me I was a waste of
+space, that I &#8220;jumed the shark&#8221;, they were quietly taking my work and using it to improve
+their festering shit pile deployments.</p>
+
+
+	<p>In fact, in chats with me and them where I started to identify the GC, Threads, and IO all
+I ever got was denial from guys like Dave Thomas, Michael Koziarski, and Chad Fowler.
+Remember that <a href="http://web.archive.org/web/20080103072111/http://securitytracker.com/alerts/2006/Dec/1017363.html">nasty cgi.rb bug</a> that
+is fixed with a monkey patch in Mongrel?  Did you guys know that Michael K. and Dave Thomas pretty much
+threatened me into not releasing a Mongrel fix for the problem for <strong>three months</strong>?  They actually
+let it sit for three months before other people crafted the cgi_multipart_eof_fix which I
+could include.</p>
+
+
+	<p>In the beginning, was this huge lie, but after that&#8230;</p>
+
+
+	<h2>Then The Idiots Came</h2>
+
+
+	<p>My theory on why Rails is a ghetto is best summarized by an observation I made about
+Michael Koziarski.  <a href="http://web.archive.org/web/20080103072111/http://www.koziarski.com/">Here&#8217;s is fat fucking face</a> just in
+case you don&#8217;t know who I&#8217;m talking about.  See, here&#8217;s the thing about Koz:  He&#8217;s got 
+a big mouth he runs when he&#8217;s online, but in person he doesn&#8217;t say shit.  He loves
+talking shit about me when I&#8217;m not around apparently, insults me when he wants, but
+the best thing about Michael Koziarski is this:</p>
+
+
+	<p>When he tells people I&#8217;m an asshole they go, &#8220;Zed&#8217;s such a prick I hate him.&#8221;</p>
+
+
+	<p>When I tell people Mike&#8217;s a fucktard loser, they say,</p>
+
+
+	<pre><code>"Who?"</code></pre>
+
+
+	<p>That&#8217;s right, dude works on Rails in some capacity, apparently writing tons of
+shitty fucking code with his butt buddy Nicholas Sekar.  Yet, nobody knows him.
+He&#8217;s got more web sites than Elvis and Chuck Noris combined and nobody knows
+him.  He&#8217;s written <strong>mountains</strong> more open source code than me and no-bo-dy knows
+him.</p>
+
+
+	<p>He&#8217;s a fucking loser, and man he used to bug me.  Now however, I don&#8217;t give a
+shit about Rails so he&#8217;s a little fly.  Rails is my money maker platform I don&#8217;t
+invest in at all.  Rails could sink in the ocean for all I care and I&#8217;d roll on to
+my next big thing.  I&#8217;ve done the right thing by giving Mongrel to a great team,
+and if Rails dies, then awesome because little useless pricks like MK will
+probably fall off the planet into that part of hell where shitty managers end
+up.</p>
+
+
+	<p>The best part about the whole thing is there&#8217;s potentially 10 new web frameworks
+that can take on Rails.  Hell, Mongrel spawned or helped 5 of those.  My
+favorite of those frameworks is <a href="http://web.archive.org/web/20080103072111/http://merbivore.com/">Merb</a> which is literally
+&#8220;Mongrel plus Erb&#8221; but now it uses Erubis mostly.  What I love about Merb is
+that it proved you could make a fast thread safe Ruby web framework with all the
+same ideas as Rails and using most of the Rails gear at the same time.  However,
+the joke is that before Merb the Rails Core morons would scream up and down
+you can&#8217;t make Rails thread safe.  Ezra however proved them all wrong by
+just writing a better Rails than Rails and all thanks to Mongrel being so
+easy to hack and work with.</p>
+
+
+	<p>If the Rails guys had given me even an ounce of respect and listened to me I
+might have helped them, but instead I wanted to make sure that they didn&#8217;t rule
+the world because when I listened to them shit talk about the community that
+made them famous I wanted to scream.</p>
+
+
+	<p>Alright, but let&#8217;s say I&#8217;m totally wrong and Koz is really a great coder who&#8217;s
+just staying under the radar?  Alright, remember the change to Rails to allow
+this?</p>
+
+
+<pre>http://mysite.com/controller/action;edit</pre>
+
+	<p>That one little &#8217;;&#8217; was the cause of some serious pain for people since it&#8217;s
+actually not a proper request the way they interpret it.  Requests with &#8217;;&#8217; in them
+are considered path parameters which are kind of like query parameters.  Koz and <span class="caps">DHH</span> and
+crew added this, but I told them that&#8217;s not right, they should use something
+else like, uh, oh, maybe fucking <strong>&#8217;/&#8217;</strong>.  They ignored me.  Did it anyway.  Then
+when it was clearly obvious they were wrong (since Mongrel&#8217;s got a tight parser)
+who was out there defending this decision?  Fucking Koz.  Great programmers
+don&#8217;t defend stupid, they stamp it out and own up to their mistakes.</p>
+
+
+	<p>Fuck you Koz.  You don&#8217;t speak.</p>
+
+
+	<p>Ruby on Rails has become full of people like Koz, with Koz the most
+senior of the wannabe smarties.  Koz got lucky at best and injected
+his shitty coding into a good project, fucked it up, and then latched
+on to security as the way to get more control.  Of course he doesn&#8217;t
+actually know anything about secure coding which is why his code seems
+to have lots of the bugs (go check out the date parsing shit.  Clue: months
+don&#8217;t always have 30 days).</p>
+
+
+	<p>When I hang out with the Nitro, <a href="http://web.archive.org/web/20080103072111/http://www.factorcode.org/">Factor</a>, Django,
+Lua, Python, Lisp, or Mongrel crews I get to talk to super smart guys who have
+egos for sure, but have mutual respect.  They craft nifty shit I love to play
+with, are fun to talk with even when I disagree, and don&#8217;t say mean shit when
+I&#8217;m not around.</p>
+
+
+	<p>With Rails I get scrawny cock suckers with carpal tunnel syndrome talking
+to me like they&#8217;re gonna eat my young.  Their feeble <span class="caps">PHP</span> infected minds
+can&#8217;t grasp advanced shit like objects or closures.  When you combine
+stupid businesses with stupid people using a stupid framework based on a
+big fat fucking lie on a shitty platform you get the perfect storm
+of dumbfuck where a man like me can&#8217;t find work.</p>
+
+
+	<p>There&#8217;s no work for a smart man in a town full of stupid.</p>
+
+
+	<h2>The Hysteria Of Consultancy</h2>
+
+
+	<p>Where I work the company is willing to blow huge amounts of money on
+a consulting firm or hardware, but ends up firing people when times
+get tight.  It&#8217;s a universal mass hysteria that paying $100 &#8211; $200 
+per hour for a group of consultants is preferable to simply hiring
+good employees.  At the rates companies pay these consultants
+they could hire 4 full time employees.</p>
+
+
+	<p>Consultancies used to provide a service by managing the entire project
+so you didn&#8217;t have to do much.  Now with Agile and Pair Programming
+the consulting firms can dupe clients into helping them make the
+sausage, provide little to no services, yet still charge insane
+rates.  What&#8217;s impressive is these consulting firms somehow charge
+rates that are 5 or 6 <strong>times</strong> what they pay their employees.</p>
+
+
+	<p>Think about that.  How is it possible that your consulting firm
+has so much inefficiency they must charge 600%
+overhead?  Are the services you get <strong>really</strong> that far above the
+base pay of that employee?  Why the hell not just hire someone
+and have a long term learner who&#8217;ll be ready to work on anything?</p>
+
+
+	<p>Accounting, that&#8217;s why.  When you hire a Full Time Employee (FTE)
+you need to account for it and budget them differently than if 
+you pay a firm for a consultant.  There&#8217;s several loop holes in
+the tax and accounting standards that make a consultant seem
+cheaper than a regular employee.</p>
+
+
+	<p>However, this is a mass hysteria.  Eventually people will catch
+on that the quality they get for the price they pay isn&#8217;t there.
+A smart consultancy will figure out that they could undercut these
+idiot firms by simply using technology properly to cut costs and
+reduce overhead.  Hell, you&#8217;ve got 600% overhead to work with.
+Should be easy to pull a Southwest Airlines on them.</p>
+
+
+	<p>Let&#8217;s take ThoughtWorks as a classic example of the hysteria.  They
+decided to get into the Ruby on Rails game and went full bore.  I was
+telling people right when Rails came out that doing it for internal projects
+at big companies would be a huge money maker.  Nobody believed me, and now
+rather than all my smart friends working on cool applications for
+big money I have ThoughtWorks fucking up my party.</p>
+
+
+	<p>Before you continue this part of the rant ask yourself a question:</p>
+
+
+	<p>How did ThoughtWorks go from 0% Rails business to 60% Rails in just
+a few short months, but somehow didn&#8217;t hire that many top notch
+Ruby guys?  Remember, if 60% of your business is Rails then 60% of
+your people need Rails training or else you have to hire more people.
+If they didn&#8217;t hire any more people than that means&#8230;the people they
+had were retrained.  With two week training courses.  Huh?  How does
+that make them experts?</p>
+
+
+	<p>What happens if you do that is you have a group of former C# and Java
+guys running around writing shitty Ruby code and training on the client&#8217;s
+dime for huge fees.</p>
+
+
+	<p>Think for a second.  ThoughtWorks charges its clients a premium price
+for expertise.  They claim that their Agile methods and development
+expertise means they&#8217;ll produce a great result.  This is why you
+pay them a premium.  However, they reserve the right to control staffing,
+and you have very little say in the skills of the people they place.</p>
+
+
+	<p>Continue the logic further my friends with this little walk through
+consulting practices:</p>
+
+
+	<ol>
+	<li>TW figures out it can make a mint doing RoR projects for dumb ass MBAs at dumbass
+companies.</li>
+		<li>TW goes for it and gets 60% of its business now all RoR.</li>
+		<li>TW realizes that they can&#8217;t hire enough Ruby people to do that.  Actually, they
+didn&#8217;t really try too hard since that&#8217;d mean paying the new people a fair salary.</li>
+		<li>Yet, somehow they put 6-20 people on projects and claim that these people are Rails
+experts with a high standard of quality.  These people actually had two weeks of training.</li>
+		<li>After each person has been on a project for a few months, they mysteriously get 
+transitioned to another project, become &#8220;sick&#8221;, or generally leave.</li>
+		<li>They are then replaced with someone else who&#8217;s training is limited.</li>
+		<li>During their operations they seem to focus entirely on the process, but very
+little on the quality of the code.  Sorry guys, but having a 1:4 code:test ratio
+is not focusing on code quality.  It&#8217;s focusing on <strong>test</strong> quality.</li>
+		<li>Finally, when your project is in the dumps and it takes months to get simple
+things done you realize that you&#8217;ve been paying ThoughtWorks a premium for
+what is effectively a bunch of total newbies who are only there for a few
+months before they roll off.</li>
+		<li><strong>You my friend got fucked in the ass.</strong>  Congratulations because all the idiots
+who paid ThoughtWorks 6x times salary for junior ass wipes got taken and simply paid
+to train ThoughtWorks&#8217; new crew.</li>
+	</ol>
+
+
+	<p>How do I know this?  Well, I&#8217;ve been a consultant for years and recently I&#8217;ve
+taken over two ThoughtWorks Ruby on Rails projects.  <span class="caps">BTW</span>, they claim they don&#8217;t
+do &#8220;Ruby on Rails&#8221; projects, but actually do &#8220;Ruby&#8221; projects.  They also claim
+they don&#8217;t do &#8220;eXtreme Programming&#8221; but do &#8220;Agile&#8221;.  Doing this little semantics
+juggle means you can never hold them to any standard of quality.</p>
+
+
+	<p>In the two projects I&#8217;ve taken from ThoughtWorks I found mountains of horrible,
+horrible code.  They of course try to pull the classic &#8220;there&#8217;s many ways to
+do everything in programming&#8221; but this time they kind of get caught because
+Ruby on <strong>Rails</strong> means stay on the Rails.  There <strong>is</strong> an established best
+practice way to build web applications with <strong>Rails</strong> and that&#8217;s the entire
+point of the system.  When ThoughtWorks fucked up these projects they did it
+in such a completely deviated way that it was impossible to defend.</p>
+
+
+	<p>Additionally, the people they placed on these projects were not well trained at all,
+had no idea about simple Ruby idioms let alone good design, and spent more of their
+time drinking and having fun than actually getting shit done.  At the last project they
+actually had bottles of Pedialyte in the fridge to help with their hangovers after
+wild nights partying.</p>
+
+
+	<p>After ThoughtWorks left the most recent project we revamped the team.  We got
+rid of pair programming, cut down the number of tests, started cleaning more and
+more code out, got rid of their shitty tools, and we all started leaving at 6pm.
+What happens?</p>
+
+
+	<p>We <strong>doubled</strong> our productivity with <strong>fewer</strong> people.  Yes, that is a verifiable
+metrically validated claim I can back up.  Just like the horrible quality of the
+code, their idiotic defense of it, and their very bad job at designing even the
+basics of the business model required.  Remember, they are testing and svn whores
+so their failure on these two projects is very well documented.</p>
+
+
+	<p>However, what really ticks me off about ThoughtWorks isn&#8217;t the way they fucked up 
+these two projects.  I&#8217;d take ThoughtWorks over <span class="caps">IBM</span>, Accenture, or BearingPoint
+any day of the week.  ThoughtWorks&#8217; competitors are even worse, so I&#8217;ll take
+the lesser of ten evils any day.  What pisses me off is that I know they&#8217;re responsible
+for turning Ruby on Rails into the next Visual Basic.  Why?  Because they wrote
+in a position paper that Ruby on Rails was like Visual Basic.  Yes, they did that.
+They compared Ruby on Rails to probably the most technically vilified language
+in the history of computing.</p>
+
+
+	<p>Here&#8217;s my prediction about ThoughtWorks:  They&#8217;ll continue to screw customers
+over by training their employees on their client&#8217;s dime and write tons of
+fucked up software.  The bad results from ThoughtWorks will kill Ruby on Rails
+for companies as these companies are left with a bad taste from bad implementations.</p>
+
+
+	<h2>From Industry to Corporate</h2>
+
+
+	<p>ThoughtWorks is simply taking advantage of a pattern where new technology goes
+from fringe to corporate and then dies.  A great example of this is Java
+Portals.  They started out on the fringe at universities and non-profits, where
+they were mildly successful.  Then they migrated into the corporate world where
+they were complete disasters, and finally the risk averse government picked them
+up for even less success.</p>
+
+
+	<p>How do I know this?  I worked on portals for their entire life and followed them
+through this process.  Go look.  I did some of the first work on uPortal, then
+I worked on portals in companies, and then worked on them for the government.</p>
+
+
+	<p>Ruby on Rails is following the same trajectory I&#8217;m afraid, and ThoughtWorks is 
+milking it while they can.  First it started on the fringe in start-ups and a 
+few lonely places where it&#8217;s having mixed success (mostly due to the poor
+performance of the Ruby platform).  Now it&#8217;s getting adopted internally at
+companies where of course it&#8217;ll get fucked up again and die off.  After that
+it&#8217;ll move to the government sector where it will languish along with it&#8217;s
+new found buddy <span class="caps">COBOL</span>.</p>
+
+
+	<p>Oh, did I mention ThoughtWorks compared Rails to <span class="caps">COBOL</span> as well?  Awesome.</p>
+
+
+	<h2>Fighting Consulting Firms</h2>
+
+
+	<p>I have a few pieces of advice for people about to hire any company like
+ThoughtWorks.  There&#8217;s just a few simple strategies you can follow to 
+make sure you get the most out of them and get your money&#8217;s worth:</p>
+
+
+	<ol>
+	<li>Make sure you have the right to see every resume and interview each
+consultant they place.  Treat them like new hires and don&#8217;t let anyone
+who&#8217;s not worth the rate you&#8217;re paying on the team.</li>
+		<li>Demand a variable rate based on the position of the person and their
+experience.</li>
+		<li>Demand that no employees can leave the project to work on another 
+project.  These placements have to be for the life of the project 
+or until the employee quits.</li>
+		<li>Require that you have the right to have someone replaced if they are
+not immediately capable.  Part of what you&#8217;re paying is that a ThoughtWorker
+should be able to drop in commando style and just start working.  The
+reality is they are usually totally lost anyway.</li>
+		<li>Seriously consider recruiting one full time employee as a team lead,
+another as a project manager, and then staff the rest of your team with
+independent consultants.  You&#8217;ll find that you get more control and better
+quality at a lower price.</li>
+	</ol>
+
+
+	<p>Finally, a company like ThoughtWorks uses bizarre socialization processes
+and weird shit like <a href="http://web.archive.org/web/20080103072111/http://en.wikipedia.org/wiki/Neuro-linguistic_programming">Neuro-Linguistic Programming</a>
+to enslave their employees into working more hours than needed.  That
+shit about &#8220;can&#8217;t leave with a broken build&#8221;, pair programming, hazing rituals,
+firing people who don&#8217;t conform, and other unprofessional behavior mostly
+exists to make employees pliable pawns.</p>
+
+
+	<p>Why?  Because ThoughtWorks pays these people a salary that is fixed and
+considered a sunk cost.  If they pay someone 60k/year and that person
+works 40 hours/week then they are paying them about $29/hour.  If
+they convince this idiot to work 60 hours/week then they are basically
+paying the moron $19/hour.  If they can push them to 80 hour/week
+then these idiots are actually making $14/hour.  You can make $29/hour
+managing a fast food joint.</p>
+
+
+	<p>The further and harder ThoughtWorks (or any consulting firm) pushes its
+employees the more money they make because then they charge the client
+<strong>for each fucking hour</strong>.  Get it?  If they push an employee to 60/week
+they not only reduce the cost of that employee but <strong>also</strong> increase the
+billable hours.  Hell, even if they don&#8217;t charge for those hours they
+still make more money just by reducing costs.</p>
+
+
+	<p>Now I&#8217;ll admit I didn&#8217;t see ThoughtWorks do this quite as much as I&#8217;ve seen <span class="caps">IBM</span>
+Global Services, Accenture, and BearingPoint do it, but they still do it.  My
+observation about ThoughtWorks is they&#8217;re really really <strong>really</strong> fucking weird
+about it.  I saw them pull passive aggressive shit like picking on a single
+employee high-school-nerd-vs-jock style until he conforms or quits.</p>
+
+
+	<p>What&#8217;s this got to do with your project?  Well, if you have a mix of
+ThoughtWorks employees and your own then be careful that the ThoughtWorkers
+don&#8217;t warp your employees as well.  I&#8217;ve seen it once already where a room full
+of ThoughtWorkers would thrash and trash on one poor employee simply because he
+disagreed with their approach to a problem.  Or, having special boards on the
+wall with &#8220;How Many Times Frank Is Late&#8221;.  Or, holding &#8220;dev lunches&#8221; (which I
+called &#8220;dev <strong>lynches</strong>&#8220;) where they thrash client employees with alternative
+opinions in order to maintain their stupid operations.</p>
+
+
+	<p>I&#8217;ve seen it, and they do it.  Be careful of it as you&#8217;ll lose people
+who are smart and not susceptible to that crap, or you&#8217;ll have a 
+bunch of brain washed idiots at the end of the project.  It&#8217;s also
+a horrible way to treat a client so don&#8217;t put up with it.</p>
+
+
+	<h2>More To Come</h2>
+
+
+	<p>This is a long rant I&#8217;m writing in serial form.  Stay tuned for more 
+about Ruby conferences and why they suck, and why the Pickaxe book
+is what killed Ruby.</p>
+        </div>
+      </div>

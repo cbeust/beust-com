@@ -1,0 +1,183 @@
+There are quite a few configuration libraries available in Java, such as <a href="http://commons.apache.org/proper/commons-configuration/">the one available from Apache Commons</a>, and they usually follow a very similar pattern: they parse a variety of configuration files and in the end, give you a <tt>Property</tt> or <tt>Map</tt> like structure where you can query your values:
+
+<pre class="brush:java">
+Double double = config.getDouble("number");
+Integer integer = config.getInteger("number");
+</pre>
+
+I have always been unsatisfied with this approach for a couple of reasons:
+
+<ul>
+    <li>I need to have the, potentially big, <tt>config</tt> object everywhere I need even just one property.
+    <li>It's very easy to misspell a property and received incorrect values.
+</ul>
+
+A while ago, I was reading the <a href="https://code.google.com/p/google-guice/wiki/BindingAnnotations">Guice documentation</a> and I came across a paragraph that made me realize that maybe, we could do better. Here is the relevant excerpt:
+
+<blockquote>
+Guice supports binding annotations that have attribute values. In the rare case that you need such an annotation:
+
+Create the annotation @interface.
+Create a class that implements the annotation interface. Follow the guidelines for equals() and hashCode() specified in the Annotation Javadoc. Pass an instance of this to the annotatedWith() binding clause.
+</blockquote>
+
+I think a configuration framework was exactly the "rare case" that I had been looking for. The relevance of this snippet will become clear later, but first, let's focus on the goals.
+
+<h3>Objectives</h3>
+
+I want to:
+
+<ul>
+    <li>Be able to inject individual configuration values anyhere in my code base and I want this to be type safe. No <tt>@Named</tt> or other string-based lookup.
+    <li>Have a canonical list of all the properties available to the application, with their full type, default value, documentation and leaving the door open for improvements (e.g. is this option mandatory or optional, etc...).
+</ul>
+
+I don't care much about the front end: how these properties get gathered is not relevant, they can come from XML, JSON, the network, a database, and they can have complex overriding rules. All I need is <tt>Map</tt> set of properties and I take it from there.
+
+<p>
+
+    By the time we're done, we will be able to do something like this:
+
+<pre class="brush: plain">
+    # Some property file
+    host=foo.com
+    port=1234
+</pre>
+
+Using these values:
+
+<pre class="brush: java">
+public class A {
+    @Inject
+    @Prop(Property.HOST)
+    private String host;
+
+    @Inject
+    @Prop(Property.PORT)
+    private Integer port;
+
+    // ...
+}
+</pre>
+
+<h3>Implementation</h3>
+
+The definition of the <tt>Prop</tt> annotation is trivial:
+
+<pre class="brush: java">
+@Retention(RUNTIME)
+@Target({ ElementType.FIELD, ElementType.PARAMETER })
+@BindingAnnotation
+public @interface Prop {
+  Property value();
+}
+</pre>
+
+<tt>Property</tt> is an enum that captures all the information necessary for all your properties. In our case:
+
+<pre class="brush: java">
+public enum Property {
+    HOST("host",
+        "The host name",
+        new TypeLiteral<String>() {},
+        "foo.com"),
+
+    PORT("port",
+        "The port",
+        new TypeLiteral<Integer>() {},
+        1234);
+}
+</pre>
+
+This enum contains the string name of the property, its type (a `TypeLiteral`, so we can even offer properties that have generic types that would otherwise be erased).
+
+<p>
+
+    The next step is to tie all the properties that we parsed as input, we'll use a <tt>Map<String, Object></tt> called <tt>"allProps"</tt>, into our module so that Guice knows how to inject them. In order to do this, we iterate all these properties and bind them to their own provider. Because we are using typed names, note the use of <tt>Key.get</tt> from the Guice API, which lets us specifically target each property with its specific annotation:
+
+<pre class="brush:java">
+    for (Property prop : Property.values()) {
+        Object value = PropertyConverters.getValue(prop.getType(), prop, allProps.asMap());
+        binder.bind(Key.get(prop.getType(), new PropImpl(prop)))
+                .toProvider(new PropertyProvider(prop, value));
+    }
+</pre>
+
+    There are two classes in this piece of code that I haven't explained yet. The first one is <tt>PropertyProvider</tt>, a trivial Guice provider:
+
+<pre class="brush:java">
+public class PropertyProvider<T> implements Provider<T> {
+    private final T value;
+    private final Property property;
+
+    public PropertyProvider(Property property, T value) {
+        this.property = property;
+        this.value = value;
+    }
+
+    @Override
+    public T get() {
+        return value;
+    }
+}
+</pre>
+
+<tt>PropImpl</tt> is more tricky and also the one thing that has always prevented me from implementing such a framework, until I came across this obscure tidbit of the Guice documentation. In order to understand the necessity of its existence, we need to understand how Guice's <tt>Key.get()</tt> works. Guice uses this class to translate a type into a unique key that it can use to inject the correct value. The important part here is to notice that not only does this method work with both <tt>Class</tt> and <tt>TypeLiteral</tt> (which we are using), but it can also be given a specific annotation. This annotation can be <tt>@Named</tt>, which I'm not a big fan of because it's a string, so susceptible to typos, or a real annotation, which is what we want. However, annotations are special beasts in Java and you can't get an instance of them just like that.
+
+<p>
+
+    This is where the trick mentioned at the top of this article comes into play: Java actually allows you to implement an annotation with a regular class. The implementation is fairly trivial (<a href="https://github.com/cbeust/personal/blob/master/src/main/java/com/beust/prop/PropImpl.java">here it is </a>).
+
+<p>
+    Now that we have all this in place, let's back track and dissect how the magic happens:
+
+<pre class="brush:java">
+    @Inject
+    @Prop(Property.HOST)
+    private String host;
+</pre>
+
+When Guice encounters this injection point, it looks into its binders and it finds multiple bindings for <tt>Strings</tt>. However, because they have all been bound with a <tt>Key</tt>, the key is actually a pair: <tt>(String, a Prop)</tt>. In this case, it will look up the pair <tt>String, Property.HOST</tt> and it will find a provider there. This provider was instantiated with the value found in the property file, so it knows what value to return.
+
+<h3>Generalizing</h3>
+
+Once I had the basic logic in place, I wondered if I could turn this mini framework into a library so that others could use it. The only missing piece would be to allow the specification of a more general <tt>Prop</tt> annotation. In the example above, this annotation has a value of type <tt>Property</tt>, which is specific to my application:
+
+<pre class="brush: java">
+@Retention(RUNTIME)
+@Target({ ElementType.FIELD, ElementType.PARAMETER })
+@BindingAnnotation
+public @interface Prop {
+    Property value();
+}
+</pre>
+
+In order to make this more general, I need to make this attribute return an <tt>enum</tt> instead of my own:
+
+<pre class="brush: java">
+@Retention(RUNTIME)
+@Target({ ElementType.FIELD, ElementType.PARAMETER })
+@BindingAnnotation
+public @interface Prop {
+    Enum value();
+}
+</pre>
+
+Unfortunately, this is not legal Java, because according to the JLS section 8.9), <tt>Enum</tt> and its generic variants are <b>not</b> enum types, something that Josh Bloch confirmed, to my consternation.
+
+<p>
+
+    Sadly, this can therefore not be turned into a library, so if you are interested in using it in your project, you will have to copy the source and make a few modifications, starting by having <tt>Prop#value</tt> have the type of the enum that captures your configuration. <a href="https://github.com/cbeust/personal/tree/master/src/main/java/com/beust/prop">You can find the sources here</a>.
+
+
+
+
+
+
+
+
+
+
+
+
+

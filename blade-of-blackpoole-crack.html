@@ -1,0 +1,490 @@
+<html>
+<head>
+<title>Cracking "The Blade of Blackpoole"</title>
+<style type="text/css">
+pre {
+    border-radius: 25px;
+	margin-left: 20px;
+	padding: 10px;
+	background-color: #eee;
+	border: solid 1px #000;
+	width: 50%;
+}
+</style>
+</head>
+<body>
+<h1>
+<p align="center">
+Cracking "The Blade of Blackpoole"
+</p>
+</h1>
+
+<h2>
+  <p align="center">
+    C&eacute;dric Beust, February 2nd, 2016
+  </p>
+</h2>
+
+<p align="center">
+<img src="http://beust.com/pics/blade_of_blackpoole.jpg"/>
+</p>
+
+<p>
+I have a special connection to this game since I tried (unsuccessfully) to crack the original something like thirty years ago. My knowledge of the 6502 and of the Apple ][ ROM was not sufficient back then, but today, I have the Internet and a rabid hunger for revenge.
+
+</p>
+
+<p>
+The game comes on two sides, of which only side A is protected. Side B is not a DOS disk but it follows the standard D5 AA 96 encoding, so it can be copied easily.
+</p>
+
+<p>
+Side A is very non standard, using AD DA D0 which is then followed by something that's nowhere like the sector content one would expect. Let's get first stage in.
+</p>
+
+<p>
+<a href="https://twitter.com/a2_4am">@a2_4am</a>'s AUTOTRACE captures BOOT0 and then stops there. No RWTS and no IOB. Not surprising.
+</p>
+
+<p>The plan: get all the successive stages in memory, save them one by one and see if we can get a full crack this way. No DEMUFFIN will be used in this endeavor.
+</p>
+
+$801 starts with some standard stuff and then reads stage 2 in:
+
+<pre>
+; Look for AD DA DD
+
+0833-   BD 8C C0    LDA   $C08C,X
+0836-   10 FB       BPL   $0833
+0838-   C9 AD       CMP   #$AD
+083A-   D0 F7       BNE   $0833
+083C-   BD 8C C0    LDA   $C08C,X
+083F-   10 FB       BPL   $083C
+0841-   C9 DA       CMP   #$DA
+0843-   D0 F3       BNE   $0838
+0845-   BD 8C C0    LDA   $C08C,X
+0848-   10 FB       BPL   $0845
+084A-   C9 DD       CMP   #$DD
+084C-   D0 EA       BNE   $0838
+</pre>
+
+What follows is a bit non standard in my view and was kindly elucidated to me by <a href="https://twitter.com/a2_qkumba">Qkumba</a>, an Apple ][ expert.
+
+<pre>
+; Performs a continuous read.  There is only one header and then one
+; really big sector.  The value in $FA is the number of pages in
+; that sector.  The value in $F8 is the high byte of the address.
+
+0850-   BD 8C C0    LDA   $C08C,X
+0853-   10 FB       BPL   $0850
+0855-   38          SEC
+0856-   2A          ROL
+0857-   85 F6       STA   $F6
+0859-   B0 12       BCS   highBitSet
+</pre>
+
+<pre>
+; not a timing nibble, read again
+
+085B-   BD 8C C0    LDA   $C08C,X
+085E-   10 FB       BPL   $085B
+0860-   38          SEC
+0861-   2A          ROL
+0862-   85 F6       STA   $F6
+0864-   C8          INY
+0865-   D0 06       BNE   highBitSet
+0867-   E6 F8       INC   $F8
+0869-   C6 FA       DEC   $FA
+086B-   F0 0F       BEQ   $087C
+</pre>
+
+<p align="center">
+<img src="http://beust.com/pics/blade_of_blackpoole_1.jpg"/>
+</p>
+
+Going back to the track content with a nibble editor does shed some light on why this code is looking this way but I didn't capture it so I'm not going to linger on this. If I get my way, the crack will end up discarding all this part anyway.
+
+I just want to find out where the next stage starts so I can stop it. And here it is:
+
+<pre>
+087C-   BD 8C C0    LDA   $C08C,X
+087F-   10 FB       BPL   $087C
+0881-   25 F6       AND   $F6
+0883-   45 F5       EOR   $F5
+0885-   D0 A4       BNE   $082B
+0887-   4C 0C A0    JMP   $A00C
+</pre>
+
+So the next stage starts at $A00C. Time to ruin the party.
+
+Clone the boot procedure in $9600 and force the disk to reboot instead of launching stage two:
+
+<pre>
+*9600&lt;C600.C6FFM
+
+Adding my stage 2 loader patch:
+
+*96F8L
+
+96F8-   A9 4C       LDA   #$4C
+96FA-   8D 87 08    STA   $0887
+96FD-   A9 0A       LDA   #$0A
+96FF-   8D 88 08    STA   $0888
+9702-   A9 97       LDA   #$97
+9704-   8D 89 08    STA   $0889
+9707-   4C 01 08    JMP   $0801
+970A-   A9 C5       LDA   #$C5
+970C-   8D DC A0    STA   $A0DC
+970F-   4C 0C A0    JMP   $A00C
+
+*BSAVE REBOOT2,A$9600,L$110
+
+$9600G
+</pre>
+
+I simply replace the JMP $A00C with a jump to my own code, which instead, reboots to my work disk.
+
+
+Main disk boots, grinds a bit then my work disk boots. Let's welcome our new guest.
+
+<pre>
+*A00CL
+
+; Standard reset hijacking: the badlands for this stage is $A353
+
+A00C-   A0 00       LDY   #$00
+A00E-   84 FD       STY   $FD
+A010-   84 F1       STY   $F1
+A012-   84 F2       STY   $F2
+A014-   AD FF 7F    LDA   $7FFF
+A017-   8D 88 A3    STA   $A388
+A01A-   A9 53       LDA   #$53
+A01C-   8D F0 03    STA   $03F0
+A01F-   8D F2 03    STA   $03F2
+A022-   8D FC 03    STA   $03FC
+A025-   8D FE 03    STA   $03FE
+A028-   A9 A3       LDA   #$A3
+A02A-   8D F1 03    STA   $03F1
+A02D-   8D F3 03    STA   $03F3
+A030-   8D FD 03    STA   $03FD
+A033-   8D FF 03    STA   $03FF
+A036-   49 A5       EOR   #$A5
+A038-   8D F4 03    STA   $03F4
+
+; This next section is mysterious. Store some values in $200 (the keyboard
+; buffer). Not sure what this is for but let's make a note of it
+; for later.
+
+A03B-   A9 5D       LDA   #$5D
+A03D-   8D 00 02    STA   $0200
+A040-   A9 43       LDA   #$43
+A042-   8D 01 02    STA   $0201
+A045-   A9 A2       LDA   #$A2
+A047-   85 22       STA   $22
+A049-   A9 4C       LDA   #$4C
+A04B-   85 23       STA   $23
+
+; Display @ signs on the screen, this is what we see during the boot
+
+A04D-   A9 A0       LDA   #$A0
+A04F-   99 00 04    STA   $0400,Y
+A052-   99 00 05    STA   $0500,Y
+A055-   99 00 06    STA   $0600,Y
+A058-   99 00 07    STA   $0700,Y
+A05B-   C8          INY
+A05C-   D0 F1       BNE   $A04F
+
+; Switch graphic mode
+
+A05E-   AD 51 C0    LDA   $C051
+A061-   AD 54 C0    LDA   $C054
+A064-   AD 52 C0    LDA   $C052
+A067-   AD 57 C0    LDA   $C057
+
+; And now some real work starts, loading more tracks for stage 3
+A06A-   A9 02       LDA   #$02
+A06C-   A6 FB       LDX   $FB
+A06E-   8E F8 05    STX   $05F8
+A06E-   8E F8 05    STX   $05F8
+A071-   A0 05       LDY   #$05
+A073-   8D 01 A0    STA   $A001
+A076-   8C 00 A0    STY   $A000
+</pre>
+
+
+Not going to bore you with the details. I followed the logic here and figured out most of it until we reach the place where stage 2 continues into stage 3:
+
+<pre>
+*A0B9L
+
+A0B9-   A9 E3       LDA   #$E3
+A0BB-   8D F0 03    STA   $03F0
+A0BE-   8D F2 03    STA   $03F2
+A0C1-   8D FC 03    STA   $0
+A0C4-   8D FE 03    STA   $03FE
+A0C7-   A9 80       LDA   #$80 ;; bad land: $80a5
+A0C9-   8D F1 03    STA   $03F1
+A0CC-   8D F3 03    STA   $03F3
+A0CF-   8D FD 03    STA   $03FD
+A0D2-   8D FF 03    STA   $03FF
+A0D5-   49 A5       EOR   #$A5 
+A0D7-   8D F4 03    STA   $03F4
+A0DA-   4C 00 40    JMP   $4000
+</pre>
+
+This code does a new hijacking of the reset vectors (probably because the previous one might have been overwritten by this stage). That new one is not doing anything surprising: wiping everything, etc...
+
+<p align="center">
+<img src="http://beust.com/pics/blade_of_blackpoole_2.jpg"/>
+</p>
+
+But the important part is, of course:
+
+<pre>
+A0DA-   4C 00 40    JMP   $4000
+</pre>
+
+Back to my boot loader and let's prevent this code from calling into $4000. I can
+do this simply by replacing the value in $A0DC with $C5 so that it becomes:
+
+<pre>
+A0DA-   4C 00 C5    JMP   $C500
+</pre>
+
+
+which will reboot into my work disk:
+
+<pre>
+*BLOAD REBOOT2,A$9600
+</pre>
+
+... add stage 2 hijacking:
+
+<pre>
+96F8-   A9 4C       LDA   #$4C
+96FA-   8D 87 08    STA   $0887
+96FD-   A9 0A       LDA   #$0A
+96FF-   8D 88 08    STA   $0888
+9702-   A9 97       LDA   #$97
+9704-   8D 89 08    STA   $0889
+9707-   4C 01 08    JMP   $0801
+970A-   A9 C5       LDA   #$C5
+970C-   8D DC A0    STA   $A0DC
+970F-   4C 0C A0    JMP   $A00C
+</pre>
+
+The new code is in $970A.
+
+<pre>
+*BSAVE REBOOT3,A$9600,L$120
+*9600G
+</pre>
+
+Boot, grind, grind, grind. The title screen appears, then the screen turns to white, asks me to flip to side B and... boom, reboot to my work disk. Everything is going according to plan.
+
+Hello stage 3:
+
+<pre>
+*4000L
+
+4000-   A9 BA       LDA   #$BA
+4002-   85 C2       STA   $C2
+4004-   A2 00       LDX   #$00
+4006-   86 C0       STX   $C0
+4008-   20 AA 51    JSR   $51AA
+400B-   A9 0D       LDA   #$0D
+400D-   85 C1       STA   $C1
+400F-   20 F5 40    JSR   $40F5
+4012-   D0 CC       BNE   $3FE0
+4014-   C5 C1       CMP   $C1
+4016-   D3          ???
+4017-   C5 A0       CMP   $A0
+4019-   C9 CE       CMP   #$CE
+401B-   D3          ???
+401C-   C5 D2       CMP   $D2
+401E-   D4          ???
+401F-   A0 D9       LDY   #$D9
+4021-   CF          ???
+4022-   D5 D2       CMP   $D2,X
+4024-   A0 C3       LDY   #$C3
+*
+</pre>
+
+Ok, now I'm getting a bit worried. This starts as genuine code but it soon becomes garbage. Not good. I predict some nasty stack swizzling happening downstream.
+
+Looking more carefully at the garbage, I actually recognize ASCII letters. Could it be...  "PLEASE INSERT YOUR COPY"... Yup, that's it. That's encouraging.
+
+But let's not get ahead of ourselves. First, save this portion at $4000 (by the way, I've been saving all the previous stages as well) and who knows, maybe we'll get lucky?
+
+Switch to graphics, then
+
+<pre>
+*4000G
+</pre>
+
+The screen switches to white (yay!) but instead of the message, I get garbage. And the code soon drops me off in the monitor with a beep. Would have been too good to be true.
+
+Time to roll my sleeves and disassemble this mess.
+
+I'll spare you the details but it took a while to go through this, and the code doesn't pull any punches with multiple indirections and obfuscations. My attention is first drawn to code that stores stuff in $(00),Y which ends up storing garbage in what is otherwise regular code (which ends up being called, hence the abrupt exit).
+
+Cause identified, now we need to find the culprit.
+
+Next step: find out what code stores addresses in $(00) and after additional (and painful) disassembling, I stumble upon:
+
+<pre>
+
+51FF-   BD C0 09    LDA   $09C0,X
+5202-   85 00       STA   $00
+5204-   BD 00 09    LDA   $0900,X
+5207-   85 01       STA   $01
+5209-   A0 00       LDY   #$00
+520B-   C0 08       CPY   #$08
+520D-   B0 10       BCS   $521F
+520F-   B1 04       LDA   ($04),Y
+5211-   49 FF       EOR   #$FF
+5213-   29 7F       AND   #$7F
+5215-   A4 C0       LDY   $C0
+5217-   91 00       STA   ($00),Y
+5219-   EE 0A 52    INC   $520A
+521C-   4C F9 51    JMP   $51F9
+</pre>
+
+Well hello there, $(00) stomper. But wait... these values are coming from $900 and $9C0. So loaded from a previous stage. Looking there is not reassuring, it's mostly garbage:
+
+<pre>
+0900-   00          BRK
+0901-   AD 43 4D    LDA   $4D43
+0904-   44          ???
+0905-   D0 31       BNE   $0938
+0907-   32          ???
+0908-   39 CD 43    AND   $43CD,Y
+090B-   48          PHA
+090C-   45 43       EOR   $43
+090E-   4B          ???
+090F-   53          ???
+</pre>
+
+I must have missed something.
+
+Taking a hard look at this garbage, and again, it looks familiar. It's actually BASIC. Wait... what? Pretty sure there's no BASIC in sight here, so the only other option is that I polluted it myself. And then I captured this pollution when I saved the $800 stage and it's been following me ever since.
+
+And then it hits me: this is the HELLO of the working disk! It's @a2_4am's own startup, which is very useful to get things started but it then stomps all over what could be useful stuff from stage 2.
+
+Time for the nuclear option:
+
+<pre>
+*DELETE HELLO
+</pre>
+
+I don't need it any more anyway. Let's back track to stage 2 and see what we get this time.
+
+<pre>
+*BLOAD REBOOT2,A$9600
+*9600G
+</pre>
+
+Boot, grind, boot to work disk, exit right away this time (no more HELLO).
+
+<pre>
+*900L
+
+0900-   20 24 28    JSR   $2824
+0903-   2C 30 34    BIT   $3430
+0906-   38          SEC
+0907-   3C          ???
+0908-   20 24 28    JSR   $2824
+090B-   2C 30 34    BIT   $3430
+090E-   38          SEC
+090F-   3C          ???
+</pre>
+
+Well... that's different garbage, but it's still garbage. Unless...
+
+I was getting garbage on the screen because the routine in charge of displaying each letter one by one was apparently hitting the wrong regions of memory. Do you notice anything about the code above? It looks like locations in the interleaved graphic memory, each incremented by 4. This is very promising.
+
+Let's save this precious new addition to our puzzle (up to $2000 for good measure):
+
+<pre>
+*BSAVE A900,A$900,L$16FF
+</pre>
+
+And load $4000 back:
+
+<pre>
+*BLOAD A4000,A$4000
+</pre>
+
+Fingers crossed:
+
+<pre>
+$4000G
+</pre>
+
+Yes! The screen turns to white and the message "PLEASE INSERT..." is correctly displayed. I feverishly insert side B, press a key and... I get the first image of the game.
+
+Victory!
+
+Or... is it?
+
+I go "N", get the second image along with its description and then... BEEEP! And back to the monitor. Kicked out of my own party. Rats. Still not quite there yet.
+
+Time for more disassembly. I trace the tortuous and contrived code (but this time, we're in the heart of the game engine) until I come across something that is obviously going to crash:
+
+<pre>
+43F2-   6C 00 02    JMP   ($0200)
+43F5-   00          BRK
+</pre>
+
+Why an indirect jump to $200? Because fuck you, that's why.
+
+$200 is the keyboard buffer, and of course, it contains everything but a valid address where to jump (actually, it contains "4000G" since these are the latest keys I pressed).
+
+Okay, I've identified the problem, now I need to find out which stage puts a valid address at that location. And of course, I'm forbidden to use the keyboard from now on or my keys will destroy its content.
+
+So I go back to the drawing board and go through all the past stages, one by one, for a second, hard look at all the stages, until... eureka! Remember this from stage 2?
+
+<pre>
+A03B-   A9 5D       LDA   #$5D
+A03D-   8D 00 02    STA   $0200
+A040-   A9 43       LDA   #$43
+A042-   8D 01 02    STA   $0201
+A045-   A9 A2       LDA   #$A2
+A047-   85 22       STA   $22
+A049-   A9 4C       LDA   #$4C
+A04B-   85 23       STA   $23
+</pre>
+
+It didn't make sense then but it does now. This store $435D in $200 (and checking it confirms it's valid code). This snippet also stores a couple more values in $22,$23. Not sure what these are for but obviously, I'll have to preserve them just in case.
+
+So things are shaping up now: I need to load the chunks at $900 and $4000 and then preserve these values before calling into $4000. I'm not in the mood to do it the hard way so let's go BASIC on this one:
+
+<pre>
+10  PRINT  CHR$ (4)"BLOAD A900,A$900"
+20  PRINT  CHR$ (4)"BLOAD AA000,A$A000"
+30  PIRNT  CHR$ (4)"BLOAD A4000,A$4000"
+40  POKE 49232,0: POKE 49236,0:POKE 49234,0:POKE 49239,0
+50  POKE 512,93: POKE 513,67: POKE 34,162: POKE 35,76
+100  CALL 16384
+</pre>
+
+I'm loading $A0000 too just to be safe but we might not need it. We do need $900, though (the scan lines) and, obviously, $4000. Then switch the correct graphic mode, put the right values in $200, $22 and $23 and launch.
+
+<p>
+
+I insert side B of the game and this time, I can successfully move from location to location without any crash.
+
+<p>
+
+Looks like we're done this time.
+
+<p>
+
+The only thing missing to a proper crack is to restore the title screen but that's pretty trivial.
+
+<p>
+
+<i>It's good to feel closure after thirty years</i>.
+
+</body>
+</html>

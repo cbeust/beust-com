@@ -1,0 +1,214 @@
+<html>
+<head>
+<title>
+
+    Kobalt: a modern, versatile build system by Cedric Beust
+
+</title>
+
+    <script type="text/javascript" src="../sh/scripts/shCore.js"></script>
+    <script type="text/javascript" src="../sh/scripts/shBrushJScript.js"></script>
+    <script type="text/javascript" src="../sh/scripts/shBrushJava.js"></script>
+    <script type="text/javascript" src="../sh/scripts/shBrushPlain.js"></script>
+
+    <script>
+        SyntaxHighlighter.defaults['gutter'] = false;
+        SyntaxHighlighter.defaults['toolbar'] = false;
+        SyntaxHighlighter.all();
+    </script>
+
+<!--[if lt IE 9]><script src="../assets/js/ie8-responsive-file-warning.js"></script><![endif]-->
+<!--
+<script src="../bootstrap/assets/js/ie-emulation-modes-warning.js"></script>
+-->
+
+<!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+<!--[if lt IE 9]>
+  <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+  <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+<![endif]-->
+
+<!-- Favicons -->
+<!--
+<link rel="icon" href="/favicon.ico">
+-->
+    <script>
+        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+                    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+                m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+        ga('create', 'UA-238215-6', 'auto');
+        ga('send', 'pageview');
+
+    </script>
+</head>
+
+<body>
+
+
+    <div class="container">
+
+      <!-- Static navbar -->
+      <nav id="kobalt-navbar" class="navbar navbar-default">
+      </nav>
+
+      <!-- Main component for a primary marketing message or call to action -->
+      <div class="jumbotron">
+        <h1>Kobalt: A modern, versatile build system</h1>
+      </div>
+
+      <!-- Main content -->
+      <div class="col-md-9">
+
+<p>
+<em style="font-size: 1em">
+    Kobalt is a build system inspired by Gradle and Maven. It reuses the best concepts from these two
+    successful and popular build systems while adding a few modern features of its own. Kobalt is written
+    entirely in Kotlin and its build files are valid Kotlin files as well. Thanks to IDEA's top notch
+    support for Kotlin, writing Kobalt build files automatically benefits from auto completion and all
+    the other features that you are used to when writing code with your IDE of choice.
+</em>
+</p>
+<p>
+    <em style="font-size: 1em">
+      Here are some of Kobalt's most prominent features.
+  </em>
+</p>
+<h2 class="section" id="features">Features</h2>
+
+<h2 class="section" id="syntax" indent="1">Clean, minimal syntax for build files</h2>
+<p>
+For example, here is <a href="http://jcommander.org">JCommander's</a> entire build file:
+</p>
+
+<pre class="brush:java">
+import com.beust.kobalt.*
+import com.beust.kobalt.plugin.java.*
+import com.beust.kobalt.plugin.packaging.*
+import com.beust.kobalt.plugin.publish.*
+
+val jcommander = project {
+    name = "jcommander"
+    group = "com.beust"
+    artifactId = name
+    version = "1.52"
+
+    dependenciesTest {
+        compile("org.testng:testng:")
+    }
+
+    assemble {
+        mavenJars {
+        }
+    }
+
+    bintray {
+        publish = false
+    }
+}
+
+</pre>
+<p>
+  This build file also includes a directive to upload your artifacts to Bintray automatically.
+</p>
+
+
+<h2 class="section" id="buildFile" indent="1">Build file auto-completion in your IDE</h2>
+<p>
+  Since Kobalt's build files are actual Kotlin files, not only can you leverage auto-completion
+  to write your build files but the full power of your IDEA is at your fingertips to write
+  these files in any way you see fit: using expressions, conditionals, classes, extension functions,
+  constants... The sky is the limit!
+</p>
+<p>
+  Kobalt uses Kotlin's type safe builder pattern to offer a DSL that's extremely similar to Gradle
+  and minimalistic while allowing you to switch to full Kotlin code whenever necessary.
+</p>
+<p>
+  Here is an example of the auto-completion dialog:
+</p>
+<p align="center">
+  <img src="../pics/auto-completion.png" class="img-rounded"/>
+</p>
+<p>
+  And see the following section to get a feel for Kobalt's build file syntax.
+</p>
+
+
+          <h2 class="section" id="incremental" indent="1">Incremental tasks</h2>
+<p>
+  Most of Kobalt's core tasks are incremental, which means that if you run them without having changed anything, they will be skipped. The support for incremental tasks is also trivial to add for plug-in developers, which guarantees that your builds with Kobalt will always be as fast as they can be.
+</p>
+  <h2 class="section" id="plug-in" indent="1">Intuitive plug-in architecture</li></h2>
+          <p>
+              Kobalt's plug-in architecture is heavily inspired from other successful plug-in architectures such
+              as Eclipse and IDEA. Thanks to Kotlin's static type safety, writing plug-ins for Kobalt is both
+              flexible and intuitive, with a minimum of boiler plate. See the
+              <a href="../plug-in-development/index.html">Kobalt plug-in development documentation</a> for more details.
+          </p>
+</ul>
+</p>
+
+          <!--
+<h2 class="section" id="design-goals">Design goals</h2>
+
+<ul>
+  <li>Completely written in Kotlin: core, plug-ins and build files.
+  <li>Auto completion from the IDE.
+  <li>Reusing all the good ideas from Gradle, such as the DSL and the wrapper.
+  <li>Fast builds.
+  <li>Support for all scopes (including <code>provided</code>).
+  <li>Streamlining the build file, applying "convention over configuration" as much as possible.
+  <li>A turnkey solution with all the common plug-ins pre-installed. With Kobalt, you can create a package and upload it to JCenter within ten minutes. <a href="../ten-minutes/index.html">See for yourself!</a>
+  <li>An agnostic build tool. Kobalt can be used to build Kotlin and Java projects today but it's capable to build anything: any language (JVM or not) or platform (Android, Spring, ...).
+</ul>
+-->
+
+<h2 class="section" id="status">Status</h2>
+
+<p>
+Here are links to a few build files you can inspect to get a feel for what Kobalt enables:
+</p>
+
+<ul>
+  <li><a href="https://github.com/cbeust/jcommander/blob/master/kobalt/src/Build.kt">JCommander</a>.</li>
+  <li><a href="https://github.com/cbeust/testng/blob/master/kobalt/src/Build.kt">TestNG</a> (this build file shows an example of adding a custom task in the build itself).</li>
+  <li><a href="https://github.com/cbeust/klaxon/blob/master/kobalt/src/Build.kt">Klaxon</a></li>
+  <li><a href="https://github.com/cbeust/kobalt-android">u2020 (Android show case application)</a></li>
+  <li><a href="https://github.com/cbeust/ktor/blob/kobalt/kobalt/src/Build.kt">Ktor</a></li>
+  <li>... and of course, <a href="https://github.com/cbeust/kobalt/blob/master/kobalt/src/Build.kt">Kobalt itself</a> (this build file demonstrates multi projects and project dependencies).</li>
+</ul>
+
+<h2 class="section" id="next-steps">Next steps</h2>
+<p>
+  Proceed to the <a href="../getting-started/index.html">Getting Started</a> section to learn more about Kobalt.
+</p>
+
+
+          <p>
+</p>
+
+      </div>
+
+      <!-- Table of contents -->
+      <div class="col-md-3" id="table-of-contents">
+      </div>
+
+<!-- Bootstrap core JavaScript
+================================================== -->
+<!-- Placed at the end of the document so the pages load faster -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+<script src="../bootstrap/dist/js/bootstrap.min.js"></script>
+<script src="../js/kobalt.js"></script>
+<script>generateKobalt();</script>
+
+  <!--
+  <script src="../../assets/js/docs.min.js"></script>
+-->
+<!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+<!--
+<script src="../../assets/js/ie10-viewport-bug-workaround.js"></script>
+-->
+
+</body>

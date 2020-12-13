@@ -1,0 +1,5 @@
+digraph g2
+{
+  a1 -> b1 [dir=back]
+  a2 -> b2 [dir=back]
+}

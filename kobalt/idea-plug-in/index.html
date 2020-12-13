@@ -1,0 +1,216 @@
+<html>
+<head>
+<title>
+
+    Kobalt: a modern, versatile build system by Cedric Beust
+
+</title>
+
+<!-- Bootstrap core CSS -->
+    <script type="text/javascript" src="../sh/scripts/shCore.js"></script>
+    <script type="text/javascript" src="../sh/scripts/shBrushJScript.js"></script>
+    <script type="text/javascript" src="../sh/scripts/shBrushJava.js"></script>
+    <script type="text/javascript" src="../sh/scripts/shBrushPlain.js"></script>
+
+    <script>
+        SyntaxHighlighter.defaults['gutter'] = false;
+        SyntaxHighlighter.defaults['toolbar'] = false;
+        SyntaxHighlighter.all();
+    </script>
+
+  <!-- Optional Bootstrap Theme -->
+
+  <link href="data:text/css;charset=utf-8," data-href="../bootstrap/dist/css/bootstrap-theme.min.css" rel="stylesheet" id="bs-theme-stylesheet">
+
+
+<!--[if lt IE 9]><script src="../assets/js/ie8-responsive-file-warning.js"></script><![endif]-->
+<!--
+<script src="../bootstrap/assets/js/ie-emulation-modes-warning.js"></script>
+-->
+
+<!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+<!--[if lt IE 9]>
+  <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+  <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+<![endif]-->
+
+<!-- Favicons -->
+<!--
+<link rel="icon" href="/favicon.ico">
+-->
+
+    <style type="text/css">
+        img {
+            border: 1px solid #cccccc;
+            padding: 5px;
+            margin: 10px;
+        }
+        img.kb-wide {
+            width: 75%;
+        }
+    </style>
+</head>
+
+<body>
+
+
+    <div class="container">
+
+      <!-- Static navbar -->
+      <nav id="kobalt-navbar" class="navbar navbar-default">
+      </nav>
+
+      <!-- Main content -->
+      <div class="col-md-9">
+<h2>How to install and use the Kobalt IDEA plug-in</h2>
+
+<h3 class="section" id="installation">Installation</h3>
+<p>
+    Open the "Plugins" section of the IDEA preferences and find the "Kobalt" plug-in.
+</p>
+<p align="center">
+    <img src="../pics/install-plugin.png" class="img-rounded kb-wide"/>
+</p>
+<p>
+ Install it and restart IDEA. Next time you open a project with a <code>Build.kt</code> build file in it, IDEA
+    will offer to import it as a Kobalt project.
+</p>
+          <p align="center">
+              <img src="../pics/kobalt-import-1.png" class="img-rounded"/>
+          </p>
+          <p align="center">
+              <img src="../pics/kobalt-import-2.png" class="img-rounded"/>
+          </p>
+
+          <p>
+Once you accept, a new window will be available on the right
+side of your main IDEA window. Clicking it will reveal the whole Kobalt window.
+You can then click on the Sync icon in the upper left corner to update your dependencies:
+</p>
+
+<p align="center">
+  <img src="../pics/kobalt-main-window.png" class="img-rounded"/>
+</p>
+<h3 class="section" id="features">Features</h3>
+<p>
+    The Kobalt IDEA plug-in offers the following features:
+    <ul>
+        <li>Synchronization of build files.</li>
+        <li>Automatic completion of <code>Build.kt</code></li>
+    </ul>
+</p>
+<h4 class="section" indent="1" id="sync-build-file">Synchronization of build files</h4>
+<p>
+    The plug-in will locate your <code>kobalt/src/Build.kt</code> file and automatically update your project's libraries and
+    dependencies to reflect it. For example, suppose you have the following dependencies:
+</p>
+<pre class="brush:java">
+compile("org.apache.ant:ant:1.7.0",
+    "com.google.inject:guice:4.0:no_aop",
+    "com.beust:jcommander:1.48")
+</pre>
+          <p>
+              Select the menu "Kobalt / Sync build file", wait for a few seconds as the status in the lower left
+              corner updates:
+          </p>
+          <p align="center">
+              <img src="../pics/status.png" class="img-rounded"/>
+          </p>
+          <p>
+              Bring up the "Project structure" window for your project and you should see the following:
+          </p>
+          <p align="center">
+              <img src="../pics/structure-1.png" class="img-rounded"/>
+          </p>
+          <p>
+              A new library has been created with the dependencies from your build file. If you switch to the
+              Module section, you should see this library added as a dependency of your modules:
+          </p>
+          <p align="center">
+              <img src="../pics/structure-2.png" class="img-rounded"/>
+          </p>
+          <p>
+              The plug-in understands other scopes as well (e.g. "provided", "runtime"). For example, let's
+              move a dependency in the "runtime" section of the build file:
+          </p>
+<pre class="brush:java">
+dependencies {
+    runtime("com.google.inject:guice:4.0:no_aop")
+    compile("org.apache.ant:ant:1.7.0",
+        "com.beust:jcommander:1.48")
+}</pre>
+          <p>
+              The libraries are now the following:
+          </p>
+          <p align="center">
+              <img src="../pics/structure-3.png" class="img-rounded"/>
+          </p>
+          <p>
+              Notice that you now have two different libraries and that they have both been added with the
+              correct scope to your project:
+          </p>
+          <p align="center">
+              <img src="../pics/structure-4.png" class="img-rounded"/>
+          </p>
+
+<h4 class="section" indent="1" id="autocompletion">Auto completion of Build.kt</h4>
+          <p>
+              The plug-in will automatically turn on auto-completion of your <code>kobalt/src/Build.kt</code>
+              file. Once this is
+              enabled, you can use everything you use on Kotlin files (auto completion, jump
+              to symbols, even refactorings).
+          </p>
+          <p>
+              The plug-in also understands the <code>plugins()</code> directive:
+          </p>
+          <ul>
+              <li>Add a plug-in to your build file:
+<pre class="brush:java">
+val bs = buildScript {
+    plugins("com.beust.kobalt:kobalt-line-count:0.17")
+}</pre>
+              </li>
+              <li>Sync your build file, as explained in the previous section.</li>
+              <li>You can now import the new symbols and use the new configuration:
+              <pre class="brush:java">
+import com.beust.kobalt.plugin.linecount.lineCount
+val lc = lineCount {
+    suffix = "**Plugin.kt"
+}</pre>
+              </li>
+          </ul>
+
+  <h3 class="section">Source code and bug reports</h3>
+  <p>
+      The source code <a href="http://github.com/cbeust/kobalt-intellij-plugin">can be found on github</a>.
+      If you need to report a bug, please make sure you include the log file, which you can find under
+      the "Help" menu:
+  </p>
+  <p align="center">
+      <img src="../pics/show-log.png" class="img-rounded"/>
+  </p>
+</div>
+
+      <!-- Table of contents -->
+      <div class="col-md-3" id="table-of-contents">
+      </div>
+
+</div> <!-- container -->
+
+<!-- Bootstrap core JavaScript
+================================================== -->
+<!-- Placed at the end of the document so the pages load faster -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+<script src="../bootstrap/dist/js/bootstrap.min.js"></script>
+<script src="../js/kobalt.js"></script>
+<script>generateKobalt(4);</script>
+
+  <!--
+  <script src="../../assets/js/docs.min.js"></script>
+-->
+<!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+<!--
+<script src="../../assets/js/ie10-viewport-bug-workaround.js"></script>
+-->
+
+</body>

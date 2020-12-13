@@ -1,0 +1,283 @@
+<html>
+  <head>
+    <title>Hard core multicore with TestNG</title>
+      <link rel="stylesheet" href="testng.css" type="text/css" />
+      <link type="text/css" rel="stylesheet" href="http://beust.com/beust.css"  />
+      <script type="text/javascript" src="http://beust.com/prettify.js"></script>
+      <script type="text/javascript" src="http://testng.org/doc/banner.js"></script>
+
+      <script type="text/javascript" src="http://beust.com/scripts/shCore.js"></script>
+      <script type="text/javascript" src="http://beust.com/scripts/shBrushJava.js"></script>
+      <script type="text/javascript" src="http://beust.com/scripts/shBrushXml.js"></script>
+      <script type="text/javascript" src="http://beust.com/scripts/shBrushBash.js"></script>
+      <script type="text/javascript" src="http://beust.com/scripts/shBrushPlain.js"></script>
+      <link type="text/css" rel="stylesheet" href="http://beust.com/styles/shCore.css"/>
+
+      <link type="text/css" rel="stylesheet" href="http://beust.com/styles/shThemeCedric.css"/>
+      <script type="text/javascript">
+        SyntaxHighlighter.config.clipboardSwf = 'scripts/clipboard.swf';
+        SyntaxHighlighter.defaults['gutter'] = false;
+        SyntaxHighlighter.all();
+      </script>
+    </head>
+
+
+<body>
+
+
+<h1>Hard core multicore with TestNG</h1>
+<p align="center">
+<a href="http://beust.com/topo/Topo2.dot">
+<img border="1" src="http://beust.com/pics/Topo2.png" />
+</a>
+</p>
+
+<p>
+
+I recently implemented a new feature in TestNG that took me down an interesting technical path that ended up mixing graph theory with concurrency.
+<p>
+Here are a few notes.
+
+<h3>The problem</h3>
+<p>
+
+TestNG allows you to declare dependencies among your test methods.  Here is a simple example:
+
+<pre class="brush:java">
+@Test
+public void a1() {}
+
+@Test(dependsOnMethods = "a1")
+public void b1() {}
+
+@Test
+public void x() {}
+
+@Test
+public void y() {}
+</pre>
+
+In this example, <tt>b1()</tt> will not run until <tt>a1()</tt> has completed and passed.  If <tt>a1()</tt> fails, <tt>b1()</tt> will be marked as "Skipped". For the purpose of these articles, I call both method <tt>a1()</tt> and <tt>b1()</tt> "dependent" methods while <tt>x()</tt> and <tt>y()</tt> are "free" methods.
+<p>
+Things get more interesting when you want to run these four test methods in parallel. When you specify that these methods should be run in a pool of three threads, TestNG still needs to maintain the ordering of <tt>a1()</tt> and <tt>b1()</tt>. The way it accomplishes this is by running all the dependent methods in the same thread, guaranteeing that not only will they not overlap but also that the ordering will be strictly respected.
+<p>
+The current algorithm is therefore simple:
+<ul>
+  <li>Break all the test methods into two categories: free and dependent.
+  <li>Free methods are thrown into the thread pool and executed by the Executor, one method per worker, which guarantees full parallelism.
+  <li>Dependent methods are sorted and run into an executor that contains just one thread.
+</ul>
+<p>
+This has been the scheduling algorithm for more than five years.  It works great, but it's not optimal.
+
+
+<h3>Improvements</h3>
+<p>
+
+Dependent methods are a very popular feature of TestNG, especially in web testing frameworks such as Selenium, where the testing of pages is very dependent on the ordering in which operations are performed on these pages. These tests are typically made of a majority of dependent methods, which means that the current scheduling algorithm makes it very hard to leverage any parallelism at all in these situations.
+<p>
+
+For example, consider the following example:
+
+<p>
+<a href="http://beust.com/topo/Topo7.dot">
+<img border="1" src="http://beust.com/pics/Topo7.png" />
+</a>
+</p>
+
+Since all four methods are dependent, they will all be running in the same thread, regardless of the thread pool size.  An obvious improvement would be to run <tt>a1()</tt> and <tt>b1()</tt> in one thread and <tt>a2()</tt> and <tt>b2()</tt> in a different thread.
+<p>
+But why not push thing further and see if we can't just throw all these four methods in the main thread pool and still respect their ordering?
+<p>
+This thought led me to take a closer look at the concurrent primitives availables in the JDK, and more specifically, <a href="http://java.sun.com/j2se/1.5.0/docs/api/java/util/concurrent/Executors.html">Executors</a>.
+<p>
+My first question was whether it was possible to add workers to an Executor without necessarily having them ready to run right away, but this idea soon appeared to me as going against the principle of Executors, so I abandoned it.
+<p>
+The other idea was to see if it was possible to start with only a few workers and then add more workers to an Executor as it's running, which turns out to be legal (or at least, not explicitly prohibited). Looking through the existing material, it seems to me that Executors typically do not modify their own set of workers.  They get initialized and then external callers can add workers to them with the <a href="http://java.sun.com/j2se/1.5.0/docs/api/java/util/concurrent/Executor.html#execute%28java.lang.Runnable%29"><tt>execute()</tt></a> method.
+<p>
+At this point, the solution was becoming fairly clear in my mind, but before I get into details, we need to take a closer look at sorting.
+
+<h3>Topological sort</h3>
+<p>
+
+In the example shown at the beginning, I said that TestNG was sorting the methods before executing them but I didn't explain exactly how this was happening.  As it turns out, we need a slightly different sorting algorithm than the one you are used to.
+<p>
+Looking back at this first example, it should be obvious that there are more than one correct way to order the methods:
+
+<ul>
+  <li>a1() b1() x() y()
+  <li>x() a1() b1() y()
+  <li>y() a1() x() b1()
+  <li>...
+</ul>
+<p>
+
+In short, any ordering that executes <tt>a1()</tt> before <tt>b1()</tt> is legal. What we are doing here is trying to sort a set of elements that cannot all be compared to each other.  In other words, if I pick two random methods "f" and "g" and I ask you to compare them, your answer will be either "f must run before g", "g must run before f" or "I cannot compare these methods" (for example if I give you <tt>a1()</tt> and <tt>x()</tt>).
+
+<p>
+This is called a <a href="http://en.wikipedia.org/wiki/Topological_sorting">Topological sorting</a>.  This link will tell you all you need to know about topological sorting, but if you are lazy, suffice to say that there are basically two algorithms to achieve this kind of sort.
+
+<p>
+
+Let's see the execution of a topological sort on a simple example.  
+
+<p>
+
+The following graphs represent test methods and how they depend on
+each other.  Methods in green are "free methods": they don't depend on any other methods.  Arrows represent dependencies and dotted arrows are dependencies that have been satisfied.  Finally, grey nodes are methods that have been executed.
+
+
+<p>
+<a href="http://beust.com/topo/Topo1.dot">
+<img border="1" src="http://beust.com/pics/Topo1.png" />
+</a>
+</p>
+
+First iteration, we have four free methods.  These four methods are ready to be run.
+
+<p>
+
+Result so far:  <b>{ a1, a2, x, y } </b>
+
+<p>
+<a href="http://beust.com/topo/Topo2.dot">
+<img border="1" src="http://beust.com/pics/Topo2.png" />
+</a>
+</p>
+
+The four methods have been run and they "freed" two new nodes, <tt>b1</tt> and <tt>b2</tt>, which become eligible for the next wave of executions.  Note that  while one of <tt>d</tt>'s dependencies has been satisfied (<tt>a1</tt>), <tt>d</tt> still depends on <tt>b1</tt> so it's not free yet.
+
+<p>
+
+Result so far:  <b>{ a1, a2, x, y, b1, b2 } </b>
+
+<p>
+<a href="http://beust.com/topo/Topo3.dot">
+<img border="1" src="http://beust.com/pics/Topo3.png" />
+</a>
+</p>
+
+<tt>b2</tt> and <tt>b1</tt> have run and they free three additional methods.
+
+<p>
+<a href="http://beust.com/topo/Topo4.dot">
+<img border="1" src="http://beust.com/pics/Topo4.png" />
+</a>
+</p>
+
+The last methods have run, we're done.
+<p>
+
+Final result:  <b>{ a1, a2, x, y, b1, b2, c1, c2, d } </b>
+
+</p>
+
+Again, note that this is not the only valid topological sort for this example: you can reorder certain elements as long as the dependencies are respected.  For example, a result that would start with <b>{a2, a1}</b> would be as correct as the one above, which starts with <b>{a1, a2}</b>.
+<p>
+
+This is a pretty static, academic example.  In the case of TestNG, things are a lot more dynamic and the entire running environment needs to be re-evaluated each time a method completes. Another important aspect of this algorithm is that all the free methods need to be added to the thread pool as soon as they are ready to run, which means that the <tt>ExecutorService</tt> will have workers added to its pool even as it is running other workers.
+<p>
+For example, let's go back to the following state:
+
+<p>
+<a href="http://beust.com/topo/Topo2.dot">
+<img border="1" src="http://beust.com/pics/Topo2.png" />
+</a>
+</p>
+
+At this stage, we have two methods that get added to the thread pool and run on two different threads:  <tt>b1</tt> and <tt>b2</tt>. We can then have two different situations depending on which one completes first:
+
+<p>
+<a href="http://beust.com/topo/Topo6.dot">
+<img border="1" src="http://beust.com/pics/Topo6.png" />
+</a>
+</p>
+
+<tt>b1</tt> finishes first and frees both <tt>c1</tt> and <tt>d</tt>.
+<p>
+Or...
+
+<p>
+<a href="http://beust.com/topo/Topo5.dot">
+<img border="1" src="http://beust.com/pics/Topo5.png" />
+</a>
+</p>
+<tt>b2</tt> finishes first but doesn't free any new node.
+<p>
+
+<h3>A new kind of Executor</h3>
+<p>
+
+Since the early days, TestNG's model has always been very dynamic:  what methods to run and when is being decided as the test run progresses. One of the improvements I have had on my mind for a while was to create a "Test Plan" early on. A Test Plan means that the engine would look at all the TestNG annotations inside the classes and it would come up with a master execution plan: a representation of all the methods to run, which I can then hand over to a runner that would take care of it.
+
+<p>
+
+Understanding the scenario above made me realize that the idea of a "Test Plan" was doomed to fail.  Considering the dynamic aspect of TestNG, it's just plain impossible to look at all the test classes during the initialization and come up with an execution plan, because as we saw above, the order in which the methods are run will change depending on which methods finish first. A Test Plan would basically make TestNG more static, while we need the exact opposite of this:  we want to make it even more dynamic than it is right now.
+<p>
+The only way to effectively implement this scenario is basically to reassess the entire execution every time a test method completes.  Luckily, <a href="http://java.sun.com/j2se/1.5.0/docs/api/java/util/concurrent/Executor.html"><tt>Executors</tt></a> allow you to receive a callback each time a worker completes, so this is the perfect place for this.  My next question was to wonder whether it was legal to add workers to an <tt>Executor</tt> when it's already running (the answer is:  yes).
+
+<p>
+
+Here is an overview of what the new Executor looks like.
+
+<p>
+
+The <tt>Executor</tt> receives a graph of test methods to run in its constructor and then simply revolves around two methods:
+
+<pre class="brush:java">
+/**
+ * Create one worker per node and execute them.
+ */
+private void runNodes(Set&lt;ITestNGMethod&gt; nodes) {
+  List&lt;IMethodWorker&gt; runnables = m_factory.createWorkers(m_xmlTest, nodes);
+  for (IMethodWorker r : runnables) {
+    m_activeRunnables.add(r);
+    setStatus(r, Status.RUNNING);
+    try {
+      execute(r);
+    }
+    catch(Exception ex) {
+      // ...
+    }
+  }
+}
+</pre>
+The second part is to reassess the state of the world every time a method completes:
+
+<pre class="brush:java">
+@Override
+public void afterExecute(Runnable r, Throwable t) {
+  m_activeRunnables.remove(r);
+  setStatus(r, Status.FINISHED);
+  synchronized(m_graph) {
+    if (m_graph.getNodeCount() == m_graph.getNodeCountWithStatus(Status.FINISHED)) {
+      shutdown();
+    } else {
+      Set&lt;ITestNGMethod&gt; freeNodes = m_graph.getFreeNodes();
+      runNodes(freeNodes);
+    }
+  }
+}
+</pre>
+
+When a worker finishes, the Executor updates its status in the graph. Then it checks if we have run all the nodes, and if we haven't, it asks the graph the new list of free nodes and schedules these nodes for running.
+
+<p>
+
+<h3>Wrapping up</h3>
+<p>
+
+This is basically a description of the new TestNG scheduling engine. I tried to focus on general concepts and I glossed over a few TestNG specific features that made this implementation more complex than I just described, but overall, implementing this new engine turned out to be fairly straightforward thanks to TestNG's layered architecture.
+<p>
+With this new implementation, TestNG is getting as close to possible to offering maximal parallelism for test running, and a few Selenium users have already reported tremendous gains in test execution (from an hour down to ten minutes).
+<p>
+When I ran the tests with this new engine, very fest tests failed and the ones that did were exactly the ones that I wanted to fail (such as on that verified that dependent methods execute in the same thread, which is exactly what this new engine is fixing).  Similarly, I added new tests to verify that dependent methods are now sharing the thread pool with free methods, which turned out to be trivial since I already have plenty of support for this kind of testing.
+
+<p>
+This new engine will be available in TestNG 5.11, which you can beta test <a href="http://testng.org/beta">here</a>.
+<p>
+
+<em>To comment, please go to <a href="http://beust.com/weblog/archives/000525.html">the original post</a>.
+
+</body>
+</html>

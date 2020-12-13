@@ -1,0 +1,27 @@
+digraph g {
+  b1
+  c1
+  b2
+  b3
+  d
+  y[style=filled color=green]
+  x[style=filled color=green]
+  a1[style=filled color=green]
+  a2[style=filled color=green]
+  a3[style=filled color=grey]
+
+  b1 -> c1 [dir=back ]
+  x -> d [dir=back ]
+  b2 -> c1 [dir=back ]
+  a1 -> b1 [dir=back ]
+  a1 -> b2 [dir=back ]
+  a1 -> b3 [dir=back ]
+  b3 -> c1 [dir=back ]
+  a3 -> b1 [dir=back style=dotted]
+  a3 -> b2 [dir=back style=dotted]
+  a3 -> b3 [dir=back style=dotted]
+  a3 -> d [dir=back style=dotted]
+  a2 -> b1 [dir=back ]
+  a2 -> b2 [dir=back ]
+  a2 -> b3 [dir=back ]
+}

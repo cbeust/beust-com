@@ -1,0 +1,24 @@
+digraph g4
+{
+  viewport="290, 200, 0.75, 140, 90"
+  a1 [style=filled color=lightgray]
+  a2 [style=filled color=lightgray]
+  b1 [style=filled color=lightgray]
+  b2 [style=filled color=lightgray]
+  c1 [style=filled color=lightgray]
+  c2 [style=filled color=lightgray]
+  d [style=filled color=lightgray]
+
+  a1 -> b1 [style=dotted dir=back]
+  a1 -> b2 [style=dotted dir=back]
+  a2 -> b1 [style=dotted dir=back]
+  a2 -> b2 [style=dotted dir=back]
+  b1 -> c1 [style=dotted dir=back]
+  b1 -> c2 [style=dotted dir=back]
+  b2 -> c2 [style=dotted dir=back]
+  a1 -> d [style=dotted dir=back]
+  b1 -> d [style=dotted dir=back]
+  x [style=filled color=lightgray]
+  y [style=filled color=lightgray]
+}
+
